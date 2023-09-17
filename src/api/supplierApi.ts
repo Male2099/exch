@@ -1,6 +1,6 @@
 import axios, { type AxiosResponse } from 'axios';
 
-const API_BASE_URL = 'http://admin-api.neotechs.xyz/api/v1/suppliers';
+const API_BASE_URL = 'http://localhost:8081/api/v1/suppliers';
 
 const supplierApi = {
   async getAllSuppliers(): Promise<any[]> {

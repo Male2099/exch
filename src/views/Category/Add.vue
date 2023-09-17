@@ -2,44 +2,46 @@
 import PictureInput from 'vue-picture-input';
 import axios from 'axios';
 export default {
-    name: 'app',
-    data() {
-        return {
-            category: {
-    name: "",
-    img: "",
-    isAvailable: true
+  data() {
+    return {
+      form: {
+        name: '',
+        image: null
+      },
+      imageUrl: ''
+    };
   },
-        }
+  methods: {
+    handleFileChange(event) {
+      const file = event.target.files[0];
+      this.form.image = file;
+      this.imageUrl = URL.createObjectURL(file);
     },
-    components: {
-        PictureInput
-    },
-    methods: {
-        onChange(image) {
-            console.log('New picture selected!')
-            if (image) {
-                console.log('Picture loaded.')
-                this.image = image
-            } else {
-                console.log('FileReader API not supported: use the <form>')
-            }
-        },
-        addCategory(){
-                fetch('http://localhost:8080/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.category)
-                })
-                .then(data => {
-                    console.log(data)
-                    this.$router.push("/category/");
-                })
-
-            }
-    },
+    addCategory(event) {
+      event.preventDefault();
+      const formData = new FormData();
+      formData.append('name', this.form.name);
+      formData.append('image', this.form.image);
+      
+      // Make an API call to post the form data
+      fetch('your-api-endpoint', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        this.form.name = '';
+        this.form.image = null;
+        this.imageUrl = '';
+        this.$refs.fileInput.value = '';
+        this.$router.push("/category/");
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    }
+  }
 };
 </script>
 <template>
@@ -53,7 +55,7 @@ export default {
             <h1 class="page-header mb-0">Category</h1>
         </div>
     </div>
-<form @submit.prevent="addCategory">
+<form @submit="addCategory">
 
     <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
         <div class="card-header h6 mb-0 bg-none p-3">
@@ -68,15 +70,11 @@ export default {
                 <i class="fa-solid fa-image fa-lg fa-fw text-dark text-opacity-50 me-1"></i> Image
             </div>
             <div class="card-body">
-                <picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
-                    button-class="btn" :custom-strings="{
-                        upload: '<h1>Bummer!</h1>',
-                        drag: 'input profile picture'
-                    }" @change="onChange">
-                </picture-input>
+                <input type="file" id="image" ref="fileInput" @change="handleFileChange">
+        <img :src="imageUrl" alt="Selected Image" v-if="imageUrl" width="150" height="150">
             </div>
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-  <input class="btn btn-primary me-md-2 btn-rounded px-4 rounded-pill" type="submit" value="Submit">
+  <button class="btn btn-primary me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
   <a href="/category/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>
         </div>

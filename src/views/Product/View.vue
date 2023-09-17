@@ -2,45 +2,21 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
+import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
 	data() {
-		
-                return {
-					image: "string",
-  product: {
-    id: 0,
-    name: "string",
-    productCode: "string",
-    price: 0,
-    quantity: 0,
-    description: "string",
-    img: "string",
-	categoryId: 0,
-    isAvailable: true,
-  },
-  result: `The product is`
-                }
-            },
-            methods: {
-                handleCheckboxChange() {
-                    this.result = `The product is ${this.product.isAvailable ? 'activated' : 'disactivated'}`
-                },
-				async doDelete() {
-            const ok = await this.$refs.confirmDialogue.show({
-                title: 'Delete Confirmation',
-                message: 'Are you sure you want to delete? It cannot be undone.',
-                okButton: 'Delete Forever',
-            })
-            // If you throw an error, the method will terminate here unless you surround it wil try/catch
-            if (ok) {
-                alert('You have successfully delete this page.')
-            } else {
-                alert('You chose not to delete this page. Doing nothing now.')
-            }
-        },
-            },
+		return {
+        products: {
+			category: {}
+		}
+    };
+		},    
 	mounted() {
+		axios.get(`http://localhost:8081/api/v1/products/${this.$route.params.id}`)
+        .then(response => {
+          this.products = response.data;
+        })
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {
@@ -69,20 +45,28 @@ export default {
 		<div class="card-body">
 					<div class="mb-3">
 			<div class="text-center">
-				<img src="/assets/img/user/user-13.jpg" class="rounded-circle" alt="" />
+				<img :src="products.img" class="rounded-circle" width="150" height="150" alt="" />
 			</div>
 		</div>
 		<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
 			<div class="card">
-				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="product.name">
+				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="products.name">
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="category" class="form-label">Category</label>
+			<div class="card">
+				<div class="card">
+				<input id="category.name"  type="text" name="Category" class="form-control" placeholder="Category" required v-model="products.category.name">
+			</div>
 			</div>
 		</div>
 		<div class="mb-3">
 			<label for="productCode" class="form-label">Product Code</label>
 			<div class="card">
 				<div class="card">
-				<input id="productCode"  type="text" name="productCode" class="form-control" placeholder="Product Code" required v-model="product.productCode">
+				<input id="productCode"  type="text" name="productCode" class="form-control" placeholder="Product Code" required v-model="products.productCode">
 			</div>
 			</div>
 		</div>
@@ -90,31 +74,31 @@ export default {
 			<label for="price" class="form-label">Price</label>
 			<div class="card">
 				<div class="card">
-				<input id="price"  type="text" name="price" class="form-control" placeholder="Price" required v-model="product.price">
+				<input id="price"  type="text" name="price" class="form-control" placeholder="Price" required v-model="products.price">
 			</div>
 			</div>
 		</div>
 		<div class="mb-3">
-			<label for="phone" class="form-label">Quantity</label>
+			<label for="quantity" class="form-label">Quantity</label>
 			<div class="card">
 				<div class="card">
-				<input id="quantity"  type="text" name="quantity" class="form-control" placeholder="Quantity" required v-model="product.quantity">
+				<input id="quantity"  type="text" name="quantity" class="form-control" placeholder="Quantity" required v-model="products.quantity">
 			</div>
 			</div>
 		</div>
 
 		<div class="mb-3">
-			<label for="dob" class="form-label">Description</label>
+			<label for="description" class="form-label">Description</label>
 			<div class="card">
 				<div class="card">
-				<input id="description"  type="text" name="ndescription" class="form-control" placeholder="Description" required v-model="product.description">
+				<input id="description"  type="text" name="description" class="form-control" placeholder="Description" required v-model="products.description">
 			</div>
 			</div>
 		</div>
 			<div class="mb-3">
 				<label for="status" class="form-label">Status</label>
 				<div class="form-check form-switch mb-2">
-					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="product.isAvailable" @change="handleCheckboxChange">
+					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="products.available" @change="handleCheckboxChange">
 					<label id="my-checkbox-checked" class="form-check-label"  for="my-checkbox">{{result}}</label>
 					<div>
 					<i> When the product is deactivated, the product is created in the system, so the product is reserved, but it is not Available until it is activated again </i>

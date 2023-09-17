@@ -10,115 +10,23 @@ import supplierApi from "../../api/supplierApi"
 const appVariable = useAppVariableStore();
 
 export default {
-	data () {
-		const data = reactive([]);
-
-      data.push(
-      );
-
-      const searchTerm = ref("");
-          // Table config
-    const table = reactive({
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "3%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "Pic",
-          field: "quick",
-          width: "4%",
-          display: function (row) {
-            return (
-              `<div class="w-50px h-50px bg-light d-flex align-items-center justify-content-center">
-											<img alt="" class="mw-100 mh-100" src="/assets/img/product/product-6.jpg" />
-										</div>`
-              );
-          }
-          },
-        {
-          label: "Name",
-          field: "name",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Email",
-          field: "email",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "Phone",
-          field: "phone",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "Address",
-          field: "address",
-          width: "15%",
-        },
-        {
-          label: "Operation",
-          field: "quick",
-          width: "10%",
-          display: function (row) {
-            return (
-              `<div>
-                <a href="/supplier/view" type="button" data-id="' + row.id + '" class="btn btn-success btn-rounded px-4 rounded-pill">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(suppliers.id)">Delete</button>
-              </div>`
-              );
-          }
-          },
-      ],
-      rows: computed(() => {
-        return data.filter(
-          (x) =>
-            x.email.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.name.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.address.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-
-            x.phone.toLowerCase().includes(searchTerm.value.toLowerCase()) 
-
-        );
-      }),
-      totalRecordCount: computed(() => {
-        return table.rows.length;
-      }),
-      sortable: {
-        order: "id",
-        sort: "asc",
-      },
-    });
-    
-		return {
-			code1: '',
-      searchTerm,
-			table,
-      suppliers:[]
-		}
-	},methods:{
-
-  },
 	components: {
 		highlightjs: highlightjs,
 		navScrollTo: navscrollto,
 		vueTable: vueTable
 	},
-  async	mounted() {
-    this.suppliers=await supplierApi.getAllSuppliers();
-    console.log(this.suppliers);
-		
-		new ScrollSpy(document.body, {
-			target: '#sidebar-bootstrap',
-			offset: 200
-		});
-	}
+	data() {
+    return {
+      suppliers: []
+    };
+  },
+
+  mounted() {
+    axios.get('http://localhost:8081/api/v1/suppliers')
+        .then(response => {
+          this.suppliers = response.data;
+        })
+  }
 }
 </script>
 <template>
@@ -135,29 +43,36 @@ export default {
 			
 		</div>
 	</div>
-	
-		<!-- BEGIN #vue3TableLite -->
+  <div class="card border-0">
+		<table class="table table-bordered table-dark table-stroped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>phone</th>
+          <th>address</th>
+          <th>info</th>
+          <th style="text-align: right;" > Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="supplier in suppliers" :key="supplier.id">
+          <td>{{ supplier.id }}</td>
+          <td>{{ supplier.name }}</td>
+          <td>{{ supplier.email }}</td>
+          <td>{{ supplier.phone }}</td>
+          <td>{{ supplier.address }}</td>
+          <td>{{ supplier.info }}</td>
+		  <td style="text-align: right;">
+        <div style="display:flex;">
+        <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/supplier/${supplier.id}`">View</a>
+                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
+              </div>
+              </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-        <div class="card border-0">
-				<div class="input-group mb-3">
-                    <div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px bg-light" placeholder="Search products..." v-model="searchTerm"/>
-						</div>
-					</div>
-				</div>
-				<vue-table class="vue-table"
-        :has-checkbox="true"
-					:is-static-mode="true"
-					:columns="table.columns"
-					:rows="table.rows"
-					:total="table.totalRecordCount"
-          :rowClasses="table.rowClasses"
-					:sortable="table.sortable" />
-
-		<!-- END #vue3TableLite -->
-	</div>
 </template>

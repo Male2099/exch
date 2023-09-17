@@ -8,133 +8,24 @@ import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
 
 const appVariable = useAppVariableStore();
-
-export default {
-	data () {
-		const data = reactive([]);
-
-      data.push(
-        {
-        id: 1,
-        user: "sothy" ,
-        price: "33$",
-        customer: "mark",
-        tax: "5%",
-        payment: "card",
-      },
-      {
-        id: 2,
-        user: "sothy" ,
-        price: "45$",
-        customer: "rex",
-        tax: "5%",
-        payment: "card",
-    }
-      );
-
-    const searchTerm = ref("");
-    // Table config
-    const table = reactive({
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "5%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "User",
-          field: "user",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Customer",
-          field: "customer",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Price",
-          field: "price",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Tax",
-          field: "tax",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Payment",
-          field: "payment",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Total_Price",
-          field: "price",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Date",
-          field: "price",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Status",
-          field: "price",
-          width: "5%",
-          sortable: true,
-        },
-        
-      ],
-      rows: computed(() => {
-        return data.filter(
-          (x) =>
-            x.user.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.customer.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.price.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.tax.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.id.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.payment.toLowerCase().includes(searchTerm.value.toLowerCase())
-        );
-      }),
-      totalRecordCount: computed(() => {
-        return table.rows.length;
-      }),
-      sortable: {
-        order: "id",
-        sort: "asc",
-      },
-    });
-    
-		return {
-			code1: '',
-      searchTerm,
-			table
-		}
-	},
+export default {	
 	components: {
 		highlightjs: highlightjs,
 		navScrollTo: navscrollto,
 		vueTable: vueTable
 	},
-	mounted() {
-		axios.get('/assets/data/table/plugin-code-1.json').then((response) => {
-			this.code1 = response.data;
-		});
-		
-		new ScrollSpy(document.body, {
-			target: '#sidebar-bootstrap',
-			offset: 200
-		})
-	}
-}
+	data() {
+    return {
+      orders: []
+    };
+  },
+  mounted() {
+    axios.get('http://localhost:8081/api/v1/orders')
+        .then(response => {
+          this.orders = response.data;
+        })
+  }
+};
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
@@ -150,29 +41,38 @@ export default {
 			
 		</div>
 	</div>
+	<div class="card border-0">
+		<table class="table table-bordered table-dark table-stroped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>User</th>
+          <th>Customer</th>
+          <th>Tax</th>
+          <th>Total Price</th>
+          <th>Received Money</th>
+          <th>Changed Money</th>
+		  <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders" :key="order.id">
+          <td>{{ order.id }}</td>
+          <td>{{ order.user.name }}</td>
+          <td>{{ order.customer.name }}</td>
+          <td>{{ order.date }}</td>
+          <td>{{ order.tax }}</td>
+          <td>{{ order.totalPrice }}</td>
+          <td>{{ order.receivedMoney }}</td>
+          <td>{{ order.changedMoney }}</td>
+		  <td>
+        <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/order/${order.id}`">View</a>
+                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(orders.id)">Delete</button>
+              </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 	
-		<!-- BEGIN #vue3TableLite -->
-
-        <div class="card border-0">
-				<div class="input-group mb-3">
-                    <div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px bg-light" placeholder="Search products..." v-model="searchTerm"/>
-						</div>
-					</div>
-				</div>
-				<vue-table class="vue-table"
-        :has-checkbox="true"
-					:is-static-mode="true"
-					:columns="table.columns"
-					:rows="table.rows"
-					:total="table.totalRecordCount"
-          :rowClasses="table.rowClasses"
-					:sortable="table.sortable" />
-
-		<!-- END #vue3TableLite -->
-	</div>
 </template>

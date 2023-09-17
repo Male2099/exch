@@ -13,18 +13,6 @@ export default {
 	data () {
 		const data = reactive([]);
 
-      data.push(
-        {
-        id: 1,
-        name: "TEST B" ,
-        email: "Atest" + "@example.com",
-        role: "Cashier"
-      },
-      {id: 2,
-        name: "TEST A" ,
-        email: "Btest" + "@example.com",
-        role: "Admin"}
-      );
 
     const searchTerm = ref("");
     // Table config
@@ -99,7 +87,7 @@ export default {
     });
     
 		return {
-			code1: '',
+			data : [],
       searchTerm,
 			table
 		}
@@ -109,15 +97,17 @@ export default {
 		navScrollTo: navscrollto,
 		vueTable: vueTable
 	},
-	mounted() {
-		axios.get('/assets/data/table/plugin-code-1.json').then((response) => {
-			this.code1 = response.data;
-		});
+	async mounted() {
 		
 		new ScrollSpy(document.body, {
 			target: '#sidebar-bootstrap',
 			offset: 200
 		})
+
+    const response = await axios.get('http://localhost:8081/api/v1/users');
+    console.log('data :', response.data);
+
+    this.table.rows.push(response.data);
 	}
 }
 </script>

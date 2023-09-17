@@ -2,21 +2,29 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
+import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
-					category: {
-    name: "string",
-    img: "string",
-    isAvailable: true,
-  },
-  result: `The category is `
+					categories: [],
+					result: `The product is`
                 }
             },
+			mounted() {
+	  axios.get(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`)
+        .then(response => {
+          this.categories = response.data;
+        })
+		appOption.appSidebarWide = true;
+	},
+	beforeRouteLeave(to, from, next) {
+		appOption.appSidebarWide = false;
+		next();
+	},
             methods: {
                 handleCheckboxChange() {
-                    this.result = `The category is ${this.category.isAvailable ? 'activated' : 'disactivated'}`
+                    this.result = `The category is ${this.categories.available ? 'activated' : 'disactivated'}`
                 },
 				async doDelete() {
             const ok = await this.$refs.confirmDialogue.show({
@@ -31,37 +39,20 @@ export default {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
-		getCategory(){
-            fetch(`http://localhost:8080/patient/${this.$route.params.id}`)
-            .then(res => res.json())
-            .then(data => {
-                this.patient = data;
-                console.log(this.category);
-            })
-
-        },
 		updateCategory(){
-            fetch(`http://localhost:8080/patient`, {
-                method: 'PUT',
+            fetch(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`, {
+                method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(this.category)
+                body: JSON.stringify(this.categories)
             })
             .then(data => {
                 console.log(data);
                 this.$router.push('/category/');
             })
         }
-            },
-	mounted() {
-		appOption.appSidebarWide = true;
-        this.getCategory();
-	},
-	beforeRouteLeave(to, from, next) {
-		appOption.appSidebarWide = false;
-		next();
-	},
+            }
 }
 </script>
 <template>
@@ -85,19 +76,19 @@ export default {
 		<div class="card-body">
 		<div class="mb-3">
 			<div class="text-center">
-				<img src="/assets/img/user/user-13.jpg" class="" alt="" />
+				<img :src="categories.img" class="" alt="" width="50" height="50"/>
 			</div>
 		</div>
 		<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
 			<div class="card">
-				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="category.name">
+				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="categories.name">
 			</div>
 		</div>
 			<div class="mb-3">
 				<label for="status" class="form-label">Status</label>
 				<div class="form-check form-switch mb-2">
-					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="category.isAvailable" @change="handleCheckboxChange">
+					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="categories.available" @change="handleCheckboxChange">
 					<label id="my-checkbox-checked" class="form-check-label"  for="my-checkbox">{{result}}</label>
 					<div>
 					<i> When the category is deactivated, the category is created in the system, but it is not Available until it is activated again</i>

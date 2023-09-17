@@ -13,20 +13,20 @@ const router = createRouter({
 
     { path: '/supplier/', component: () => import('../views/Supplliers/suppliers.vue') },
     { path: '/supplier/add', component: () => import('../views/Supplliers/Add.vue') },
-    { path: '/supplier/view', component: () => import('../views/Supplliers/View.vue') },
+    { path: '/supplier/:id', component: () => import('../views/Supplliers/View.vue') },
 
 
     { path: '/customer/', component: () => import('../views/Customer/customer.vue') },
     { path: '/customer/add', component: () => import('../views/Customer/Add.vue') },
-    { path: '/customer/view', component: () => import('../views/Customer/View.vue') },
+    { path: '/customer/:id', component: () => import('../views/Customer/View.vue') },
 
     { path: '/category', component: () => import('../views/Category/category.vue') },
     { path: '/category/add', component: () => import('../views/Category/Add.vue') },
-    { path: '/category/view', component: () => import('../views/Category/View.vue') },
+    { path: '/category/:id', component: () => import('../views/Category/View.vue') },
 
     { path: '/product/', component: () => import('../views/Product/product.vue') },
     { path: '/product/add', component: () => import('../views/Product/Add.vue') },
-    { path: '/product/view', component: () => import('../views/Product/View.vue') },
+    { path: '/product/:id', component: () => import('../views/Product/View.vue') },
 
     { path: '/order/', component: () => import('../views/Order/order.vue') },
     { path: '/order/add', component: () => import('../views/Order/Add.vue') },
