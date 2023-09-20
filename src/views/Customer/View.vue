@@ -8,7 +8,7 @@ export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
-	customers:[]
+	customers:{}
             }
 		},    
 	mounted() {
@@ -40,7 +40,7 @@ export default {
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 		</div>
 	</div>
-    <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+    <div class="card border-0 mb-4">
 		<div class="card-body">
 		<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>

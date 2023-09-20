@@ -1,7 +1,0 @@
-<!-- include -->
-<script>
-import 'bootstrap-icons/font/bootstrap-icons.css';
-</script>
-
-<!-- icon -->
-<i class="bi bi-person"></i>

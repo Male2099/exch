@@ -46,7 +46,7 @@ export default {
 			<a href="/supplier/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
     </div>
-    <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+    <div class="card border-0 mb-4">
 		<div class="card-body">
   <form @submit.prevent="addCategory">
 	<div class="mb-3">

@@ -14,7 +14,7 @@ import { useAppOptionStore } from '@/stores/app-option';
       <h1 class="page-header mb-0">Add Stock Item</h1>
     </div>
     </div>
-    <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+    <div class="card border-0 mb-4" >
 		<div class="card-body">
   <form>
 	<div class="mb-3">

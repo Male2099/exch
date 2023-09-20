@@ -9,7 +9,8 @@ export default {
 		return {
         products: {
 			category: {}
-		}
+		},
+		result: `The Product is`,
     };
 		},    
 	mounted() {
@@ -23,6 +24,11 @@ export default {
 		appOption.appSidebarWide = false;
 		next();
 	},
+	methods: {
+                handleCheckboxChange() {
+                    this.result = `The Product is ${this.products.available ? 'activated' : 'disactivated'}`
+                },
+			}
 }
 </script>
 <template>
@@ -41,7 +47,7 @@ export default {
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 		</div>
 	</div>
-	<div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+	<div class="card border-0 mb-4" >
 		<div class="card-body">
 					<div class="mb-3">
 			<div class="text-center">

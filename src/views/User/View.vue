@@ -2,24 +2,28 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
+import axios from 'axios';
+import roleApi from "../../api/roleApi"
+
 export default {
 	components: { ConfirmDialogue },
 	data() {
 		
                 return {
-					result: `The user is`,
-					user:{id: 0,
-  name: "string",
-  username: "string",
-  password: "string",
-  img: "string",
-  address: "string",
-  phone: "string",
-  sex: "string",
-  dob: "string",
-  roleId: 0,
-  status: true
-				},
+					user: {
+        username: '',
+        password: '',
+        name: '',
+        img: '',
+        dob: '',
+        roleId: '',
+        sex: '',
+        address: '',
+        phone:""
+      },
+      roles: [],
+      image: null,
+					result: ``
                 }
             },
             methods: {
@@ -32,16 +36,28 @@ export default {
                 message: 'Are you sure you want to delete? It cannot be undone.',
                 okButton: 'Delete Forever',
             })
-            // If you throw an error, the method will terminate here unless you surround it wil try/catch
             if (ok) {
-                alert('You have successfully delete this page.')
+				axios
+        .delete(`http://localhost:8081/api/v1/users/${this.$route.params.id}`) // Replace with your API endpoint
+        .then(response => {
+			this.user = response.data;
+        })
+		this.$router.push("/user/").then(() => {
+        window.location.reload();
+	});
             } else {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
-            },
-	mounted() {
+		},
+	async mounted() {
+		axios.get(`http://localhost:8081/api/v1/users/${this.$route.params.id}`)
+        .then(response => {
+          this.user = response.data;
+        })
 		appOption.appSidebarWide = true;
+		this.roles = await roleApi.getAllRoles();
+    this.user.roleId = this.roles[2]?.id;
 	},
 	beforeRouteLeave(to, from, next) {
 		appOption.appSidebarWide = false;
@@ -60,17 +76,17 @@ export default {
 			<h1 class="page-header mb-0">User Profile</h1>
 		</div>
 		<div class="ms-auto">
-			<a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>
-				Update</a>
 			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		<a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>
-	<div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+	<form @submit="registerUser">
+	<div class="card border-0 mb-4">
 		<div class="card-body">		
 			<div class="mb-3">
 			<div class="text-center">
-				<img src="/assets/img/user/user-13.jpg" class="rounded-circle" alt="" />
+				<img :src="user.img" class="rounded-circle" alt="" width="150" height="150"/>
 			</div>
 		</div>
 		<div class="mb-3">
@@ -110,14 +126,14 @@ export default {
 			</div>
 		</div>
 		<div class="mb-3">
-			<label for="role" class="form-label">Role:</label>
-			<div class="card">
-				<div class="card-body">
-					This is some text within a card body.
-				</div>
-				<div>
-				</div>
-			</div>
+		<label for="role" class="form-label">Role </label>
+		<div>
+			<select class="form-control" v-model="user.roleId">
+              <option v-for="(role) in roles" :key="role.id" :value="role.id" v-text="role.name"></option>
+              <!-- :selected="role.name === 'ROLE_USER'" -->
+            </select>
+</div>
+    </div>
 			<div class="mb-3">
 				<label for="status" class="form-label">Status</label>
 				<div class="form-check form-switch mb-2">
@@ -134,5 +150,5 @@ export default {
 			</div>
 		</div>
 	</div>
-	</div>
+	</form>
 </template>

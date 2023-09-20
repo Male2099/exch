@@ -34,7 +34,7 @@ export default {
         </div>
     </div>
 
-    <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+    <div class="card border-0 mb-4">
 		<div class="card-body">
         <div class="card-header h6 mb-0 bg-none p-3">
             <i class="fa fa-dolly fa-lg fa-fw text-dark text-opacity-50 me-1"></i> Product Information

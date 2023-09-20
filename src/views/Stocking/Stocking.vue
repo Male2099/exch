@@ -10,135 +10,26 @@ import { ScrollSpy } from 'bootstrap';
 const appVariable = useAppVariableStore();
 
 export default {
-  data() {
-    const data = reactive([]);
-
-    data.push(
-      {
-        id: 1,
-        status: "string",
-        tax: 0,
-        deliveryAt: "string",
-        expectedDelivery: "string",
-        supplierId: 0,
-        createAt: "string"
-      },
-      {
-        id: 2,
-        status: "string",
-        tax: 0,
-        deliveryAt: "string",
-        expectedDelivery: "string",
-        supplierId: 0,
-        createAt: "string"
-      }
-    );
-
-    const searchTerm = ref("");
-    // Table config
-    const table = reactive({
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "3%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "Supplier",
-          field: "supplierId",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "TAX",
-          field: "tax",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Staus",
-          field: "status",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Expected_Delivery",
-          field: "expectedDelivery",
-          width: "5%",
-          sortable: true,
-        },
-        {
-          label: "Delivery_at",
-          field: "deliveryAt",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Created_at",
-          field: "createAt",
-          width: "10%",
-          sortable: true,
-        },
-
-        {
-          label: "Operation",
-          field: "quick",
-          width: "10%",
-          display: function (row) {
-            return (
-              `<div>
-                <a href="/stocking_item/" type="button" data-id="' + row.id + '" class="btn btn-success btn-rounded px-4 rounded-pill">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
-              </div>`
-
-            );
-          }
-        },
-      ],
-      rows: computed(() => {
-        return data.filter(
-          (x) =>
-            x.status.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.supplierId.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.expectedDelivery.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.deliveryAt.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.id.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.tax.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-
-            x.createAt.toLowerCase().includes(searchTerm.value.toLowerCase())
-        );
-      }),
-      totalRecordCount: computed(() => {
-        return table.rows.length;
-      }),
-      sortable: {
-        order: "id",
-        sort: "asc",
-      },
-    });
-
+	components: {
+		highlightjs: highlightjs,
+		navScrollTo: navscrollto,
+		vueTable: vueTable
+	},
+	data() {
     return {
-      code1: '',
-      searchTerm,
-      table
-    }
+      isLoading: true,
+      stockings: []
+    };
   },
-  components: {
-    highlightjs: highlightjs,
-    navScrollTo: navscrollto,
-    vueTable: vueTable
-  },
-  mounted() {
-    axios.get('/assets/data/table/plugin-code-1.json').then((response) => {
-      this.code1 = response.data;
-    });
 
-    new ScrollSpy(document.body, {
-      target: '#sidebar-bootstrap',
-      offset: 200
-    })
+  mounted() {
+    axios.get('http://localhost:8081/api/v1/stockings')
+        .then(response => {
+          this.stockings = response.data;
+        });
+        setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   }
 }
 </script>
@@ -161,26 +52,45 @@ export default {
   <!-- BEGIN #vue3TableLite -->
 
   <div class="card border-0">
-    <div class="input-group mb-3">
-      <div class="flex-fill position-relative">
-        <div class="input-group">
-          <div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1;">
-            <i class="fa fa-search opacity-5"></i>
-          </div>
-          <input type="text" class="form-control ps-35px bg-light" placeholder="Search products..."
-            v-model="searchTerm" />
-        </div>
-      </div>
-    </div>
-    <vue-table class="vue-table"
-        :has-checkbox="true"
-					:is-static-mode="true"
-					:columns="table.columns"
-					:rows="table.rows"
-					:total="table.totalRecordCount"
-          :rowClasses="table.rowClasses"
-					:sortable="table.sortable" />
-
-    <!-- END #vue3TableLite -->
+		<table class="table table-bordered table-dark table-stroped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Status</th>
+          <th>Tax</th>
+          <th>Delivery At</th>
+          <th>Expected Delivery</th>
+          <th>Created At</th>
+          <th>Total Item</th>
+          <th>Total Cost</th>
+          <th>Supplier</th>
+          <th > Action</th>
+        </tr>
+      </thead>
+      <tbody v-if="isLoading">
+        <tr>
+          <td colspan="10">Loading...</td>
+        </tr>
+      </tbody>
+      <tbody  v-else>
+        <tr v-for="stocking in stockings" :key="stocking.id">
+          <td>{{ stocking.id }}</td>
+          <td>{{ stocking.status }}</td>
+          <td>{{ stocking.tax }}</td>
+          <td>{{ stocking.deliveryAt }}</td>
+          <td>{{ stocking.expectedDelivery }}</td>
+          <td>{{ stocking.createdAt }}</td>
+          <td>{{ stocking.totalItem }}</td>
+          <td>{{ stocking.totalCost }}</td>
+          <td>{{ stocking.supplier.name }}</td>
+		  <td>
+        <div style="display:flex;">
+        <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stocking.id}`">View</a>
+                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
+              </div>
+              </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </template>

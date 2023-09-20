@@ -7,8 +7,8 @@ export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
-					categories: [],
-					result: `The product is`
+					categories: {},
+					result: `The category is`
                 }
             },
 			mounted() {
@@ -72,7 +72,7 @@ export default {
 		</div>
 	</div>
 	<form form @submit.prevent="updateCategory">
-    <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+    <div class="card border-0 mb-4">
 		<div class="card-body">
 		<div class="mb-3">
 			<div class="text-center">

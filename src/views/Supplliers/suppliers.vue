@@ -6,10 +6,9 @@ import navscrollto from '@/components/app/NavScrollTo.vue';
 import axios from 'axios';
 import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
-import supplierApi from "../../api/supplierApi"
-const appVariable = useAppVariableStore();
 
-export default {
+const appVariable = useAppVariableStore();
+export default {	
 	components: {
 		highlightjs: highlightjs,
 		navScrollTo: navscrollto,
@@ -17,33 +16,37 @@ export default {
 	},
 	data() {
     return {
-      suppliers: []
+      isLoading: true,
+      suppliers: {}
     };
   },
-
   mounted() {
     axios.get('http://localhost:8081/api/v1/suppliers')
         .then(response => {
           this.suppliers = response.data;
-        })
+        });
+        setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   }
-}
+};
+
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0">Suppliers</h1>
 		</div>
 		<div class="ms-auto">
-			<a href="/supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-			
+      <a href="/supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
 		</div>
 	</div>
-  <div class="card border-0">
+		<!-- BEGIN #vue3TableLite -->
+    <div class="card border-0">
 		<table class="table table-bordered table-dark table-stroped">
       <thead>
         <tr>
@@ -53,10 +56,15 @@ export default {
           <th>phone</th>
           <th>address</th>
           <th>info</th>
-          <th style="text-align: right;" > Action</th>
+          <th> Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="isLoading">
+        <tr>
+          <td colspan="7">Loading...</td>
+        </tr>
+      </tbody>
+      <tbody  v-else>
         <tr v-for="supplier in suppliers" :key="supplier.id">
           <td>{{ supplier.id }}</td>
           <td>{{ supplier.name }}</td>
@@ -64,7 +72,7 @@ export default {
           <td>{{ supplier.phone }}</td>
           <td>{{ supplier.address }}</td>
           <td>{{ supplier.info }}</td>
-		  <td style="text-align: right;">
+		  <td>
         <div style="display:flex;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/supplier/${supplier.id}`">View</a>
                 <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
@@ -74,5 +82,5 @@ export default {
       </tbody>
     </table>
   </div>
-
+        
 </template>

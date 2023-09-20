@@ -18,6 +18,7 @@ export default {
 	},
 	data() {
     return {
+      isLoading: true,
       categories: []
     };
   },
@@ -25,7 +26,10 @@ export default {
     axios.get('http://localhost:8081/api/v1/categories')
         .then(response => {
           this.categories = response.data;
-        })
+        });
+        setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   }
 };
 
@@ -58,7 +62,12 @@ export default {
 		  <th></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="isLoading">
+        <tr>
+          <td colspan="5">Loading...</td>
+        </tr>
+      </tbody>
+      <tbody  v-else>
         <tr v-for="category in categories" :key="category.id">
           <td>{{ category.id }}</td>
           <td>{{ category.name }}</td>

@@ -8,109 +8,51 @@ import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
 
 const appVariable = useAppVariableStore();
-
-export default {
-	data () {
-		const data = reactive([]);
-
-
-    const searchTerm = ref("");
-    // Table config
-    const table = reactive({
-      columns: [
-        {
-          label: "ID",
-          field: "id",
-          width: "3%",
-          sortable: true,
-          isKey: true,
-        },
-        {
-          label: "Pic",
-          field: "quick",
-          width: "4%",
-          display: function (row) {
-            return (
-              `<div class="w-50px h-50px bg-light d-flex align-items-center justify-content-center">
-											<img alt="" class="mw-100 mh-100" src="/assets/img/product/product-6.jpg" />
-										</div>`
-              );
-          }
-          },
-        {
-          label: "Name",
-          field: "name",
-          width: "10%",
-          sortable: true,
-        },
-        {
-          label: "Email",
-          field: "email",
-          width: "15%",
-          sortable: true,
-        },
-        {
-          label: "Role",
-          field: "role",
-          width: "5%",
-        },
-        {
-          label: "Operation",
-          field: "quick",
-          width: "5%",
-          display: function (row) {
-            return (
-            
-              `<div>
-                <a href="/user/profile" type="button" data-id="' + row.id + '" class="btn btn-success btn-rounded px-4 rounded-pill">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(id)">Delete</button>
-              </div>`
-              
-              );
-          }
-          },
-      ],
-      rows: computed(() => {
-        return data.filter(
-          (x) =>
-            x.email.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-            x.name.toLowerCase().includes(searchTerm.value.toLowerCase())
-        );
-      }),
-      totalRecordCount: computed(() => {
-        return table.rows.length;
-      }),
-      sortable: {
-        order: "id",
-        sort: "asc",
-      },
-    });
-    
-		return {
-			data : [],
-      searchTerm,
-			table
-		}
-	},
+export default {	
 	components: {
 		highlightjs: highlightjs,
 		navScrollTo: navscrollto,
 		vueTable: vueTable
 	},
-	async mounted() {
-		
-		new ScrollSpy(document.body, {
-			target: '#sidebar-bootstrap',
-			offset: 200
-		})
+	data() {
+    return {
+      isLoading: true,
+      users: []
+    };
+  },
+  mounted() {
+  this.fetchdata();
+        setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
+  },
+  methods:{
+    fetchdata(){
+      axios.get('http://localhost:8081/api/v1/users')
+        .then(response => {
+          this.users = response.data;
+        });
+    }
+  }
+};
 
-    const response = await axios.get('http://localhost:8081/api/v1/users');
-    console.log('data :', response.data);
-
-    this.table.rows.push(response.data);
-	}
-}
 </script>
+<style scoped>
+.loader {
+  margin: auto;
+  border: 20px solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 20px solid #FF7A59;
+  width: 200px;
+  height: 200px;
+  animation: spinner 4s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
@@ -127,27 +69,46 @@ export default {
 	</div>
 	
 		<!-- BEGIN #vue3TableLite -->
-
-        <div class="card border-0">
-				<div class="input-group mb-3">
-                    <div class="flex-fill position-relative">
-						<div class="input-group">
-							<div class="input-group-text position-absolute top-0 bottom-0 bg-none border-0 pe-0" style="z-index: 1;">
-								<i class="fa fa-search opacity-5"></i>
-							</div>
-							<input type="text" class="form-control ps-35px bg-light" placeholder="Search products..." v-model="searchTerm"/>
-						</div>
-					</div>
-				</div>
-				<vue-table class="vue-table"
-        :has-checkbox="true"
-					:is-static-mode="true"
-					:columns="table.columns"
-					:rows="table.rows"
-					:total="table.totalRecordCount"
-          :rowClasses="table.rowClasses"
-					:sortable="table.sortable" />
-
-		<!-- END #vue3TableLite -->
-	</div>
+    <div class="card border-0">
+		<table class="table table-bordered table-dark table-stroped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Img</th>
+          <th>Name</th>
+          <th>Sex</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>DOB</th>
+          <th>Role</th>
+		  <th>Action</th>
+        </tr>
+      </thead>
+      <tbody v-if="isLoading">
+        <tr>
+          <td colspan="9">
+          <div class="loader"></div>
+        </td>
+        </tr>
+      </tbody>
+      <tbody  v-else>
+        
+        <tr v-for="user in users" :key="user.id">
+          <td>{{ user.id }}</td>
+          <td><img :src="user.img" alt="" width="50" height="50"></td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.sex }}</td>
+          <td>{{ user.phone }}</td>
+          <td>{{ user.address }}</td> 
+          <td>{{ user.dob }}</td>
+          <td>{{ user.role.name }}</td>
+		  <td>
+        <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/user/${user.id}`">View</a>
+                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(users.id)">Delete</button>
+              </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+        
 </template>

@@ -15,7 +15,7 @@ import { useAppOptionStore } from '@/stores/app-option';
 			
 		</div>
 	</div>
-  <div class="card border-0 mb-4" style="background-color: rgb(77, 167, 246);">
+  <div class="card border-0 mb-4" >
 		<div class="card-body">
 
   <form>

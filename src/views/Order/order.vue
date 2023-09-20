@@ -16,6 +16,7 @@ export default {
 	},
 	data() {
     return {
+      isLoading: true,
       orders: []
     };
   },
@@ -23,7 +24,10 @@ export default {
     axios.get('http://localhost:8081/api/v1/orders')
         .then(response => {
           this.orders = response.data;
-        })
+        });
+        setTimeout(() => {
+      this.isLoading = false;
+    }, 2000);
   }
 };
 </script>
@@ -56,7 +60,12 @@ export default {
 		  <th>Action</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-if="isLoading">
+        <tr>
+          <td colspan="10">Loading...</td>
+        </tr>
+      </tbody>
+      <tbody  v-else>
         <tr v-for="order in orders" :key="order.id">
           <td>{{ order.id }}</td>
           <td>{{ order.user.name }}</td>

@@ -8,7 +8,7 @@ const router = createRouter({
     { path: '/dashboard/v2', component: () => import('../views/Dashboard-v2.vue') },
     { path: '/user/login-v2', component: () => import('../views/User-login-v2.vue') },
     { path: '/user/', component: () => import('../views/User/User.vue') },
-    { path: '/user/profile', component: () => import('../views/User/View.vue') },
+    { path: '/user/:id', component: () => import('../views/User/View.vue') },
     { path: '/user/add', component: () => import('../views/User/Add.vue') },
 
     { path: '/supplier/', component: () => import('../views/Supplliers/suppliers.vue') },
@@ -34,8 +34,8 @@ const router = createRouter({
     { path: '/stock/', component: () => import('../views/Stocking/Stocking.vue') },
     { path: '/stock/add', component: () => import('../views/Stocking/Add.vue') },
 
-    { path: '/stocking_item/', component: () => import('../views/Stocking_item/stocking_item.vue') },
-    { path: '/stocking_item/view', component: () => import('../views/Stocking_item/View.vue') },
+    { path: '/stocking_item/:id', component: () => import('../views/Stocking_item/stocking_item.vue') },
+    { path: '/stocking_item/view/:id', component: () => import('../views/Stocking_item/View.vue') },
     { path: '/stocking_item/add', component: () => import('../views/Stocking_item/Add.vue') },
 
 

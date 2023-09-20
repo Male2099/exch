@@ -8,6 +8,7 @@
     </transition>
 </template>
 <script>
+
 export default {
     name: 'PopupModal',
 
