@@ -57,8 +57,8 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-				<li class="breadcrumb-item"><a href="javascript:;">User</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>User</li>
 			</ol>
 			<h1 class="page-header mb-0">User</h1>
 		</div>
@@ -77,11 +77,9 @@ export default {
           <th>Img</th>
           <th>Name</th>
           <th>Sex</th>
-          <th>Phone</th>
-          <th>Address</th>
           <th>DOB</th>
           <th>Role</th>
-		  <th>Action</th>
+		  <th style="width: 100px;">Action</th>
         </tr>
       </thead>
       <tbody v-if="isLoading">
@@ -98,13 +96,10 @@ export default {
           <td><img :src="user.img" alt="" width="50" height="50"></td>
           <td>{{ user.name }}</td>
           <td>{{ user.sex }}</td>
-          <td>{{ user.phone }}</td>
-          <td>{{ user.address }}</td> 
           <td>{{ user.dob }}</td>
           <td>{{ user.role.name }}</td>
-		  <td>
+		  <td style="width: 100px;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/user/${user.id}`">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(users.id)">Delete</button>
               </td>
         </tr>
       </tbody>

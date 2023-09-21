@@ -1,32 +1,37 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
+import axios from 'axios';
 export default {
         data() {
             return {
                 supplier : {
                     name: '',
+                    phone: '',
                     email: '',
-                    gender: '',
-                    pNo: ''
+                    address: '',
+                    info: ''
                 }
             }
         },
 
         methods: {
-            addSuppllier(){
-                fetch('http://localhost:8080/add', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(this.patient)
-                })
-                .then(data => {
-                    console.log(data)
-                    this.$router.push("/");
-                })
-
+          async addSupplier() {
+            const body = JSON.stringify(this.supplier);
+            console.log(body);
+            try {
+              const res = await fetch('http://localhost:8081/api/v1/suppliers', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: body
+              });
+              const data = await res.json();
+              console.log(data);
+            } catch (error) {
+              console.log(error);
             }
+          }
         },
             
     }
@@ -36,8 +41,8 @@ export default {
   	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-				<li class="breadcrumb-item"><a href="javascript:;">Supplier</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+				<li class="breadcrumb-item"><a href="/supplier/">Supplier</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Supplier</h1>
@@ -48,26 +53,26 @@ export default {
     </div>
     <div class="card border-0 mb-4">
 		<div class="card-body">
-  <form @submit.prevent="addCategory">
+  <form @submit.prevent="addSupplier">
 	<div class="mb-3">
       <label for="Name" class="form-label">Name</label>
-      <input type="text" class="form-control" id="name" placeholder="Name">
+      <input type="text" class="form-control" id="name" placeholder="Name" required v-model="supplier.name">
     </div>
     <div class="mb-3">
-      <label for="Email" class="form-label">Email address</label>
-      <input type="text" class="form-control" id="FormEmail" placeholder="email@example.com">
+      <label for="phone" class="form-label">Phone</label>
+      <input type="text" class="form-control" id="phone" placeholder="Phone" required v-model="supplier.phone">
+    </div>
+    <div class="mb-3">
+      <label for="Email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" placeholder="email@example.com" required v-model="supplier.email">
     </div>
 	<div class="mb-3">
       <label for="Address" class="form-label">Address</label>
-      <input type="text" class="form-control" id="Address" placeholder="Address">
-    </div>
-	<div class="mb-3">
-      <label for="phone" class="form-label">Phone</label>
-      <input type="text" class="form-control" id="phone" placeholder="Phone">
+      <input type="text" class="form-control" id="address" placeholder="Address">
     </div>
     <div class="mb-3">
       <label for="info" class="form-label">Info</label>
-      <input type="text" class="form-control" id="Info" placeholder="info">
+      <input type="text" class="form-control" id="info" placeholder="Info">
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <button class="btn btn-primary me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>

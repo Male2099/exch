@@ -1,27 +1,36 @@
-// // const API_BASE_URL=import.meta.env.API_BASE_URL;
-// const API_BASE_URL="http://localhost:8081/api/v1";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const token = "UNKNOWN YET";
 
-// export default {
-//     async createUser(data) {
-//       console.log(API_BASE_URL);
-//         try {
-//           const res = await fetch(`${API_BASE_URL}/auth/register`, {
-//             method: 'POST',
-//             headers: {
-//               'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify(data),
-//           });
-    
-//           console.log(await res.json());
-//           // if (!res.ok) {
-//           //   throw new Error('Failed to create user');
-//           // }
-    
-//           console.log(234);
-//         } catch (error) {
-//           // Handle the error here
-//           console.error(error);
-//         }
-//       },
-// }
+export default {
+  async updateUserById(id, updateUser) {
+    if (!updateUser.password) updateUser.password = null;
+
+    const res = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updateUser),
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      return data;
+    } else throw data;
+  },
+  async getUserById(id) {
+    const res = await fetch(`${API_BASE_URL}/users/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const data = await res.json();
+    console.log(data);
+    if (res.ok) {
+      return data;
+    } else throw data;
+  },
+};

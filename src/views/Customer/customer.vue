@@ -31,18 +31,30 @@ export default {
   }
 };
 </script>
+<style scoped>
+.loader {
+  margin: auto;
+  border: 20px solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 20px solid #FF7A59;
+  width: 200px;
+  height: 200px;
+  animation: spinner 4s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Customer</li>
 			</ol>
 			<h1 class="page-header mb-0">Customer</h1>
-		</div>
-		<div class="ms-auto">
-			<a href="/customer/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-			
 		</div>
 	</div>
     <div class="card border-0">
@@ -55,12 +67,12 @@ export default {
           <th>Address</th>
           <th>Total Spend</th>
           <th>Last Order At</th>
-		  <th>Action</th>
+		      <th style="width: 100px;">Action</th>
         </tr>
       </thead>
       <tbody v-if="isLoading">
         <tr>
-          <td colspan="10">Loading...</td>
+          <td colspan="10"><div class="loader"></div></td>
         </tr>
       </tbody>
       <tbody  v-else>
@@ -71,9 +83,8 @@ export default {
           <td>{{ customer.address }}</td>
           <td>{{ customer.totalSpend }}</td>
           <td>{{ customer.lastOrderAt }}</td>
-		  <td>
+		  <td style="width: 100px;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/customer/${customer.id}`">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
               </td>
         </tr>
       </tbody>

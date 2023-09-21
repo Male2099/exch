@@ -30,15 +30,15 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Stock</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Stock_Item</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
+        <li class="breadcrumb-item"><a type="button" :href="`/stocking_item/${stockingitems.id}`">Stock_Item</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> View Stock_Item</li>
 			</ol>
 			<h1 class="page-header mb-0">Stock Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<button class="btn btn-danger btn-rounded px-4 rounded-pill">Back</button>
+			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.id}`">Back</a>
 		</div>
 	</div>
 	<div class="card border-0 mb-4">
@@ -98,7 +98,7 @@ export default {
 			
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
 				<a href="/stocking_item/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
-				<a href="/stocking_item/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
+				<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.id}`">Back</a>
 			</div>
 		</div>
 	</div>

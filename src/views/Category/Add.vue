@@ -22,8 +22,6 @@ export default {
       const formData = new FormData();
       formData.append('name', this.form.name);
       formData.append('image', this.form.image);
-      
-      // Make an API call to post the form data
       fetch('your-api-endpoint', {
         method: 'POST',
         body: formData
@@ -48,8 +46,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
         <div>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-                <li class="breadcrumb-item"><a href="javascript:;">Category</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+                <li class="breadcrumb-item"><a href="/category">Category</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Add Category</li>
             </ol>
             <h1 class="page-header mb-0">Category</h1>

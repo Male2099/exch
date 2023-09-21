@@ -93,8 +93,8 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">User</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item"><a href="/user/">User</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add User</li>
       </ol>
       <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
@@ -139,11 +139,11 @@ export default {
         </div>
         <div class="mb-3">
           <label class="form-label">Address</label>
-          <input type="Address" class="form-control" placeholder="Address" v-model="user.address">
+          <input type="text" class="form-control" placeholder="Address" v-model="user.address">
         </div>
         <div class="mb-3">
           <label class="form-label">Phone</label>
-          <input type="phone" class="form-control" placeholder="Phone" v-model="user.phone">
+          <input type="text" class="form-control" placeholder="Phone" v-model="user.phone">
         </div>
         <div class="mb-3">
           <label for="dob" class="form-label">DOB</label>

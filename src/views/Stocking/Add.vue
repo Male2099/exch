@@ -5,8 +5,8 @@ import { useAppOptionStore } from '@/stores/app-option';
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stcok</li>
 
       </ol>

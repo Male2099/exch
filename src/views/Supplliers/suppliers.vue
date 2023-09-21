@@ -32,11 +32,27 @@ export default {
 };
 
 </script>
+<style scoped>
+.loader {
+  margin: auto;
+  border: 20px solid #EAF0F6;
+  border-radius: 50%;
+  border-top: 20px solid #FF7A59;
+  width: 200px;
+  height: 200px;
+  animation: spinner 4s linear infinite;
+}
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0">Suppliers</h1>
@@ -56,12 +72,12 @@ export default {
           <th>phone</th>
           <th>address</th>
           <th>info</th>
-          <th> Action</th>
+          <th style="width: 100px;"> Action</th>
         </tr>
       </thead>
       <tbody v-if="isLoading">
         <tr>
-          <td colspan="7">Loading...</td>
+          <td colspan="7"><div class="loader"></div></td>
         </tr>
       </tbody>
       <tbody  v-else>
@@ -72,10 +88,9 @@ export default {
           <td>{{ supplier.phone }}</td>
           <td>{{ supplier.address }}</td>
           <td>{{ supplier.info }}</td>
-		  <td>
+		  <td style="width: 100px;">
         <div style="display:flex;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/supplier/${supplier.id}`">View</a>
-                <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '" @click="deletecategories(customers.id)">Delete</button>
               </div>
               </td>
         </tr>

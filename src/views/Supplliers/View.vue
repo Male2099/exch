@@ -22,16 +22,38 @@ export default {
 		appOption.appSidebarWide = false;
 		next();
 	},
-
+	methods: {
+    toggleTable() {
+      this.showTable = !this.showTable;
+    },
+	async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+				axios
+        .delete(`http://localhost:8081/api/v1/suppliers/${this.$route.params.id}`) // Replace with your API endpoint
+        .then(response => {
+			this.suppliers = response.data;
+        })
+		this.$router.push("/supplier/").then(() => {
+        window.location.reload();
+	});
+            } else {
+                alert('You chose not to delete this page. Doing nothing now.')
+            }
+        },
+  }
 }
-
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-				<li class="breadcrumb-item"><a href="javascript:;">Supplier</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+				<li class="breadcrumb-item"><a href="/supplier/">Supplier</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> view Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0">Supplier Profile</h1>

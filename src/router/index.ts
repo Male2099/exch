@@ -15,9 +15,7 @@ const router = createRouter({
     { path: '/supplier/add', component: () => import('../views/Supplliers/Add.vue') },
     { path: '/supplier/:id', component: () => import('../views/Supplliers/View.vue') },
 
-
     { path: '/customer/', component: () => import('../views/Customer/customer.vue') },
-    { path: '/customer/add', component: () => import('../views/Customer/Add.vue') },
     { path: '/customer/:id', component: () => import('../views/Customer/View.vue') },
 
     { path: '/category', component: () => import('../views/Category/category.vue') },
@@ -29,7 +27,8 @@ const router = createRouter({
     { path: '/product/:id', component: () => import('../views/Product/View.vue') },
 
     { path: '/order/', component: () => import('../views/Order/order.vue') },
-    { path: '/order/add', component: () => import('../views/Order/Add.vue') },
+    { path: '/order/:id', component: () => import('../views/Order/view.vue') },
+
 
     { path: '/stock/', component: () => import('../views/Stocking/Stocking.vue') },
     { path: '/stock/add', component: () => import('../views/Stocking/Add.vue') },
