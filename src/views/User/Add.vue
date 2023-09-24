@@ -1,5 +1,4 @@
 <script>
-import ConfirmModal from "../../components/app/confirm.vue"
 import authApi from "../../api/authApi"
 import roleApi from "../../api/roleApi"
 import imageApi from "../../api/imageApi"

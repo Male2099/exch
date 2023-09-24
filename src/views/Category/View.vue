@@ -34,24 +34,18 @@ export default {
             })
             // If you throw an error, the method will terminate here unless you surround it wil try/catch
             if (ok) {
-                alert('You have successfully delete this page.')
+				axios
+        .delete(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`) // Replace with your API endpoint
+        .then(response => {
+			this.customers = response.data;
+        })
+		this.$router.push("/category").then(() => {
+        window.location.reload();
+	});
             } else {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
-		updateCategory(){
-            fetch(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(this.categories)
-            })
-            .then(data => {
-                console.log(data);
-                this.$router.push('/category/');
-            })
-        }
             }
 }
 </script>
@@ -66,23 +60,26 @@ export default {
 			<h1 class="page-header mb-0">Category </h1>
 		</div>
 		<div class="ms-auto">
-			<a href="/category/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
 			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		<a href="/category/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+
 		</div>
 	</div>
 	<form form @submit.prevent="updateCategory">
     <div class="card border-0 mb-4">
 		<div class="card-body">
 		<div class="mb-3">
-			<div class="text-center">
-				<img :src="categories.img" class="" alt="" width="50" height="50"/>
-			</div>
-		</div>
-		<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
 			<div class="card">
 				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="categories.name">
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="Img" class="form-label">Image</label>
+			<div class="text-center">
+				
+				<img :src="categories.img" class="" alt="" width="150" height="150"/>
 			</div>
 		</div>
 			<div class="mb-3">

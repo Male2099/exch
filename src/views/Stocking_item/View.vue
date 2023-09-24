@@ -8,7 +8,8 @@ export default {
 	data() {
                 return {
   stockingitems: {
-	product:{}
+	product:{},
+	stocking:{}
   },
                 }
             },
@@ -32,13 +33,13 @@ export default {
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
         <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
-        <li class="breadcrumb-item"><a type="button" :href="`/stocking_item/${stockingitems.id}`">Stock_Item</a></li>
+        <li class="breadcrumb-item"><a type="button" :href="`/stocking_item/${stockingitems.stocking.id}`">Stock_Item</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> View Stock_Item</li>
 			</ol>
 			<h1 class="page-header mb-0">Stock Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.id}`">Back</a>
+			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
 		</div>
 	</div>
 	<div class="card border-0 mb-4">
@@ -89,7 +90,7 @@ export default {
 		</div>
 		<div class="mb-3">
 			<label for="mfgDate" class="form-label">MFGDate</label>
-			<div class="card">
+			<div class="card">s
 				<div class="card">
 				<input id="mfgDate"  type="text" name="mfgDate" class="form-control" placeholder="mfgDate" required v-model="stockingitems.mfgDate">
 			</div>
@@ -98,7 +99,7 @@ export default {
 			
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
 				<a href="/stocking_item/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
-				<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.id}`">Back</a>
+				<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
 			</div>
 		</div>
 	</div>

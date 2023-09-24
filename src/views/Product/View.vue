@@ -28,6 +28,25 @@ export default {
                 handleCheckboxChange() {
                     this.result = `The Product is ${this.products.available ? 'activated' : 'disactivated'}`
                 },
+				async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+				axios
+        .delete(`http://localhost:8081/api/v1/products/${this.$route.params.id}`) 
+        .then(response => {
+			this.customers = response.data;
+        })
+		this.$router.push("/customer/").then(() => {
+        window.location.reload();
+	});
+            } else {
+                alert('You chose not to delete this page. Doing nothing now.')
+            }
+        },
 			}
 }
 </script>
@@ -42,9 +61,10 @@ export default {
 			<h1 class="page-header mb-0">Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<a href="/product/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
 			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		<a href="/product/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+
 		</div>
 	</div>
 	<div class="card border-0 mb-4" >

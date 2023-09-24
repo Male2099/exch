@@ -63,8 +63,7 @@ export default {
 			<h1 class="page-header mb-0">Stocking Item</h1>
 		</div>
 		<div class="ms-auto">
-
-			<a href="/stocking_item/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+      <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/add/${stock.id}`"><i
 					class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
 					<a href="/stock/" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
 		</div>

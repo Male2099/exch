@@ -72,14 +72,14 @@ export default {
       <thead>
         <tr>
           <th>ID</th>
-          <th>Status</th>
+          <th>Supplier</th>
           <th>Tax</th>
           <th>Delivery At</th>
           <th>Expected Delivery</th>
           <th>Created At</th>
           <th>Total Item</th>
           <th>Total Cost</th>
-          <th>Supplier</th>
+          <th>Status</th>
           <th > Action</th>
         </tr>
       </thead>
@@ -91,14 +91,14 @@ export default {
       <tbody  v-else>
         <tr v-for="stocking in stockings" :key="stocking.id">
           <td>{{ stocking.id }}</td>
-          <td>{{ stocking.status }}</td>
+          <td>{{ stocking.supplier.name }}</td>
           <td>{{ stocking.tax }}</td>
           <td>{{ stocking.deliveryAt }}</td>
           <td>{{ stocking.expectedDelivery }}</td>
           <td>{{ stocking.createdAt }}</td>
           <td>{{ stocking.totalItem }}</td>
           <td>{{ stocking.totalCost }}</td>
-          <td>{{ stocking.supplier.name }}</td>
+          <td>{{ stocking.status }}</td>
 		  <td style="width: 100px;">
 
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stocking.id}`">View</a>

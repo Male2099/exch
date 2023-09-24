@@ -35,7 +35,7 @@ const router = createRouter({
 
     { path: '/stocking_item/:id', component: () => import('../views/Stocking_item/stocking_item.vue') },
     { path: '/stocking_item/view/:id', component: () => import('../views/Stocking_item/View.vue') },
-    { path: '/stocking_item/add', component: () => import('../views/Stocking_item/Add.vue') },
+    { path: '/stocking_item/add/:id', component: () => import('../views/Stocking_item/Add.vue') },
 
 
 
