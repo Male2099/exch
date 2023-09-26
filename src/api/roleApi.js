@@ -12,7 +12,7 @@ export default {
       const data = await res.json();
       return data;
     } catch (error) {
-      console.console.log();("error appear: " + error);
+      console.log("error appear: " + error);
     }
   },
 };

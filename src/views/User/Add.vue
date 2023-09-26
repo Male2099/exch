@@ -1,8 +1,9 @@
 <script>
-import authApi from "../../api/authApi"
+import authApi from "../../api/service/authApi"
 import roleApi from "../../api/roleApi"
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
+import swal from "sweetalert"
 
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {
@@ -10,9 +11,18 @@ export default {
   data() {
     return {
       user: {
-        username: '',
-        password: '',
-        name: '',
+        // username: '',
+        // password: '',
+        // name: '',
+        // img: '',
+        // dob: '',
+        // roleId: '3',
+        // sex: 'MALE',
+        // address: '',
+        // phone: ""
+        username: 'testSweetAlert',
+        password: 'testSweetAlert',
+        name: 'testSweetAlert',
         img: '',
         dob: '',
         roleId: '3',
@@ -56,20 +66,22 @@ export default {
     },
     onChange(image) {
       if (image) {
-        console.log('Picture loaded.')
         this.image = this.$refs.pictureInput.file
-      } else {
-        console.log('FileReader API not supported: use the <form>')
       }
     },
     async registerUser(e) {
       e.preventDefault();
+      const confirm = await this.confirmDialog();
+      if (!confirm) return;
       this.loading = true;
       try {
+        this.user.img = await this.uploadImage();
         await authApi.registerUser(this.user);
         this.loading = false
+        await this.showSuccessDialog()
         this.$router.push("/user")
       } catch (error) {
+        console.error(error);
         this.loading = false;
         this.errors.username = error.errors.username
       }
@@ -78,6 +90,39 @@ export default {
       const res = await imageApi.uplaodImage(this.image);
       return res;
     },
+    async confirmDialog() {
+      return swal({
+        title: "Create User",
+        text: "Are you sure you want to create this user?",
+        icon: "info",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Create',
+            value: true,
+            visible: true,
+            className: 'btn btn-success',
+            closeModal: true
+          }
+        }
+      })
+    }, async showSuccessDialog() {
+      await swal({
+        title: "Success",
+        text: "User created successfully!",
+        icon: "success",
+        button: {
+          text: "OK",
+          className: 'btn btn-success',
+        }
+      });
+    }
   },
   async mounted() {
     this.roles = await roleApi.getAllRoles();

@@ -1,36 +1,71 @@
 <script>
-// import highlightjs from '@/components/plugins/Highlightjs.vue';
-// import vueTable from '@/components/plugins/VueTable.vue';
-// import navscrollto from '@/components/app/NavScrollTo.vue';
-import axios from 'axios';
-// import { useAppVariableStore } from '@/stores/app-variable';
-import userApi from "../../api/userApi"
 
-// const appVariable = useAppVariableStore();
+import userApi from "../../api/service/userApi"
 export default {
-  components: {
-    // highlightjs: highlightjs,
-    // navScrollTo: navscrollto,
-    // vueTable: vueTable
-  },
   data() {
     return {
-      isLoading: true,
-      users: []
+      users: [],
+      query: {
+        page: 1,
+        pageSize: 10,
+        roleId: '',
+      },
+      pageMetaData: {
+        currentPage: 0,
+        totalItems: 0,
+        totalPage: 0,
+        itemsPerPage: 0
+      },
+      isLoading: true
     };
   },
-  mounted() {
-    this.fetchdata();
-    setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
-  },
   methods: {
-    fetchdata() {
-      axios.get('http://localhost:8081/api/v1/users')
-        .then(response => {
-          this.users = response.data;
-        });
+    async getUsersPage() {
+      this.isLoading = true
+      console.log(this.getUrlQueryParams);
+      const res = await userApi.getAllUsers(this.getUrlQueryParams);
+      this.isLoading = false
+      return {
+        users: res.data,
+        metadata: res.metadata
+      }
+    },
+    async getAllUsers() {
+      return (await this.getUsersPage()).users;
+    },
+    // async getMetadata() {
+    //   return (await this.getUsersPage()).metadata;
+    // },
+    async toPage(pageNum) {
+      //click same page
+      console.log("pageNum: " + pageNum);
+      console.log("page: " + this.page);
+      if (pageNum == this.query.page) return
+      this.query.page = pageNum
+      //push new query to load next page
+      this.pushQuery(this.query)
+      this.users = await this.getAllUsers()
+    },
+    pushQuery(queryParams) {
+      this.$router.push({ path: this.$route.fullPath, query: queryParams });
+    }
+
+  },
+  async mounted() {
+    //fetch init data
+    const userPage = await this.getUsersPage();
+    this.users = userPage.users
+    this.pageMetaData = userPage.metadata;
+    //set to current query of page
+    this.query = this.getUrlQueryParams;
+  },
+  computed: {
+    getUrlQueryParams() {
+      return {
+        page: this.$route.query?.page || 1,
+        pageSize: this.$route.query?.pageSize || 10,
+        roleId: this.$route.query?.roleId || ''
+      }
     }
   }
 };
@@ -61,8 +96,8 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">User</a></li>
+        <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
+        <li class="breadcrumb-item">User</li>
       </ol>
       <h1 class="page-header mb-0">User</h1>
     </div>
@@ -75,7 +110,7 @@ export default {
 
   <!-- BEGIN #vue3TableLite -->
   <div class="card border-0">
-    <table class="table table-bordered table-dark table-stroped">
+    <table class="_table table table-bordered table-dark table-stroped">
       <thead>
         <tr>
           <th>ID</th>
@@ -101,23 +136,54 @@ export default {
       <tbody v-else>
 
         <tr v-for="user in users" :key="user.id">
-          <td>{{ user.id }}</td>
-          <td><img :src="user.img" alt="" width="50" height="50"></td>
+          <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
+          <td>
+            <img :src="user.img" style="width: 45px; height: 45px; object-fit: cover;">
+
+          </td>
           <td>{{ user.name }}</td>
           <td>{{ user.username }}</td>
           <!-- <td>{{ user.sex }}</td> -->
           <td>{{ user.phone }}</td>
           <!-- <td>{{ user.address }}</td> -->
           <td>{{ user.role.name }}</td>
-          <td>{{ user.status?"Active":"Inactive" }}</td>
+          <td>{{ user.status ? "Active" : "Inactive" }}</td>
           <td>
             <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
               :href="`/user/${user.id}`">Update</a>
-            <button class="btn btn-danger px-4 rounded-pill" data-id="' + row.id + '"
+            <button class="btn btn-danger px-4 rounded-pill " data-id="' + row.id + '"
               @click="deletecategories(users.id)">Delete</button>
           </td>
         </tr>
       </tbody>
     </table>
+    <!-- pagination -->
+    <ul class="pagination pg-dark">
+      <li class="page-item">
+        <a class="page-link" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">Previous</span>
+        </a>
+      </li>
+      <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
+        <button class="page-link acitve" @click="toPage(pageNum)">
+          {{ pageNum }}
+        </button>
+      </li>
+
+      <li class="page-item">
+        <a class="page-link" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">Next</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </template>
+
+<style scoped>
+._table tbody td {
+  vertical-align: middle;
+}
+</style>
+
