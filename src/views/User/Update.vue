@@ -1,5 +1,5 @@
 <script>
-import roleApi from "../../api/roleApi"
+import roleApi from "../../api/service/roleApi"
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
 import userApi from "../../api/service/userApi"
@@ -233,3 +233,4 @@ export default {
 	</form>
 </template>
 
+../../api/service/roleApi

@@ -1,9 +1,13 @@
 <script>
 
 import userApi from "../../api/service/userApi"
+import axiosInstance from '../../api/utils/axiosInstance';
+import axios from "axios";
+
 export default {
   data() {
     return {
+      defaultImage: "../../src/assets/defaultImage.png",
       users: [],
       query: {
         page: 1,
@@ -38,8 +42,6 @@ export default {
     // },
     async toPage(pageNum) {
       //click same page
-      console.log("pageNum: " + pageNum);
-      console.log("page: " + this.page);
       if (pageNum == this.query.page) return
       this.query.page = pageNum
       //push new query to load next page
@@ -52,12 +54,41 @@ export default {
 
   },
   async mounted() {
-    //fetch init data
+    //   axios.get("http://localhost:8081/api/v1/users",{
+    //     headers:{
+    //       "Content-Type": "application/json",
+    //   "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290IiwiaWF0IjoxNjk1Nzk2NjkzLCJleHAiOjE2OTU4ODMwOTN9.eOH16RBqKlXbjTmxzav0FoAEqKQbe9NL_p2jzsuBCkk`,
+    //     }
+    //   })
+    // .then(response => {
+    //   // Handle successful response
+    //   console.log(response.data);
+    // })
+    // .catch(error => {
+    //   // Handle error response
+    // console.log(error);
+    // });
+    // fetch init data
     const userPage = await this.getUsersPage();
     this.users = userPage.users
     this.pageMetaData = userPage.metadata;
     //set to current query of page
     this.query = this.getUrlQueryParams;
+    // try {
+    //   const res = await fetch("http://localhost:8081/api/v1/users?page=5&pageSize=10&roleId=", {
+    //     method: 'GET',
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290IiwiaWF0IjoxNjk1Nzk2NjkzLCJleHAiOjE2OTU4ODMwOTN9.eOH16RBqKlXbjTmxzav0FoAEqKQbe9NL_p2jzsuBCkk`,
+    //     }
+    //   });
+    //   console.log(res);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    // const res = await axiosInstance.get("http://localhost:8081/api/v1/auth/login");
+    // console.log(res);
+
   },
   computed: {
     getUrlQueryParams() {
@@ -138,7 +169,7 @@ export default {
         <tr v-for="user in users" :key="user.id">
           <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
           <td>
-            <img :src="user.img" style="width: 45px; height: 45px; object-fit: cover;">
+            <img :src="user.img || defaultImage" style="width: 45px; height: 45px; object-fit: cover;">
 
           </td>
           <td>{{ user.name }}</td>
@@ -158,24 +189,27 @@ export default {
       </tbody>
     </table>
     <!-- pagination -->
-    <ul class="pagination pg-dark">
+    <ul class="pagination">
       <li class="page-item">
-        <a class="page-link" aria-label="Previous">
+        <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
+          aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
           <span class="sr-only">Previous</span>
-        </a>
+        </button>
       </li>
       <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
-        <button class="page-link acitve" @click="toPage(pageNum)">
+        <button class="page-link acitve" @click="toPage(pageNum)"
+          :class="{ 'bg-dark text-white': pageNum == this.query.page }">
           {{ pageNum }}
         </button>
       </li>
 
       <li class="page-item">
-        <a class="page-link" aria-label="Next">
+        <button @click="toPage(this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
+          class="page-link" aria-label="Next">
           <span aria-hidden="true">&raquo;</span>
           <span class="sr-only">Next</span>
-        </a>
+        </button>
       </li>
     </ul>
   </div>

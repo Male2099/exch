@@ -1,6 +1,6 @@
 <script>
 import authApi from "../../api/service/authApi"
-import roleApi from "../../api/roleApi"
+import roleApi from "../../api/service/roleApi"
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
 import swal from "sweetalert"
@@ -223,4 +223,4 @@ export default {
       </div>
     </div>
   </form>
-</template>
+</template>../../api/service/roleApi
