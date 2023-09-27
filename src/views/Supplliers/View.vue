@@ -2,6 +2,8 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
+import SupplierApi from '../../api/supplier';
+import Supplier from '../../api/supplier';
 import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
@@ -11,11 +13,9 @@ export default {
                 }
             },
            
-	 mounted() {
-	  axios.get(`http://localhost:8081/api/v1/suppliers/${this.$route.params.id}`)
-        .then(response => {
-          this.suppliers = response.data;
-        })
+	 async mounted() {
+		this.suppliers = await SupplierApi.getSupplierById(this.$route.params.id)
+
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {
@@ -45,6 +45,17 @@ export default {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
+		async updateSupplier(e) {
+			e.preventDefault();
+			this.loading = true;
+			try {
+				await Supplier.updateSupplierById(this.$route.params.id, this.suppliers);
+				this.loading = false;
+				this.$router.push("/supplier/")
+			} catch (err) {
+				this.loading = false;
+			}
+		}
   }
 }
 </script>
@@ -64,7 +75,7 @@ export default {
 		<a href="/supplier/" class="btn btn-success btn-rounded px-4 rounded-pill" type="button">Back</a>
 		</div>
 	</div>
-	<form @submit.prevent="updateData">
+	<form @submit="updateSupplier">
 	<div class="card border-0 mb-4">
 		<div class="card-body">
 					<div class="mb-3">
@@ -97,8 +108,7 @@ export default {
 		</div>
 
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-				<button class="btn btn-success btn-rounded px-4 rounded-pill" type="submit">Update</button>
-				<a href="/supplier/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
+				<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>				<a href="/supplier/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
 			</div>
 		</div>
 	</div>

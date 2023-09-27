@@ -6,7 +6,6 @@ import navscrollto from '@/components/app/NavScrollTo.vue';
 import axios from 'axios';
 import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
-
 const appVariable = useAppVariableStore();
 export default {	
 	components: {
@@ -16,6 +15,7 @@ export default {
 	},
 	data() {
     return {
+      defaultimage: '../../src/assets/defaultImage.png',
       isLoading: true,
       users: []
     };
@@ -93,7 +93,7 @@ export default {
         
         <tr v-for="user in users" :key="user.id">
           <td>{{ user.id }}</td>
-          <td><img :src="user.img" alt="" width="50" height="50"></td>
+          <td><img :src="user.img || defaultimage"  width="50" height="50"></td>
           <td>{{ user.name }}</td>
           <td>{{ user.sex }}</td>
           <td>{{ user.dob }}</td>

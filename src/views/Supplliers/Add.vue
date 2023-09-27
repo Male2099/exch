@@ -28,6 +28,9 @@ export default {
               });
               const data = await res.json();
               console.log(data);
+              this.$router.push("/supplier/").then(() => {
+        window.location.reload();
+	});
             } catch (error) {
               console.log(error);
             }
@@ -68,11 +71,11 @@ export default {
     </div>
 	<div class="mb-3">
       <label for="Address" class="form-label">Address</label>
-      <input type="text" class="form-control" id="address" placeholder="Address">
+      <input type="text" class="form-control" id="address" placeholder="Address" v-model="supplier.address">
     </div>
     <div class="mb-3">
       <label for="info" class="form-label">Info</label>
-      <input type="text" class="form-control" id="info" placeholder="Info">
+      <input type="text" class="form-control" id="info" placeholder="Info" v-model="supplier.info">
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
     <button class="btn btn-primary me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>

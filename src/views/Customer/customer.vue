@@ -6,7 +6,6 @@ import navscrollto from '@/components/app/NavScrollTo.vue';
 import axios from 'axios';
 import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
-
 const appVariable = useAppVariableStore();
 export default {	
 	components: {
@@ -17,17 +16,15 @@ export default {
 	data() {
     return {
       isLoading: true,
-      customers: []
+      customers: [],
     };
   },
   mounted() {
     axios.get('http://localhost:8081/api/v1/customers')
         .then(response => {
           this.customers = response.data;
-        });
-        setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
+          this.isLoading = false;
+    });
   }
 };
 </script>
@@ -41,7 +38,6 @@ export default {
   height: 200px;
   animation: spinner 4s linear infinite;
 }
-
 @keyframes spinner {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

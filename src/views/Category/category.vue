@@ -18,6 +18,7 @@ export default {
 	},
 	data() {
     return {
+      defaultimage: '../../src/assets/defaultImage.png',
       isLoading: true,
       categories: []
     };
@@ -86,7 +87,7 @@ export default {
         <tr v-for="category in categories" :key="category.id">
           <td>{{ category.id }}</td>
           <td>{{ category.name }}</td>
-          <td><img :src="category.img" alt="" width="50" height="50"></td>
+          <td><img :src="category.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 100px;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/category/${category.id}`">View</a>
               </td>

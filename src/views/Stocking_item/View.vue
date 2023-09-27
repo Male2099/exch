@@ -90,7 +90,7 @@ export default {
 		</div>
 		<div class="mb-3">
 			<label for="mfgDate" class="form-label">MFGDate</label>
-			<div class="card">s
+			<div class="card">
 				<div class="card">
 				<input id="mfgDate"  type="text" name="mfgDate" class="form-control" placeholder="mfgDate" required v-model="stockingitems.mfgDate">
 			</div>

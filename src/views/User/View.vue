@@ -1,16 +1,16 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import ConfirmDialogue from '../../components/app/confirm.vue';
 import axios from 'axios';
-import roleApi from "../../api/roleApi"
+import roleApi from "../../api/roleApi";
 import userAipi from "../../api/userApi";
 import userApi from '../../api/userApi';
-import Loading from "../../components/app/LoadingOnSubmit.vue"
-
+import Loading from "../../components/app/LoadingOnSubmit.vue";
 export default {
 	data() {
 		return {
+			defaultimage: '../../src/assets/defaultImage.png',
 			user: {
 				username: '',
 				password: '',
@@ -38,6 +38,18 @@ export default {
 		ConfirmDialogue
 	},
 	methods: {
+		onChange(event) {
+			const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.user.img = reader.result;
+    };
+
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+		},
 		handleCheckboxChange() {
 			this.result = `The user is ${this.user.status ? 'activated' : 'disactivated'}`
 		},
@@ -133,12 +145,13 @@ export default {
 		<div class="card border-0 mb-4 p-2">
 			<div class="card-body">
 				<div class="circle text-center">
-					<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
-						button-class="btn" :custom-strings="{
-							upload: '<h1>Bummer!</h1>',
-							drag: 'input profile picture'
-						}" @change="onChange">
-					</picture-input>
+					<img :src="user.img || defaultimage" :alt="user.img ? '' : '<img src=\'defaultimage\' alt=\'Placeholder\' width=\'150\' height=\'150\'>'" width="150" height="150">
+<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
+  button-class="btn" :custom-strings="{
+	upload: '<h1>Bummer!</h1>',
+	drag: 'input profile picture'
+  }" @change="onChange">
+</picture-input>
 				</div>
 
 				<div class="mb-3">

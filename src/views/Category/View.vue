@@ -1,21 +1,25 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import categoryApi from '../../api/category';
+import Category from '../../api/category';
+import ConfirmDialogue from '../../components/app/confirm.vue';
 import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
-					categories: {},
+					defaultimage: '../../src/assets/defaultImage.png',
+					categories: {
+						name:'',
+						img:'',
+						available:''
+					},
 					result: `The category is`
                 }
             },
-			mounted() {
-	  axios.get(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`)
-        .then(response => {
-          this.categories = response.data;
-        })
+			async mounted() {
+				this.categories = await categoryApi.getCategoryById(this.$route.params.id)
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {
@@ -39,13 +43,24 @@ export default {
         .then(response => {
 			this.customers = response.data;
         })
-		this.$router.push("/category").then(() => {
+		this.$router.push("/category/").then(() => {
         window.location.reload();
 	});
             } else {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
+		async updateCategory(e) {
+			e.preventDefault();
+			this.loading = true;
+			try {
+				await Category.updateCategoryById(this.$route.params.id, this.categories);
+				this.loading = false;
+				this.$router.push("/category/")
+			} catch (err) {
+				this.loading = false;
+			}
+		}
             }
 }
 </script>
@@ -54,7 +69,7 @@ export default {
 		<div>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-				<li class="breadcrumb-item"><a href="/category">Category</a></li>
+				<li class="breadcrumb-item"><a href="/category/">Category</a></li>
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
 			</ol>
 			<h1 class="page-header mb-0">Category </h1>
@@ -66,7 +81,7 @@ export default {
 
 		</div>
 	</div>
-	<form form @submit.prevent="updateCategory">
+	<form @submit="updateCategory">
     <div class="card border-0 mb-4">
 		<div class="card-body">
 		<div class="mb-3">
@@ -79,7 +94,7 @@ export default {
 			<label for="Img" class="form-label">Image</label>
 			<div class="text-center">
 				
-				<img :src="categories.img" class="" alt="" width="150" height="150"/>
+				<img :src="categories.img || defaultimage" class="" alt="" width="150" height="150"/>
 			</div>
 		</div>
 			<div class="mb-3">
@@ -93,7 +108,7 @@ export default {
 			</div>
 			</div>
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-				<input class="btn btn-success btn-rounded px-4 rounded-pill" type="submit" value="Update">
+				<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>
 				<a href="/category/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
 			</div>
 		</div>

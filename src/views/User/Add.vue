@@ -21,7 +21,7 @@ export default {
         phone: ""
       },
       roles: [],
-      image: null,
+      image : null,
       errors: {
         username: null,
         password: null

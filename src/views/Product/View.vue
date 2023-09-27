@@ -1,23 +1,30 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import ConfirmDialogue from '../../components/app/confirm.vue';
+import categoryId from "../../api/categoryId"
+import ProductApi from '../../api/product';
+import Product from '../../api/product';
 import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
 	data() {
 		return {
+			defaultimage: '../../src/assets/defaultImage.png',
+
         products: {
 			category: {}
 		},
 		result: `The Product is`,
+		categories: [],
     };
 		},    
-	mounted() {
-		axios.get(`http://localhost:8081/api/v1/products/${this.$route.params.id}`)
-        .then(response => {
-          this.products = response.data;
-        })
+	async mounted() {
+		this.products = await ProductApi.getProductById(this.$route.params.id)
+		this.categories = await categoryId.getAllCategories();
+		this.products.categoryId = this.products.category.id;
+
+
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {
@@ -38,15 +45,26 @@ export default {
 				axios
         .delete(`http://localhost:8081/api/v1/products/${this.$route.params.id}`) 
         .then(response => {
-			this.customers = response.data;
+			this.products = response.data;
         })
-		this.$router.push("/customer/").then(() => {
+		this.$router.push("/product/").then(() => {
         window.location.reload();
 	});
             } else {
                 alert('You chose not to delete this page. Doing nothing now.')
             }
         },
+		async updateProduct(e) {
+			e.preventDefault();
+			this.loading = true;
+			try {
+				await Product.updateProductById(this.$route.params.id, this.products);
+				this.loading = false;
+				this.$router.push("/product/")
+			} catch (err) {
+				this.loading = false;
+			}
+		}
 			}
 }
 </script>
@@ -67,11 +85,12 @@ export default {
 
 		</div>
 	</div>
+	<form @submit="updateProduct">
 	<div class="card border-0 mb-4" >
 		<div class="card-body">
 					<div class="mb-3">
 			<div class="text-center">
-				<img :src="products.img" class="rounded-circle" width="150" height="150" alt="" />
+				<img :src="products.img || defaultimage" class="rounded-circle" width="150" height="150" alt="" />
 			</div>
 		</div>
 		<div class="mb-3">
@@ -81,12 +100,12 @@ export default {
 			</div>
 		</div>
 		<div class="mb-3">
-			<label for="category" class="form-label">Category</label>
-			<div class="card">
-				<div class="card">
-				<input id="category.name"  type="text" name="Category" class="form-control" placeholder="Category" required v-model="products.category.name">
-			</div>
-			</div>
+                <label class="form-label">Category</label>
+                <div>
+            <select class="form-control" v-model="products.categoryId">
+              <option v-for="(category) in categories" :key="category.id" :value="category.id" v-text="category.name"></option>
+            </select>
+          </div>
 		</div>
 		<div class="mb-3">
 			<label for="productCode" class="form-label">Product Code</label>
@@ -132,9 +151,10 @@ export default {
 			</div>
 			</div>
 			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-				<a href="/product/" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
+				<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>
 				<a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
 			</div>
 		</div>
 	</div>
+</form>
 </template>

@@ -4,34 +4,70 @@ import highlightjs from '@/components/plugins/Highlightjs.vue';
 import vueTable from '@/components/plugins/VueTable.vue';
 import navscrollto from '@/components/app/NavScrollTo.vue';
 import axios from 'axios';
+import StockingsAll from '../../api/stockitem';
+import Stockings from '../../api/stockitem';
+import supplierApi from "../../api/supplierApi"
+import ConfirmDialogue from '../../components/app/confirm.vue';
+
 import { useAppVariableStore } from '@/stores/app-variable';
 import { ScrollSpy } from 'bootstrap';
-import productVue from '../Product/product.vue';
-
 const appVariable = useAppVariableStore();
 export default {
 	components: {
-		highlightjs: highlightjs,
-		navScrollTo: navscrollto,
-		vueTable: vueTable
+		ConfirmDialogue
 	},
 	data() {
     return {
       isLoading: true,
 		stock:{
+      supplier:{},
 		stockingitems: []
-		}
+		},
+    suppliers: [],
+    showTable: false
     };
   },
 
-  mounted() {
-    axios.get(`http://localhost:8081/api/v1/stockings/${this.$route.params.id}`)
+  async mounted() {
+    this.stock = await StockingsAll.getStockingsById(this.$route.params.id);
+    this.suppliers = await supplierApi.getAllSuppliers();
+    this.stock.supplierId = this.stock.supplier.id;
+    console.log(this.stock);
+  },
+  methods: {
+    toggleTable() {
+      this.showTable = !this.showTable;
+    },
+	async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+				axios
+        .delete(`http://localhost:8081/api/v1/stockings/${this.$route.params.id}`) 
         .then(response => {
-          this.stock = response.data;
-        });
-        setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
+			this.stock = response.data;
+        })
+		this.$router.push("/stock/").then(() => {
+        window.location.reload();
+	});
+            } else {
+                alert('You chose not to delete this page. Doing nothing now.')
+            }
+        },
+        async updateStocking(e) {
+			e.preventDefault();
+			this.loading = true;
+			try {
+				await Stockings.updateStockingsById(this.$route.params.id, this.stock);
+				this.loading = false;
+				this.$router.push("/stock/")
+			} catch (err) {
+				this.loading = false;
+			}
+		}
   }
 }
 
@@ -63,15 +99,73 @@ export default {
 			<h1 class="page-header mb-0">Stocking Item</h1>
 		</div>
 		<div class="ms-auto">
-      <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/add/${stock.id}`"><i
+    <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/add/${stock.id}`"><i
 					class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-					<a href="/stock/" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
+	<a href="/stock/" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
 		</div>
 	</div>
-
-	<!-- BEGIN #vue3TableLite -->
-	<div class="card border-0">
-		<table class="table table-bordered table-dark table-stroped">
+  <div class="card border-0">
+  <form @submit="updateStocking">
+    <div class="card-body">
+		<div class="mb-3">
+      <label class="form-label">SupplierId</label>
+      <div>
+            <select class="form-control" v-model="stock.supplierId">
+              <option v-for="(supplier) in suppliers" :key="supplier.id" :value="supplier.id" v-text="supplier.name"></option>
+            </select>
+          </div>
+    </div>
+		<div class="mb-3">
+			<label for="Status" class="form-label">Status</label>
+			<select class="form-control" required v-model="stock.status">
+						<option value="NEW">NEW</option>
+						<option value="SHIPPING">SHIPPING</option>
+						<option value="COMPLETED">COMPLETED</option>
+						<option value="CANCEL">CANCEL</option>
+					</select>
+		</div>
+		<div class="mb-3">
+			<label for="tax" class="form-label">Tax</label>
+			<div class="card">
+				<input  type="text" class="form-control" placeholder="Tax" required v-model="stock.tax">
+			</div>
+			<div class="mb-3">
+			<label for="deliveryAt" class="form-label">Delivery At</label>
+			<div class="card">
+				<input  type="date" class="form-control" placeholder="Delivery At"  v-model="stock.deliveryAt">
+			</div>
+			</div>
+			<div class="mb-3">
+			<label for="expectedDelivery" class="form-label">Expected Delivery</label>
+			<div class="card">
+				<input  type="date"  class="form-control" placeholder="Expected Delivery"  v-model="stock.expectedDelivery">
+			</div>
+			</div>
+            <div class="mb-3">
+			<label for="createdAt" class="form-label">Created At</label>
+			<div class="card">
+				<input  type="text" class="form-control" placeholder="Created At" v-model="stock.createdAt" readonly>
+			</div>
+			</div>
+			<div class="mb-3">
+			<label for="totalItems" class="form-label">Total Items</label>
+			<div class="card">
+				<input id="totalItems"  type="text" name="totalItems" class="form-control" placeholder="total Orders" v-model="stock.totalItem" readonly>
+			</div>
+			</div>
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
+			<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>
+			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		</div>
+		</div>
+  </div>
+  </form>
+    <div>
+    <button @click="toggleTable" class="btn btn-success btn-rounded px-4 rounded-pill">
+      {{ showTable ? 'Hide Order' : 'Show Order' }}
+    </button>
+		<table v-if="showTable" class="table table-bordered table-dark table-stroped">
       <thead>
         <tr>
           <th>ID</th>
@@ -85,12 +179,7 @@ export default {
           <th style="width: 100px;"> Action</th>
         </tr>
       </thead>
-      <tbody v-if="isLoading">
-        <tr>
-          <td colspan="9"><div class="loader"></div></td>
-        </tr>
-      </tbody>
-      <tbody  v-else>
+      <tbody >
         <tr v-for="stocking in stock.stockingItems" :key="stocking.id">
           <td>{{ stocking.id }}</td>
 		  <td>{{ stocking.product.name }}</td>
@@ -107,6 +196,5 @@ export default {
       </tbody>
     </table>
   </div>
-	
-
+</div>
 </template>

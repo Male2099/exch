@@ -68,7 +68,7 @@ export default {
     </div>
     <div class="mb-3">
       <label for="stockingId" class="form-label">Stocking Id</label>
-      <input type="text" class="form-control" placeholder="Stocking Id" v-model="stockingitem.stockingId">
+      <input type="text" class="form-control" placeholder="Stocking Id" v-model="stockingitem.stockingId" readonly>
     </div>
     <div class="mb-3">
       <label for="price" class="form-label">Price</label>
@@ -90,6 +90,6 @@ export default {
       <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>  <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
 </div>
     </div>
-    </div>s
+    </div>
   </form>
 </template>

@@ -17,6 +17,8 @@ export default {
 	},
 	data() {
     return {
+      defaultimage: '../../src/assets/defaultImage.png',
+
       isLoading: true,
       products: []
     };
@@ -69,12 +71,12 @@ export default {
         <tr>
           <th>ID</th>
           <th>Name</th>
+          <th>Category</th>
           <th>ProductCode</th>
           <th>Price</th>
           <th>Quantity</th>
           <th>Description</th>
           <th>Img</th>
-          <th>Category</th>
 		  <th style="width: 100px;">Action</th>
         </tr>
       </thead>
@@ -87,12 +89,12 @@ export default {
         <tr v-for="product in products" :key="product.id">
           <td>{{ product.id }}</td>
           <td>{{ product.name }}</td>
+          <td>{{ product.category.name }}</td>
           <td>{{ product.productCode }}</td>
           <td>{{ product.price }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.description }}</td>
-          <td><img :src="product.img" alt="" width="50" height="50"></td>
-          <td>{{ product.category.name }}</td>
+          <td><img :src="product.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 100px;">
         <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/product/${product.id}`">View</a>
               </td>
