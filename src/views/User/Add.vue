@@ -70,6 +70,7 @@ export default {
       }
     },
   
+    
     async registerUser(e) {
       e.preventDefault();
       const confirm = await this.confirmDialog();
