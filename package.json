@@ -55,6 +55,7 @@
     "v-calendar": "^3.0.0-alpha.8",
     "vue": "^3.3.4",
     "vue-axios": "^3.5.2",
+    "vue-content-loader": "^2.0.1",
     "vue-picture-input": "^3.0.1",
     "vue-router": "^4.2.4",
     "vue-select": "^4.0.0-beta.3",

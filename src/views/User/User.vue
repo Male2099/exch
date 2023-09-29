@@ -2,9 +2,12 @@
 
 import userApi from "../../api/service/userApi"
 import axiosInstance from '../../api/utils/axiosInstance';
-import axios from "axios";
+import { ContentLoader } from 'vue-content-loader';
 
 export default {
+  components: {
+    ContentLoader
+  },
   data() {
     return {
       defaultImage: "../../src/assets/defaultImage.png",
@@ -28,7 +31,7 @@ export default {
       this.isLoading = true
       console.log(this.getUrlQueryParams);
       const res = await userApi.getAllUsers(this.getUrlQueryParams);
-      this.isLoading = false
+      // this.isLoading = false
       return {
         users: res.data,
         metadata: res.metadata
@@ -54,40 +57,13 @@ export default {
 
   },
   async mounted() {
-    //   axios.get("http://localhost:8081/api/v1/users",{
-    //     headers:{
-    //       "Content-Type": "application/json",
-    //   "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290IiwiaWF0IjoxNjk1Nzk2NjkzLCJleHAiOjE2OTU4ODMwOTN9.eOH16RBqKlXbjTmxzav0FoAEqKQbe9NL_p2jzsuBCkk`,
-    //     }
-    //   })
-    // .then(response => {
-    //   // Handle successful response
-    //   console.log(response.data);
-    // })
-    // .catch(error => {
-    //   // Handle error response
-    // console.log(error);
-    // });
+
     // fetch init data
     const userPage = await this.getUsersPage();
     this.users = userPage.users
     this.pageMetaData = userPage.metadata;
     //set to current query of page
     this.query = this.getUrlQueryParams;
-    // try {
-    //   const res = await fetch("http://localhost:8081/api/v1/users?page=5&pageSize=10&roleId=", {
-    //     method: 'GET',
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       "Authorization": `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJyb290IiwiaWF0IjoxNjk1Nzk2NjkzLCJleHAiOjE2OTU4ODMwOTN9.eOH16RBqKlXbjTmxzav0FoAEqKQbe9NL_p2jzsuBCkk`,
-    //     }
-    //   });
-    //   console.log(res);
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // const res = await axiosInstance.get("http://localhost:8081/api/v1/auth/login");
-    // console.log(res);
 
   },
   computed: {
@@ -126,6 +102,10 @@ export default {
 <template>
   <div class="d-flex align-items-center mb-3">
     <div>
+
+    </div>
+
+    <div>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
         <li class="breadcrumb-item">User</li>
@@ -158,11 +138,11 @@ export default {
         </tr>
       </thead>
       <tbody v-if="isLoading">
-        <tr>
-          <td colspan="9">
-            <div class="loader"></div>
-          </td>
-        </tr>
+        <ContentLoader :width="400" :height="200">
+          <rect x="0" y="0" rx="4" ry="4" :width="400" :height="20" />
+          <rect x="0" y="30" rx="4" ry="4" :width="400" :height="20" />
+          <rect x="0" y="60" rx="4" ry="4" :width="400" :height="20" />
+        </ContentLoader>
       </tbody>
       <tbody v-else>
 

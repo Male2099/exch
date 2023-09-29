@@ -3,7 +3,6 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export default {
   async uplaodImage(file) {
     if (!file) return null;
-    console.log("fisdfghjk");
     //input take file multipart file from formdata
     const formData = new FormData();
     formData.append("image", file);
