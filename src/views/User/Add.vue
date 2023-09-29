@@ -69,6 +69,7 @@ export default {
         this.image = this.$refs.pictureInput.file
       }
     },
+  
     async registerUser(e) {
       e.preventDefault();
       const confirm = await this.confirmDialog();
