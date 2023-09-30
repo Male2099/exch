@@ -153,13 +153,17 @@ export default {
 
   <!-- BEGIN #vue3TableLite -->
   <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
+
     <section class="d-flex justify-content-between pb-3">
 
       <form @submit="searchUser" name="search">
-        <div class="form-group d-flex">
+        <div class="form-group d-flex position-relative">
           <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
-          <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-          <button @click="query.search = ''" class="btn btn-search">clear</button>
+          <button type="submit" class="btn px-1 position-absolute" style="right: 0;"><i class="fa fa-search"></i>
+          </button>
+          <button type="button" class="btn px-1 position-absolute" :class="{'d-none' :this.query.search==''}" style="right: 1.25rem;" @click="query.search = ''"><i
+              class="bi bi-x"></i>
+          </button>
         </div>
       </form>
       <router-link to="/user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
@@ -201,13 +205,15 @@ export default {
             <td>{{ user.phone }}</td>
             <td>{{ user.role.name }}</td>
             <td>{{ user.status ? "Active" : "Inactive" }}</td>
-            <td style="max-width: 6rem;">
-              <router-link :to="'/user/' + user.id" class="btn btn-success btn-rounded px-4 rounded-pill"
-                aria-expanded="false">
-                Update
-              </router-link>
-              <button class="btn btn-danger px-4 rounded-pill " data-id="' + row.id + '"
-                @click="deletecategories(users.id)">Delete</button>
+            <td>
+              <div style="width: 100%; display: flex; justify-content: center;">
+                <router-link :to="'/user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+                  <i class="bi bi-pencil-square fs-4 text-info"></i>
+                </router-link>
+                <button class="btn rounded-pill text-danger" data-id="' + row.id + '" @click="deletecategories(users.id)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -217,8 +223,8 @@ export default {
     <section v-if="this.users.length > 0">
       <ul class="pagination _custome-page">
         <li class="page-item">
-          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link" :class="{'d-none': query.page}"
-            aria-label="Previous">
+          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
+            :class="{ 'invisible': query.page <= 1 }" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
           </button>
@@ -232,7 +238,7 @@ export default {
 
         <li class="page-item">
           <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
-            class="page-link" aria-label="Next">
+            class="page-link" :class="{ 'invisible': this.query.page >= this.pageMetaData.totalPage }" aria-label="Next">
             <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>
           </button>

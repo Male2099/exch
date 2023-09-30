@@ -11,6 +11,11 @@ import '@fortawesome/fontawesome-free/scss/solid.scss';
 import '@fortawesome/fontawesome-free/scss/brands.scss';
 import '@fortawesome/fontawesome-free/scss/v4-shims.scss';
 import 'bootstrap';
+// add bootstrap icon
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'animate.css';
+
+//
 import './scss/vue.scss';
 
 import App from './App.vue';

@@ -38,6 +38,8 @@ const router = createRouter({
     { path: '/stocking_item/view/:id', component: () => import('../views/Stocking_item/View.vue') },
     { path: '/stocking_item/add', component: () => import('../views/Stocking_item/Add.vue') },
 
+
+
   ],
 });
 

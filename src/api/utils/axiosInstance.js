@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
       router.push("/not-found");
       return;
     }
-    return error;
+    return Promise.reject(error);
   }
 );
 
