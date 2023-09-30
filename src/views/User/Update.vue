@@ -130,17 +130,17 @@ export default {
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ol class="breadcrumb">
+		<!-- <div> -->
+			<!-- <ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
 				<li class="breadcrumb-item"><a href="javascript:;">User</a></li>
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add User</li>
-			</ol>
-			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
-		</div>
-		<div class="ms-auto">
-			<a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-		</div>
+			</ol> -->
+			<!-- </div> -->
+			<!-- <div class="ms-auto">
+				<a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+			</div> -->
+			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update User</h1>
 	</div>
 
 	<form v-if="renderPageEnable" @submit="updateUser">

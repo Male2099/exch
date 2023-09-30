@@ -69,8 +69,8 @@ export default {
         this.image = this.$refs.pictureInput.file
       }
     },
-  
-    
+
+
     async registerUser(e) {
       e.preventDefault();
       const confirm = await this.confirmDialog();
@@ -135,14 +135,7 @@ export default {
 </script>
 <template>
   <div class="d-flex align-items-center mb-3">
-    <div>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">User</a></li>
-        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add User</li>
-      </ol>
-      <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
-    </div>
+    <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
     <div class="ms-auto">
       <a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
@@ -211,7 +204,7 @@ export default {
         </div>
         <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button :disabled="!isSubmittable" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
-            type="submit">Submit</button>
+            type="submit">Create</button>
 
           <a href="/user/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
         </div>

@@ -3,10 +3,12 @@
 import userApi from "../../api/service/userApi"
 import axiosInstance from '../../api/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
+import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
   components: {
-    ContentLoader
+    ContentLoader,
+    LoadingOnFetchingData: Loading
   },
   data() {
     return {
@@ -16,6 +18,7 @@ export default {
         page: 1,
         pageSize: 10,
         roleId: '',
+        search: ''
       },
       pageMetaData: {
         currentPage: 0,
@@ -27,51 +30,82 @@ export default {
     };
   },
   methods: {
-    async getUsersPage() {
-      this.isLoading = true
-      console.log(this.getUrlQueryParams);
-      const res = await userApi.getAllUsers(this.getUrlQueryParams);
-      // this.isLoading = false
-      return {
-        users: res.data,
-        metadata: res.metadata
-      }
+    async searchUser(e) {
+      e.preventDefault();
+      if (!this.query.search) return;
+      //set to defualt query
+      this.query = this.defaultQuery
+
+      await this.pushQuery(this.query)
+      await this.getAllUsers();
+      //set to make watch able to know if the current data is default or from search
+      // this.query.search = ''
     },
     async getAllUsers() {
-      return (await this.getUsersPage()).users;
+      this.isLoading = true
+      const res = await userApi.getAllUsers(this.getUrlQueryParams);
+      this.isLoading = false
+      this.users = res.data
+      this.pageMetaData = res.metadata
     },
-    // async getMetadata() {
-    //   return (await this.getUsersPage()).metadata;
-    // },
     async toPage(pageNum) {
       //click same page
       if (pageNum == this.query.page) return
       this.query.page = pageNum
       //push new query to load next page
-      this.pushQuery(this.query)
-      this.users = await this.getAllUsers()
+      await this.pushQuery(this.query)
+      await this.getAllUsers()
     },
-    pushQuery(queryParams) {
-      this.$router.push({ path: this.$route.fullPath, query: queryParams });
+    //add query to url
+    async pushQuery(queryParams) {
+      let updatedQueryParams = {}
+      for (const key in queryParams) {
+        if (queryParams[key] !== undefined && queryParams[key] !== null && queryParams[key] !== '') {
+          updatedQueryParams[key] = queryParams[key];
+        }
+      }
+      await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
     }
 
   },
   async mounted() {
-
-    // fetch init data
-    const userPage = await this.getUsersPage();
-    this.users = userPage.users
-    this.pageMetaData = userPage.metadata;
     //set to current query of page
     this.query = this.getUrlQueryParams;
+    // fetch init data
+    await this.getAllUsers()
 
   },
   computed: {
+    //get the query from url
     getUrlQueryParams() {
       return {
         page: this.$route.query?.page || 1,
         pageSize: this.$route.query?.pageSize || 10,
-        roleId: this.$route.query?.roleId || ''
+        roleId: this.$route.query?.roleId || '',
+        search: this.$route.query.search || ''
+      }
+    },
+    isSearched() {
+      //if url query contain search
+      return !!this.$route.query?.search;
+    },
+    defaultQuery() {
+      return {
+        page: 1,
+        pageSize: 10,
+        roleId: this.query.roleId || '',
+        search: this.query.search || ''
+      }
+    }
+  }, watch: {
+    //for return def data
+    async 'query.search'(newVal, oldVal) {
+      //if current data is from search
+      if (!newVal && this.isSearched) {
+        console.log("search");
+        //default query
+        await this.pushQuery(this.query)
+        await this.getAllUsers();
       }
     }
   }
@@ -79,7 +113,7 @@ export default {
 
 </script>
 <style scoped>
-.loader {
+/* .loader {
   margin: auto;
   border: 20px solid #EAF0F6;
   border-radius: 50%;
@@ -97,13 +131,11 @@ export default {
   100% {
     transform: rotate(360deg);
   }
-}
+} */
 </style>
 <template>
-  <div class="d-flex align-items-center mb-3">
-    <div>
+  <!-- <div class="d-flex align-items-center mb-3">
 
-    </div>
 
     <div>
       <ol class="breadcrumb">
@@ -117,87 +149,128 @@ export default {
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
 
     </div>
-  </div>
+  </div> -->
 
   <!-- BEGIN #vue3TableLite -->
-  <div class="card border-0">
-    <table class="_table table table-bordered table-dark table-stroped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Img</th>
-          <th>Name</th>
-          <th>Username</th>
-          <!-- <th>Sex</th> -->
-          <th>Phone</th>
-          <!-- <th>Address</th> -->
-          <!-- <th>DOB</th> -->
-          <th>Role</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody v-if="isLoading">
-        <ContentLoader :width="400" :height="200">
-          <rect x="0" y="0" rx="4" ry="4" :width="400" :height="20" />
-          <rect x="0" y="30" rx="4" ry="4" :width="400" :height="20" />
-          <rect x="0" y="60" rx="4" ry="4" :width="400" :height="20" />
-        </ContentLoader>
-      </tbody>
-      <tbody v-else>
+  <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
+    <section class="d-flex justify-content-between pb-3">
 
-        <tr v-for="user in users" :key="user.id">
-          <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
-          <td>
-            <img :src="user.img || defaultImage" style="width: 45px; height: 45px; object-fit: cover;">
+      <form @submit="searchUser" name="search">
+        <div class="form-group d-flex">
+          <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
+          <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+          <button @click="query.search = ''" class="btn btn-search">clear</button>
+        </div>
+      </form>
+      <router-link to="/user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+          class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
+    </section>
+    <section>
+      <table class="_table table table-bordered table-dark table-stroped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Phone</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody v-if="isLoading">
+          <tr>
+            <div class="_center-loading">
+              <LoadingOnFetchingData />
+            </div>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr v-for="user in users" :key="user.id" class="relative">
+            <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
+            <td>
+              <div class="d-flex gap-2 h-100">
+                <img :src="user.img || defaultImage" style="width: 35px; height: 35px; object-fit: cover;">
+                <div>
+                  <span style="font-weight: bold">{{ user.name }}</span>
+                  <br>
+                  <span style="font-size: 0.9em; color: #a5a5a5">@{{ user.username }}</span>
+                </div>
+              </div>
 
-          </td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.username }}</td>
-          <!-- <td>{{ user.sex }}</td> -->
-          <td>{{ user.phone }}</td>
-          <!-- <td>{{ user.address }}</td> -->
-          <td>{{ user.role.name }}</td>
-          <td>{{ user.status ? "Active" : "Inactive" }}</td>
-          <td>
-            <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-              :href="`/user/${user.id}`">Update</a>
-            <button class="btn btn-danger px-4 rounded-pill " data-id="' + row.id + '"
-              @click="deletecategories(users.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td>{{ user.phone }}</td>
+            <td>{{ user.role.name }}</td>
+            <td>{{ user.status ? "Active" : "Inactive" }}</td>
+            <td style="max-width: 6rem;">
+              <router-link :to="'/user/' + user.id" class="btn btn-success btn-rounded px-4 rounded-pill"
+                aria-expanded="false">
+                Update
+              </router-link>
+              <button class="btn btn-danger px-4 rounded-pill " data-id="' + row.id + '"
+                @click="deletecategories(users.id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
     <!-- pagination -->
-    <ul class="pagination">
-      <li class="page-item">
-        <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
-          aria-label="Previous">
-          <span aria-hidden="true">&laquo;</span>
-          <span class="sr-only">Previous</span>
-        </button>
-      </li>
-      <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
-        <button class="page-link acitve" @click="toPage(pageNum)"
-          :class="{ 'bg-dark text-white': pageNum == this.query.page }">
-          {{ pageNum }}
-        </button>
-      </li>
+    <section v-if="this.users.length > 0">
+      <ul class="pagination _custome-page">
+        <li class="page-item">
+          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link" :class="{'d-none': query.page}"
+            aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </button>
+        </li>
+        <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
+          <button class="page-link acitve" @click="toPage(pageNum)"
+            :class="{ 'bg-dark text-white': pageNum == this.query.page }">
+            {{ pageNum }}
+          </button>
+        </li>
 
-      <li class="page-item">
-        <button @click="toPage(this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
-          class="page-link" aria-label="Next">
-          <span aria-hidden="true">&raquo;</span>
-          <span class="sr-only">Next</span>
-        </button>
-      </li>
-    </ul>
+        <li class="page-item">
+          <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
+            class="page-link" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </button>
+        </li>
+      </ul>
+    </section>
   </div>
 </template>
 
 <style scoped>
 ._table tbody td {
   vertical-align: middle;
+}
+
+._table {
+  position: relative;
+}
+
+._custome-page {
+  display: flex;
+  justify-content: end;
+  padding: .5rem;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  width: 100%;
+  height: fit-content;
+
+}
+
+._center-loading {
+  position: absolute;
+  width: 100%;
+  height: 70vh;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
 

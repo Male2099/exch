@@ -16,11 +16,16 @@ export default {
     }
   },
 
-  async getAllUsers({page, pageSize, roleId}) {
+  async getAllUsers({ page, pageSize, roleId, search }) {
+    let query = `page=${page}&pageSize=${pageSize}`;
+    if (search || search === "0") {
+      query += `&search=${search}`;
+    }
+    if (roleId) {
+      query += `&roleId=${roleId}`;
+    }
     try {
-      const res = await axiosInstance.get(
-        `/users?page=${page}&pageSize=${pageSize}&roleId=${roleId || ""}`
-      );
+      const res = await axiosInstance.get(`/users?${query}`);
       return res.data;
     } catch (error) {
       // console.log(error);
