@@ -1,7 +1,7 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import StockApi from "../../api/stockApi"
-import supplierApi from "../../api/supplierApi"
+import StockApi from "../../api/stock/stockApi"
+import supplierApi from "../../api/supplier/allsupplier"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -59,7 +59,7 @@ export default {
       <label class="form-label">SupplierId</label>
       <div>
             <select class="form-control" v-model="stock.supplierId">
-              <option v-for="(supplier) in suppliers" :key="supplier.id" :value="supplier.id" v-text="supplier.name"></option>
+              <option v-for="(supplier) in suppliers.data" :key="supplier.id" :value="supplier.id" v-text="supplier.name"></option>
             </select>
           </div>
     </div>
@@ -78,4 +78,4 @@ export default {
     </div>
     </div>
   </form>
-</template>
+</template>../../api/supplier/supplierApi

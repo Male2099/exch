@@ -8,7 +8,7 @@ const router = createRouter({
     { path: '/dashboard/v2', component: () => import('../views/Dashboard-v2.vue') },
     { path: '/user/login-v2', component: () => import('../views/User-login-v2.vue') },
     { path: '/user/', component: () => import('../views/User/User.vue') },
-    { path: '/user/:id', component: () => import('../views/User/View.vue') },
+    { path: '/user/:id', component: () => import('../views/User/Update.vue') },
     { path: '/user/add', component: () => import('../views/User/Add.vue') },
 
     { path: '/supplier/', component: () => import('../views/Supplliers/suppliers.vue') },

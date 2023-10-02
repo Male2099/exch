@@ -1,8 +1,8 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
+import customer from "../../api/customer/customer"
 import ConfirmDialogue from '../../components/app/confirm.vue'
-import axios from 'axios';
 
 export default {
 	components: { ConfirmDialogue },
@@ -12,11 +12,8 @@ export default {
 	showTable: false
             }
 		},    
-	mounted() {
-		axios.get(`http://localhost:8081/api/v1/customers/${this.$route.params.id}`)
-        .then(response => {
-          this.customers = response.data;
-        })
+		async mounted() {
+				this.customers = await customer.getCustomerById(this.$route.params.id)
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {

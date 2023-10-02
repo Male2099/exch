@@ -2,9 +2,9 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue';
-import categoryId from "../../api/categoryId"
-import ProductApi from '../../api/product';
-import Product from '../../api/product';
+import categoryId from "../../api/category/categoryId"
+import ProductApi from '../../api/product/product';
+import Product from '../../api/product/product';
 import axios from 'axios';
 export default {
 	components: { ConfirmDialogue },
@@ -158,3 +158,4 @@ export default {
 	</div>
 </form>
 </template>
+../../api/category/categoryId../../api/product/product../../api/product/product

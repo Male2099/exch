@@ -1,6 +1,6 @@
 <script>
-import productApi from "../../api/productApi"
-import categoryId from "../../api/categoryId"
+import productApi from "../../api/product/productApi"
+import categoryId from "../../api/category/categoryId"
 import imageApi from "../../api/imageApi";
 import PictureInput from 'vue-picture-input';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
@@ -125,4 +125,4 @@ export default {
     </div>
     </div>
 </form>
-</template>
+</template>../../api/category/categoryId../../api/product/productApi

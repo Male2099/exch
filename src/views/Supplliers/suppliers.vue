@@ -1,53 +1,97 @@
 <script>
-import { defineComponent, reactive, ref, computed } from 'vue';
-import highlightjs from '@/components/plugins/Highlightjs.vue';
-import vueTable from '@/components/plugins/VueTable.vue';
-import navscrollto from '@/components/app/NavScrollTo.vue';
-import axios from 'axios';
-import { useAppVariableStore } from '@/stores/app-variable';
-import { ScrollSpy } from 'bootstrap';
-
-const appVariable = useAppVariableStore();
+import supplier from "../../api/supplier/supplier"
+import axiosInstance from '../../api/utils/axiosInstance';
+import { ContentLoader } from 'vue-content-loader';
+import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {	
 	components: {
-		highlightjs: highlightjs,
-		navScrollTo: navscrollto,
-		vueTable: vueTable
+    ContentLoader,
+    LoadingOnFetchingData: Loading
 	},
 	data() {
     return {
       isLoading: true,
-      suppliers: {}
+      suppliers: [],
+      query: {
+        page: 1,
+        pageSize: 10,
+        search: ''
+      },
+      pageMetaData: {
+        currentPage: 0,
+        totalItems: 0,
+        totalPage: 0,
+        itemsPerPage: 0
+      },
     };
   },
-  mounted() {
-    axios.get('http://localhost:8081/api/v1/suppliers')
-        .then(response => {
-          this.suppliers = response.data;
-        });
-        setTimeout(() => {
-      this.isLoading = false;
-    }, 2000);
+  methods: {
+    async searchSupplier(e) {
+      e.preventDefault();
+      if (!this.query.search) return;
+      this.query = this.defaultQuery
+      await this.pushQuery(this.query)
+      await this.getSuppliers();
+    },
+    async getSuppliers() {
+      this.isLoading = true
+      const res = await supplier.getAllSuppliers(this.getUrlQueryParams);
+      this.isLoading = false
+      this.suppliers = res.data
+      this.pageMetaData = res.metadata
+    },
+    async toPage(pageNum) {
+      //click same page
+      if (pageNum == this.query.page) return
+      this.query.page = pageNum
+      //push new query to load next page
+      await this.pushQuery(this.query)
+      await this.getSuppliers()
+    },
+    //add query to url
+    async pushQuery(queryParams) {
+      let updatedQueryParams = {}
+      for (const key in queryParams) {
+        if (queryParams[key] !== undefined && queryParams[key] !== null && queryParams[key] !== '') {
+          updatedQueryParams[key] = queryParams[key];
+        }
+      }
+      await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    }
+  },
+  async mounted() {
+    this.query = this.getUrlQueryParams;
+    await this.getSuppliers()
+  },
+  computed: {
+    getUrlQueryParams() {
+      return {
+        page: this.$route.query?.page || 1,
+        pageSize: this.$route.query?.pageSize || 10,
+        search: this.$route.query.search || ''
+      }
+    },
+    isSearched() {
+      return !!this.$route.query?.search;
+    },
+    defaultQuery() {
+      return {
+        page: 1,
+        pageSize: 10,
+        search: this.query.search || ''
+      }
+    }
+  }, watch: {
+    async 'query.search'(newVal, oldVal) {
+      if (!newVal && this.isSearched) {
+        console.log("search");
+        await this.pushQuery(this.query)
+        await this.getSuppliers();
+      }
+    }
   }
 };
-
 </script>
-<style scoped>
-.loader {
-  margin: auto;
-  border: 20px solid #EAF0F6;
-  border-radius: 50%;
-  border-top: 20px solid #FF7A59;
-  width: 200px;
-  height: 200px;
-  animation: spinner 4s linear infinite;
-}
-
-@keyframes spinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
@@ -57,12 +101,23 @@ export default {
 			</ol>
 			<h1 class="page-header mb-0">Suppliers</h1>
 		</div>
-		<div class="ms-auto">
-      <a href="/supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-		</div>
-	</div>
+  </div>
+    <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
+      <section class="d-flex justify-content-between pb-3">
+<form @submit="searchSupplier" name="search">
+  <div class="form-group d-flex position-relative">
+    <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
+    <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+    <button type="button" class="btn px-1 position-absolute" :class="{'d-none' :this.query.search==''}" style="right: 1.25rem;" @click="query.search = ''"><i
+              class="bi bi-x"></i>
+          </button>
+  </div>
+</form>
+<router-link to="/supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+    class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
+</section>
 		<!-- BEGIN #vue3TableLite -->
-    <div class="card border-0">
+    <section>
 		<table class="table table-bordered table-dark table-stroped">
       <thead>
         <tr>
@@ -72,12 +127,14 @@ export default {
           <th>phone</th>
           <th>address</th>
           <th>info</th>
-          <th style="width: 100px;"> Action</th>
+          <th style="width: 200px;"> Action</th>
         </tr>
       </thead>
       <tbody v-if="isLoading">
         <tr>
-          <td colspan="7"><div class="loader"></div></td>
+          <div class="_center-loading">
+              <LoadingOnFetchingData />
+            </div>
         </tr>
       </tbody>
       <tbody  v-else>
@@ -88,14 +145,72 @@ export default {
           <td>{{ supplier.phone }}</td>
           <td>{{ supplier.address }}</td>
           <td>{{ supplier.info }}</td>
-		  <td style="width: 100px;">
-        <div style="display:flex;">
-        <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/supplier/${supplier.id}`">View</a>
+		  <td style="width: 200px;">
+        <div style="width: 100%; display: flex; justify-content: center;">
+        <router-link :to="'/supplier/' + supplier.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+          <i class="bi bi-pencil-square fs-4 text-info"></i>
+              </router-link>
               </div>
               </td>
         </tr>
       </tbody>
     </table>
+  </section>
+  <section v-if="this.suppliers.length > 0">
+      <ul class="pagination _custome-page">
+        <li class="page-item">
+          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link" :class="{'d-none': query.page}"
+            aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+          </button>
+        </li>
+        <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
+          <button class="page-link acitve" @click="toPage(pageNum)"
+            :class="{ 'bg-dark text-white': pageNum == this.query.page }">
+            {{ pageNum }}
+          </button>
+        </li>
+
+        <li class="page-item">
+          <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
+            class="page-link" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+          </button>
+        </li>
+      </ul>
+    </section>
   </div>
-        
 </template>
+<style scoped>
+._table tbody td {
+  vertical-align: middle;
+}
+
+._table {
+  position: relative;
+}
+
+._custome-page {
+  display: flex;
+  justify-content: end;
+  padding: .5rem;
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  width: 100%;
+  height: fit-content;
+
+}
+
+._center-loading {
+  position: absolute;
+  width: 100%;
+  height: 70vh;
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

@@ -2,8 +2,7 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
-import axios from 'axios';
-
+import order from "../../api/order/order"
 export default {
 	components: { ConfirmDialogue },
 	data() {
@@ -17,11 +16,8 @@ export default {
 	showTable: false
             }
 		},    
-	mounted() {
-		axios.get(`http://localhost:8081/api/v1/orders/${this.$route.params.id}`)
-        .then(response => {
-          this.orders = response.data;
-        })
+		async mounted() {
+				this.orders = await order.getOrderById(this.$route.params.id)
 		appOption.appSidebarWide = true;
 	},
 	beforeRouteLeave(to, from, next) {

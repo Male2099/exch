@@ -1,6 +1,6 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import AllproductApi from "../../api/AllproductApi"
+import AllproductApi from "../../api/product/AllproductApi"
 import StockitemApi from "../../api/stockitemApi"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
@@ -37,7 +37,7 @@ export default {
     },
   },
   async mounted() {
-    this.products = await AllproductApi.getAllProduct();
+    this.products = await AllproductApi.getAllProducts();
     this. stockingitem.AllproductApi = this.products[0]?.id;
   },
 };
@@ -62,7 +62,7 @@ export default {
                 <label class="form-label">Product</label>
                 <div>
             <select class="form-control" v-model="stockingitem.productId">
-              <option v-for="(product) in products" :key="product.id" :value="product.id" v-text="product.name"></option>
+              <option v-for="(product) in products.data" :key="product.id" :value="product.id" v-text="product.name"></option>
             </select>
           </div>
     </div>
@@ -92,4 +92,4 @@ export default {
     </div>
     </div>
   </form>
-</template>
+</template>../../api/product/AllproductApi

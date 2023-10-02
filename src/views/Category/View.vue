@@ -1,8 +1,8 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
-import categoryApi from '../../api/category';
-import Category from '../../api/category';
+import categoryApi from '../../api/category/category';
+import Category from '../../api/category/category';
 import ConfirmDialogue from '../../components/app/confirm.vue';
 import axios from 'axios';
 export default {
@@ -116,3 +116,4 @@ export default {
 </form>
 
 </template>
+../../api/category/category../../api/category/category

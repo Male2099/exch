@@ -1,8 +1,9 @@
 <script>
-import authApi from "../../api/authApi"
-import roleApi from "../../api/roleApi"
+import authApi from "../../api/service/authApi"
+import roleApi from "../../api/service/roleApi"
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
+import swal from "sweetalert"
 
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {
@@ -10,9 +11,9 @@ export default {
   data() {
     return {
       user: {
-        username: '',
-        password: '',
-        name: '',
+        username: 'testSweetAlert',
+        password: 'testSweetAlert',
+        name: 'testSweetAlert',
         img: '',
         dob: '',
         roleId: '3',
@@ -21,7 +22,7 @@ export default {
         phone: ""
       },
       roles: [],
-      image : null,
+      image: null,
       errors: {
         username: null,
         password: null
@@ -56,20 +57,24 @@ export default {
     },
     onChange(image) {
       if (image) {
-        console.log('Picture loaded.')
         this.image = this.$refs.pictureInput.file
-      } else {
-        console.log('FileReader API not supported: use the <form>')
       }
     },
+
+
     async registerUser(e) {
       e.preventDefault();
+      const confirm = await this.confirmDialog();
+      if (!confirm) return;
       this.loading = true;
       try {
+        this.user.img = await this.uploadImage();
         await authApi.registerUser(this.user);
         this.loading = false
-        this.$router.push("/user")
+        await this.showSuccessDialog()
+        // this.$router.push("/user")
       } catch (error) {
+        console.error(error);
         this.loading = false;
         this.errors.username = error.errors.username
       }
@@ -78,26 +83,50 @@ export default {
       const res = await imageApi.uplaodImage(this.image);
       return res;
     },
-
+    async confirmDialog() {
+      return swal({
+        title: "Create User",
+        text: "Are you sure you want to create this user?",
+        icon: "info",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Create',
+            value: true,
+            visible: true,
+            className: 'btn btn-success',
+            closeModal: true
+          }
+        }
+      })
+    }, async showSuccessDialog() {
+      await swal({
+        title: "Success",
+        text: "User created successfully!",
+        icon: "success",
+        button: {
+          text: "OK",
+          className: 'btn btn-success',
+        }
+      });
+    }
   },
   async mounted() {
     this.roles = await roleApi.getAllRoles();
     this.user.roleId = this.roles[2]?.id;
-
   },
 };
 
 </script>
 <template>
   <div class="d-flex align-items-center mb-3">
-    <div>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/user/">User</a></li>
-        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add User</li>
-      </ol>
-      <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
-    </div>
+    <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
     <div class="ms-auto">
       <a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
@@ -138,11 +167,11 @@ export default {
         </div>
         <div class="mb-3">
           <label class="form-label">Address</label>
-          <input type="text" class="form-control" placeholder="Address" v-model="user.address">
+          <input type="Address" class="form-control" placeholder="Address" v-model="user.address">
         </div>
         <div class="mb-3">
           <label class="form-label">Phone</label>
-          <input type="text" class="form-control" placeholder="Phone" v-model="user.phone">
+          <input type="phone" class="form-control" placeholder="Phone" v-model="user.phone">
         </div>
         <div class="mb-3">
           <label for="dob" class="form-label">DOB</label>
@@ -166,7 +195,7 @@ export default {
         </div>
         <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button :disabled="!isSubmittable" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
-            type="submit">Submit</button>
+            type="submit">Create</button>
 
           <a href="/user/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
         </div>
@@ -180,4 +209,4 @@ export default {
       </div>
     </div>
   </form>
-</template>
+</template>../../api/service/roleApi

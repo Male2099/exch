@@ -14,7 +14,7 @@ export default {
       });
       const data = await res.json();
       console.log(data);
-      return data.imageUrl;
+      return data.imageUrl || data.ImageUrl;
     } catch (error) {
       console.error("error appear: " + res.message);
     }
