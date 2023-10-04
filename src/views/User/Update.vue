@@ -115,13 +115,10 @@ export default {
 	},
 	async mounted() {
 		this.user = await userApi.getUserById(this.$route.params.id)
-		//set gender of user
 		this.user.sex = this.user.sex.toLocaleUpperCase()
-		// appOption.appSidebarWide = true;
 		this.user.roleId = this.user.role.id
 		this.user.password = ''
 		this.roles = await roleApi.getAllRoles();
-		this.user.roleId = this.roles[2]?.id;
 		this.renderPageEnable = true
 
 	},

@@ -133,7 +133,7 @@ export default {
         <div class="mb-3">
           <label for="deliveryAt" class="form-label">Delivery At</label>
           <div class="card">
-            <input type="date" class="form-control" placeholder="Delivery At" v-model="stock.deliveryAt" readonly>
+            <input type="text" class="form-control" placeholder="Delivery At" v-model="stock.deliveryAt" readonly>
           </div>
         </div>
         <div class="mb-3">

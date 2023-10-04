@@ -1,6 +1,5 @@
 <script>
 import category from "../../api/category/category"
-import axiosInstance from '../../api/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 

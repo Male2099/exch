@@ -14,7 +14,7 @@ export default {
   },
   async getOrderById(id) {
     try {
-    const res = await axiosInstance.get(`/orders/${id}`); 
+    const res = await axiosInstance.get(`/orders/${id}?includeDetail=true`); 
     return res.data;
   } catch (error) {
     console.log(error);

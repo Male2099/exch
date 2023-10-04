@@ -26,7 +26,7 @@ import axiosInstance from "../utils/axiosInstance";
     },
     async getStockById(id) {
       try {
-        const res = await axiosInstance.get(`/stockings/${id}`);
+        const res = await axiosInstance.get(`/stockings/${id}?includeDetail=true`);
         return res.data;
       } catch (error) {
         console.log(error);

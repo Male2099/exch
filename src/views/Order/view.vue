@@ -7,6 +7,7 @@ export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
+	defaultimage: '../../src/assets/defaultImage.png',
 	orders:{
         user:{},
         customer:{},
@@ -133,7 +134,7 @@ export default {
           <td>{{ order.price }}</td>
           <td>{{ order.cost }}</td>
           <td>{{ order.product.name }}</td>
-          <td><img :src="order.product.img" alt="" width="50" height="50"></td>
+          <td><img :src="order.product.img || defaultimage" alt="" width="50" height="50"></td>
         </tr>
         <!-- Additional table rows -->
       </tbody>

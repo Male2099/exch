@@ -70,7 +70,7 @@ export default {
     }, async showSuccessDialog() {
       await swal({
         title: "Success",
-        text: "User created successfully!",
+        text: "Category created successfully!",
         icon: "success",
         button: {
           text: "OK",
@@ -100,7 +100,7 @@ export default {
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label">Name</label>
-                <input type="text" class="form-control" id="name" placeholder="Category" v-model="category.name" required>
+                <input type="text" class="form-control" placeholder="Category" v-model="category.name" required>
             </div>
             <div class="card-header h6 mb-0 bg-none p-3">
                 <i class="fa-solid fa-image fa-lg fa-fw text-dark text-opacity-50 me-1"></i> Image
@@ -114,7 +114,7 @@ export default {
           </picture-input>
             </div>
             <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button :disabled="!isSubmittable" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
+          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
   <a href="/category/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>

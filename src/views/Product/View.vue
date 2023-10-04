@@ -1,72 +1,98 @@
 <script>
-import { useAppOptionStore } from '@/stores/app-option';
-const appOption = useAppOptionStore();
-import ConfirmDialogue from '../../components/app/confirm.vue';
+import Loading from '../../components/app/LoadingOnSubmit.vue';
+import imageApi from "../../api/imageApi"
+import PictureInput from 'vue-picture-input'
 import categoryId from "../../api/category/categoryId"
-import ProductApi from '../../api/product/product';
 import Product from '../../api/product/product';
-import axios from 'axios';
+import swal from "sweetalert"
 export default {
-	components: { ConfirmDialogue },
 	data() {
 		return {
 			defaultimage: '../../src/assets/defaultImage.png',
-
         products: {
-			category: {}
 		},
-		result: `The Product is`,
 		categories: [],
+		image: null,
+		loading: false,
+		renderPageEnable: false
     };
-		},    
-	async mounted() {
-		this.products = await ProductApi.getProductById(this.$route.params.id)
-		this.categories = await categoryId.getAllCategories();
-		this.products.categoryId = this.products.category.id;
-
-
-		appOption.appSidebarWide = true;
+		},
+		components: { 
+		PictureInput,
+		Loading },
+			computed: {
+		imageLoaded() {
+			return !!this.$refs.pictureInput.file;
+		}
 	},
-	beforeRouteLeave(to, from, next) {
-		appOption.appSidebarWide = false;
-		next();
-	},
-	methods: {
-                handleCheckboxChange() {
-                    this.result = `The Product is ${this.products.available ? 'activated' : 'disactivated'}`
-                },
-				async doDelete() {
-            const ok = await this.$refs.confirmDialogue.show({
-                title: 'Delete Confirmation',
-                message: 'Are you sure you want to delete? It cannot be undone.',
-                okButton: 'Delete Forever',
-            })
-            if (ok) {
-				axios
-        .delete(`http://localhost:8081/api/v1/products/${this.$route.params.id}`) 
-        .then(response => {
-			this.products = response.data;
-        })
-		this.$router.push("/product/").then(() => {
-        window.location.reload();
-	});
-            } else {
-                alert('You chose not to delete this page. Doing nothing now.')
-            }
-        },
+			methods: {
+		onChange(image) {
+			if (image) {
+				this.image = this.$refs.pictureInput.file
+			}
+		},
 		async updateProduct(e) {
 			e.preventDefault();
+			const confirm = await this.confirmDialog();
+			if (!confirm) return;
 			this.loading = true;
 			try {
-				await Product.updateProductById(this.$route.params.id, this.products);
+				this.products.img = await this.uploadImage();
+				this.products = await Product.updateProductById(this.$route.params.id, this.products);
+				this.loading = false
+				await this.showSuccessDialog()
+				 this.$router.push("/product/")
+			} catch (error) {
 				this.loading = false;
-				this.$router.push("/product/")
-			} catch (err) {
-				this.loading = false;
+				console.log(error);
 			}
+		},
+		async uploadImage() {
+			const res = await imageApi.uplaodImage(this.image);
+			return res;
+		},
+		async confirmDialog() {
+			return swal({
+				title: "Update Product",
+				text: "Are you sure you want to update this Product?",
+				icon: "info",
+				buttons: {
+					cancel: {
+						text: 'Cancel',
+						value: null,
+						visible: true,
+						className: 'btn btn-default',
+						closeModal: true,
+					},
+					confirm: {
+						text: 'Update',
+						value: true,
+						visible: true,
+						className: 'btn btn-success',
+						closeModal: true
+					}
+				}
+			})
+		}, async showSuccessDialog() {
+			await swal({
+				title: "Success",
+				text: "Product updated successfully!",
+				icon: "success",
+				button: {
+					text: "OK",
+					className: 'btn btn-success',
+				}
+			});
 		}
-			}
-}
+	},
+	async mounted() {
+		this.products = await Product.getProductById(this.$route.params.id)
+		this.products.categoryid = this.products.category.id
+		this.categories = await categoryId.getAllCategories();
+		this.renderPageEnable = true
+	},
+};
+
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
@@ -79,21 +105,21 @@ export default {
 			<h1 class="page-header mb-0">Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 		<a href="/product/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-
 		</div>
 	</div>
-	<form @submit="updateProduct">
+	<form v-if="renderPageEnable" @submit="updateProduct">
 	<div class="card border-0 mb-4" >
 		<div class="card-body">
-					<div class="mb-3">
-			<div class="text-center">
-				<img :src="products.img || defaultimage" class="rounded-circle" width="150" height="150" alt="" />
-			</div>
-		</div>
-		<div class="mb-3">
+			<div class="circle text-center">
+					<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
+						button-class="btn" :custom-strings="{
+							upload: '<h1>Bummer!</h1>',
+							drag: 'input profile picture'
+						}" @change="onChange" :prefill="products.img || defaultImage" :alertOnError="false">
+					</picture-input>
+				</div>
+				<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
 			<div class="card">
 				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="products.name">
@@ -102,8 +128,8 @@ export default {
 		<div class="mb-3">
                 <label class="form-label">Category</label>
                 <div>
-            <select class="form-control" v-model="products.categoryId">
-              <option v-for="(category) in categories" :key="category.id" :value="category.id" v-text="category.name"></option>
+            <select class="form-control" v-model="products.categoryid">
+              <option v-for="category in categories.data" :key="category.id" :value="category.id" v-text="category.name"></option>
             </select>
           </div>
 		</div>
@@ -140,22 +166,31 @@ export default {
 			</div>
 			</div>
 		</div>
-			<div class="mb-3">
-				<label for="status" class="form-label">Status</label>
-				<div class="form-check form-switch mb-2">
-					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="products.available" @change="handleCheckboxChange">
-					<label id="my-checkbox-checked" class="form-check-label"  for="my-checkbox">{{result}}</label>
+		<div class="mb-3">
+					<label class="form-label">Status </label>
 					<div>
-					<i> When the product is deactivated, the product is created in the system, so the product is reserved, but it is not Available until it is activated again </i>
+						<select class="form-control text-center" v-model="products.available"
+							:class="{ 'is-invalid': products.available === 'false' || products.available === false }">
+							<option value="true">Active</option>
+							<option value="false">Inactive</option>
+						</select>
+					</div>
 				</div>
-			</div>
-			</div>
-			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-				<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>
-				<a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
+				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
+
+					<a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+				</div>
+				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button class="btn btn-success btn-rounded rounded-pill"
+						style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
+						type="button">
+						<Loading style="font-size: .22rem" />
+					</button>
+				</div>
+
 			</div>
 		</div>
-	</div>
-</form>
+	</form>
 </template>
-../../api/category/categoryId../../api/product/product../../api/product/product
+../../api/category/categoryId

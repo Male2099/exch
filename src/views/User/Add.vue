@@ -72,7 +72,7 @@ export default {
         await authApi.registerUser(this.user);
         this.loading = false
         await this.showSuccessDialog()
-        // this.$router.push("/user")
+       this.$router.push("/user")
       } catch (error) {
         console.error(error);
         this.loading = false;

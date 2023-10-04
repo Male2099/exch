@@ -1,6 +1,5 @@
 <script>
 import product from "../../api/product/product"
-import axiosInstance from '../../api/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {	
@@ -155,7 +154,7 @@ export default {
           <td>{{ product.price }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.description }}</td>
-          <td><img :src="product.img || defaultimage" alt="" width="35px" height="35px"></td>
+          <td><img :src="product.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
         <router-link :to="'/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">

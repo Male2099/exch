@@ -11,13 +11,10 @@ export default {
     throw error.response.data;
   }
   },
-  async getAllCategories({ page, pageSize, roleId, search }) {
+  async getAllCategories({ page, pageSize, search }) {
     let query = `page=${page}&pageSize=${pageSize}`;
     if (search || search === "0") {
       query += `&search=${search}`;
-    }
-    if (roleId) {
-      query += `&roleId=${roleId}`;
     }
     try {
       const res = await axiosInstance.get(`/categories?${query}`);
