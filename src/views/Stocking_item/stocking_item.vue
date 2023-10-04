@@ -91,8 +91,8 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock_Item</li>
       </ol>
       <h1 class="page-header mb-0">Stocking Item</h1>
@@ -100,7 +100,7 @@ export default {
     <div class="ms-auto">
       <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
         :href="`/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-      <a href="/stock/" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
+      <a href="/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
     </div>
   </div>
   <form @submit="updateStocking">

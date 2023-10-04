@@ -10,6 +10,7 @@ export default {
 		return {
 			defaultimage: '../../src/assets/defaultImage.png',
         products: {
+			category: {}
 		},
 		categories: [],
 		image: null,
@@ -41,7 +42,7 @@ export default {
 				this.products = await Product.updateProductById(this.$route.params.id, this.products);
 				this.loading = false
 				await this.showSuccessDialog()
-				 this.$router.push("/product/")
+				 this.$router.push("/product")
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -87,8 +88,9 @@ export default {
 	},
 	async mounted() {
 		this.products = await Product.getProductById(this.$route.params.id)
-		this.products.categoryid = this.products.category.id
-		this.categories = await categoryId.getAllCategories();
+const categoryPage = await categoryId.getAllCategories();
+this.categories = categoryPage;
+this.products.categoryId = this.products.category.id
 		this.renderPageEnable = true
 	},
 };
@@ -98,14 +100,14 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-                <li class="breadcrumb-item"><a href="/product/">Product</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/product">Product</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Product Details</li>
 			</ol>
 			<h1 class="page-header mb-0">Product Info</h1>
 		</div>
 		<div class="ms-auto">
-		<a href="/product/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+		<a href="/product" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>
 	<form v-if="renderPageEnable" @submit="updateProduct">
@@ -128,7 +130,7 @@ export default {
 		<div class="mb-3">
                 <label class="form-label">Category</label>
                 <div>
-            <select class="form-control" v-model="products.categoryid">
+            <select class="form-control" v-model="products.categoryId">
               <option v-for="category in categories.data" :key="category.id" :value="category.id" v-text="category.name"></option>
             </select>
           </div>
@@ -179,7 +181,7 @@ export default {
 				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
 
-					<a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+					<a href="/product" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 				</div>
 				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success btn-rounded rounded-pill"

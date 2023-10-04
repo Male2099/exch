@@ -46,9 +46,9 @@ export default {
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
-        <li class="breadcrumb-item"><a href="javascript:;">Stock_Item</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
+        <li class="breadcrumb-item"><a :href="`/stocking_item/${this.$route.params.id}`">Stock_Item</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stock_Item</li>
 
       </ol>
@@ -87,7 +87,8 @@ export default {
       <input type="date" class="form-control" id="expDate" placeholder="EXpDate" v-model="stockingitem.expDate">
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>  <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
+      <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
+        <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
 </div>
     </div>
     </div>

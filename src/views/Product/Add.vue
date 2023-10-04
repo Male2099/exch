@@ -44,7 +44,7 @@ export default {
         await productApi.registerProduct(this.product);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push("/product/")
+        this.$router.push("/product")
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -90,7 +90,7 @@ export default {
   },
   async mounted() {
     this.categories = await categoryId.getAllCategories();
-    this.product.categoryId = this.categories[1]?.id;
+    this.product.categoryId = this.categories[0]?.id;
   },
 };
 </script>
@@ -98,8 +98,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
         <div>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-                <li class="breadcrumb-item"><a href="/product/">Product</a></li>
+                <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/product">Product</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Product</li>
             </ol>
             <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Product</h1>
@@ -156,7 +156,7 @@ export default {
           <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
 
-          <a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+          <a href="/product" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
         </div>
         <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"

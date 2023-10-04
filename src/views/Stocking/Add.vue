@@ -27,7 +27,7 @@ export default {
       try {
         await StockApi.registerStock(this.stock);
         this.loading = false
-        this.$router.push("/stock/")
+        this.$router.push("/stock")
       } catch (error) {
         this.loading = false;
       }
@@ -44,8 +44,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stcok</li>
 
       </ol>
@@ -73,7 +73,7 @@ export default {
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
       <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
-  <a href="/stock/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+  <a href="/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>
     </div>
     </div>

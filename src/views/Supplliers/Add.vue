@@ -28,7 +28,7 @@ export default {
         await suppliersApi.registerSupplier(this.supplier);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push("/supplier/")
+        this.$router.push("/supplier")
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -74,14 +74,14 @@ export default {
   	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-				<li class="breadcrumb-item"><a href="/supplier/">Supplier</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/supplier">Supplier</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Supplier</h1>
 		</div>
     <div class="ms-auto">
-			<a href="/supplier/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+			<a href="/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
     </div>
     <form @submit="registerSupplier">
@@ -110,7 +110,7 @@ export default {
 <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
-  <a href="/supplier/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+  <a href="/supplier" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>
 <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"

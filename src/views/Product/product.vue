@@ -103,7 +103,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Product</li>
 			</ol>
 			<h1 class="page-header mb-0">Product</h1>

@@ -50,8 +50,8 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/customer/">Customer</a></li>
+				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/customer">Customer</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Customer</li>
 			</ol>
 			<h1 class="page-header mb-0">Customer Profile</h1>
@@ -59,7 +59,7 @@ export default {
 		<div class="ms-auto">
 			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-		<a href="/customer/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+		<a href="/customer" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>
     <div class="card border-0 mb-4">
