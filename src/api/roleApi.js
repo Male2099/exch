@@ -1,9 +1,9 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 export default {
-  async getAllSuppliers() {
+  async getAllRoles() {
     try {
-      const res = await fetch(`${API_BASE_URL}/suppliers`, {
+      const res = await fetch(`${API_BASE_URL}/roles`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

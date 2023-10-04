@@ -11,15 +11,6 @@ export default {
   data() {
     return {
       user: {
-        // username: '',
-        // password: '',
-        // name: '',
-        // img: '',
-        // dob: '',
-        // roleId: '3',
-        // sex: 'MALE',
-        // address: '',
-        // phone: ""
         username: 'testSweetAlert',
         password: 'testSweetAlert',
         name: 'testSweetAlert',
@@ -81,7 +72,7 @@ export default {
         await authApi.registerUser(this.user);
         this.loading = false
         await this.showSuccessDialog()
-        // this.$router.push("/user")
+       this.$router.push("/user")
       } catch (error) {
         console.error(error);
         this.loading = false;

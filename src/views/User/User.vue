@@ -1,7 +1,6 @@
 <script>
 
 import userApi from "../../api/service/userApi"
-import axiosInstance from '../../api/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
@@ -279,4 +278,3 @@ export default {
   align-items: center;
 }
 </style>
-
