@@ -14,7 +14,11 @@ export const userAuthStore = defineStore({
   actions: {
     async setUser() {
       console.log("yep fetching auth user");
-      this.user = await authApi.getMe();
+      const authUser = await authApi.getMe();
+      //if this user is admin
+      if (authUser?.role?.name.toLowerCase().includes("admin")) {
+        this.user = authUser;
+      }
     },
     clearUser() {
       this.user = null;

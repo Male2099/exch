@@ -34,10 +34,7 @@ const authApi = {
   },
   async userIsAdmin() {
     const authUser = await this.getMe();
-    if (
-      // !authUser?.role?.name.includes("ROLE_ADMIN") ||
-      !authUser?.roleId?.name.includes("ROLE_ADMIN")
-    ) {
+    if (!authUser?.role?.name?.toLowerCase().includes("admin")) {
       //remove token
       localStorage.removeItem(accessToken_key);
       throw "Access denied";
