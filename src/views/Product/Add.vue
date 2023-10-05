@@ -1,9 +1,8 @@
 <script>
-import productApi from "../../api/product/productApi"
-import categoryId from "../../api/category/categoryId"
-import imageApi from "../../api/imageApi"
-import PictureInput from 'vue-picture-input'
-import swal from "sweetalert"
+import productApi from "@/services/apis/product/product"
+import categoryId from "@/services/apis/category/categoryId"
+import imageApi from   "@/services/apis/imageApi";
+import PictureInput from 'vue-picture-input';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -28,69 +27,35 @@ export default {
     PictureInput,
     Loading
   },
-  methods: {
-    onChange(image) {
-      if (image) {
-        this.image = this.$refs.pictureInput.file
-      }
-    },
+    methods: {
+        onChange(image) {
+            console.log('New picture selected!')
+            if (image) {
+                console.log('Picture loaded.')
+                this.image = image
+            } else {
+                console.log('FileReader API not supported: use the <form>')
+            }
+        },
     async registerProduct(e) {
       e.preventDefault();
-      const confirm = await this.confirmDialog();
-      if (!confirm) return;
       this.loading = true;
       try {
-        this.product.img = await this.uploadImage();
         await productApi.registerProduct(this.product);
         this.loading = false
-        await this.showSuccessDialog()
-        this.$router.push("/product/")
+        this.$router.push("/admin/product")
       } catch (error) {
-        console.error(error);
-        this.loading = false;
-      }
+        this.loading = false;      }
     },
     async uploadImage() {
       const res = await imageApi.uplaodImage(this.image);
       return res;
     },
-    async confirmDialog() {
-      return swal({
-        title: "Create Product",
-        text: "Are you sure you want to create this Product?",
-        icon: "info",
-        buttons: {
-          cancel: {
-            text: 'Cancel',
-            value: null,
-            visible: true,
-            className: 'btn btn-default',
-            closeModal: true,
-          },
-          confirm: {
-            text: 'Create',
-            value: true,
-            visible: true,
-            className: 'btn btn-success',
-            closeModal: true
-          }
-        }
-      })
-    }, async showSuccessDialog() {
-      await swal({
-        title: "Success",
-        text: "Product created successfully!",
-        icon: "success",
-        button: {
-          text: "OK",
-          className: 'btn btn-success',
-        }
-      });
-    }
+
   },
   async mounted() {
     this.categories = await categoryId.getAllCategories();
-    this.product.categoryId = this.categories[1]?.id;
+    this.product.categoryId = this.categories[0]?.id;
   },
 };
 </script>
@@ -98,8 +63,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
         <div>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-                <li class="breadcrumb-item"><a href="/product/">Product</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/product">Product</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Product</li>
             </ol>
             <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Product</h1>
@@ -129,7 +94,7 @@ export default {
                 <label class="form-label">Category</label>
                 <div>
             <select class="form-control" v-model="product.categoryId">
-              <option v-for="(category) in categories.data" :key="category.id" :value="category.id" v-text="category.name"></option>
+              <option v-for="(category) in categories" :key="category.id" :value="category.id" v-text="category.name"></option>
             </select>
           </div>
             </div>
@@ -146,26 +111,18 @@ export default {
             </div>
             <div class="card-body">
                 <picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
-            button-class="btn" :custom-strings="{
-              upload: '<h1>Bummer!</h1>',
-              drag: 'input profile picture'
-            }" @change="onChange">
-          </picture-input>
+                    button-class="btn" :custom-strings="{
+                        upload: '<h1>Bummer!</h1>',
+                        drag: 'input Product picture'
+                    }" @change="onChange">
+                </picture-input>
             </div>
-            <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
-            type="submit">Create</button>
-
-          <a href="/product/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
-        </div>
-        <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button class="btn btn-success btn-rounded rounded-pill"
-            style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;" type="button">
-            <Loading style="font-size: .22rem" />
-          </button>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
+            <a href="/admin/product" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
         </div>
     </div>
     </div>
     </div>
 </form>
-</template>../../api/category/categoryId
+</template>

@@ -1,8 +1,8 @@
 <script>
-import customer from "../../api/customer/customer"
-import { ContentLoader } from 'vue-content-loader';
+import customer from "@/services/apis/customer/customer"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
+import { ContentLoader } from 'vue-content-loader';
 export default {	
 	components: {
     ContentLoader,
@@ -107,7 +107,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Customer</li>
 			</ol>
 			<h1 class="page-header mb-0">Customer</h1>
@@ -154,7 +154,7 @@ export default {
           <td>{{ customer.lastOrderAt }}</td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/customer/' + customer.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/customer/' + customer.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
             </div>        

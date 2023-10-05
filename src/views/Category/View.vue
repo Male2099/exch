@@ -1,11 +1,12 @@
 <script>
-import Loading from '../../components/app/LoadingOnSubmit.vue';
-import imageApi from "../../api/imageApi"
-import PictureInput from 'vue-picture-input'
-import categoryApi from '../../api/category/category';
-import swal from "sweetalert"
+import { useAppOptionStore } from '@/stores/app-option';
+const appOption = useAppOptionStore();
+import categoryApi from '@/services/apis/category/category';
+import Category    from '@/services/apis/category/category';
+import ConfirmDialogue from '../../components/app/confirm.vue';
+import axios from 'axios';
 export default {
-
+	components: { ConfirmDialogue },
 	data() {
                 return {
 					defaultimage: '../../src/assets/defaultImage.png',
@@ -14,142 +15,105 @@ export default {
 						img:'',
 						available:''
 					},
-					result: `The category is`,
-					image: null,
-					loading: false,
-			renderPageEnable: false
+					result: `The category is`
                 }
             },
-			components: { 
-		PictureInput,
-		Loading },
-			computed: {
-		imageLoaded() {
-			return !!this.$refs.pictureInput.file;
-		}
+			async mounted() {
+				this.categories = await categoryApi.getCategoryById(this.$route.params.id)
+		appOption.appSidebarWide = true;
 	},
-			methods: {
-		onChange(image) {
-			if (image) {
-				this.image = this.$refs.pictureInput.file
-			}
-		},
+	beforeRouteLeave(to, from, next) {
+		appOption.appSidebarWide = false;
+		next();
+	},
+            methods: {
+                handleCheckboxChange() {
+                    this.result = `The category is ${this.categories.available ? 'activated' : 'disactivated'}`
+                },
+				async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            // If you throw an error, the method will terminate here unless you surround it wil try/catch
+            if (ok) {
+				axios
+        .delete(`http://localhost:8081/api/v1/categories/${this.$route.params.id}`) // Replace with your API endpoint
+        .then(response => {
+			this.customers = response.data;
+        })
+		this.$router.push("/admin/category").then(() => {
+        window.location.reload();
+	});
+            } else {
+                alert('You chose not to delete this page. Doing nothing now.')
+            }
+        },
 		async updateCategory(e) {
 			e.preventDefault();
-			const confirm = await this.confirmDialog();
-			if (!confirm) return;
 			this.loading = true;
 			try {
-				this.categories.img = await this.uploadImage();
-				this.categories = await categoryApi.updateCategoryById(this.$route.params.id, this.categories);
-				this.loading = false
-				await this.showSuccessDialog()
-				// this.$router.push("/user")
-			} catch (error) {
+				await Category.updateCategoryById(this.$route.params.id, this.categories);
 				this.loading = false;
-				console.log(error);
+				this.$router.push("/admin/category")
+			} catch (err) {
+				this.loading = false;
 			}
-		},
-		async uploadImage() {
-			const res = await imageApi.uplaodImage(this.image);
-			return res;
-		},
-		async confirmDialog() {
-			return swal({
-				title: "Update Category",
-				text: "Are you sure you want to update this Category?",
-				icon: "info",
-				buttons: {
-					cancel: {
-						text: 'Cancel',
-						value: null,
-						visible: true,
-						className: 'btn btn-default',
-						closeModal: true,
-					},
-					confirm: {
-						text: 'Update',
-						value: true,
-						visible: true,
-						className: 'btn btn-success',
-						closeModal: true
-					}
-				}
-			})
-		}, async showSuccessDialog() {
-			await swal({
-				title: "Success",
-				text: "Category updated successfully!",
-				icon: "success",
-				button: {
-					text: "OK",
-					className: 'btn btn-success',
-				}
-			});
 		}
-	},
-	async mounted() {
-		this.categories = await categoryApi.getCategoryById(this.$route.params.id)
-		this.renderPageEnable = true
-
-	},
-};
-
+            }
+}
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-				<li class="breadcrumb-item"><a href="/category/">Category</a></li>
-				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Update Category</li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/amdin/category">Category</a></li>
+				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
 			</ol>
-			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update Category</h1>
-	</div>
+			<h1 class="page-header mb-0">Category </h1>
 		</div>
-	<form v-if="renderPageEnable" @submit="updateCategory">
-    <div class="card border-0 mb-4 relative">
+		<div class="ms-auto">
+			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		<a href="/admin/category" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+
+		</div>
+	</div>
+	<form @submit="updateCategory">
+    <div class="card border-0 mb-4">
 		<div class="card-body">
 		<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
-				<input id="name"  type="text" class="form-control" placeholder="Name" v-model="categories.name" required>
+			<div class="card">
+				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="categories.name">
+			</div>
 		</div>
 		<div class="mb-3">
 			<label for="Img" class="form-label">Image</label>
-			<div class="circle text-center">
-				<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
-						button-class="btn" :custom-strings="{
-							upload: '<h1>Bummer!</h1>',
-							drag: 'input profile picture'
-						}" @change="onChange" :prefill="categories.img || defaultImage" :alertOnError="false">
-					</picture-input>
+			<div class="text-center">
+				
+				<img :src="categories.img || defaultimage" class="" alt="" width="150" height="150"/>
 			</div>
 		</div>
-		<div class="mb-3">
-					<label class="form-label">Status </label>
+			<div class="mb-3">
+				<label for="status" class="form-label">Status</label>
+				<div class="form-check form-switch mb-2">
+					<input class="form-check-input" type="checkbox" id="my-checkbox" v-model="categories.available" @change="handleCheckboxChange">
+					<label id="my-checkbox-checked" class="form-check-label"  for="my-checkbox">{{result}}</label>
 					<div>
-						<select class="form-control text-center" v-model="categories.available"
-							:class="{ 'is-invalid': categories.available === 'false' || categories.available === false }">
-							<option value="true">Active</option>
-							<option value="false">Inactive</option>
-						</select>
-					</div>
+					<i> When the category is deactivated, the category is created in the system, but it is not Available until it is activated again</i>
 				</div>
-				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
-
-					<a href="/category/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
-				</div>
-				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-					<button class="btn btn-success btn-rounded rounded-pill"
-						style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
-						type="button">
-						<Loading style="font-size: .22rem" />
-					</button>
-				</div>
-
+			</div>
+			</div>
+			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
+				<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i class="fa fa-recycle"></i>&ensp; Update</button>
+				<a href="/admin/category" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
 			</div>
 		</div>
-	</form>
+	</div>
+</form>
+
 </template>
-../../api/category/category
+../../api/category/category../../api/category/category

@@ -352,12 +352,12 @@ onMounted(() => {
 				<top-menu-nav v-if="menu.title" v-bind:menu="menu"></top-menu-nav>
 			</template>
 			
-			<div class="menu-item menu-control menu-control-start">
+			<!-- <div class="menu-item menu-control menu-control-start">
 				<a href="javascript:;" class="menu-link" v-on:click="handleMenuButtonAction($event, 'prev')"><i class="fa fa-angle-left"></i></a>
 			</div>
 			<div class="menu-item menu-control menu-control-end">
 				<a href="javascript:;" class="menu-link" v-on:click="handleMenuButtonAction($event, 'next')"><i class="fa fa-angle-right"></i></a>
-			</div>
+			</div> -->
 		</div>
 	</div>
 </template>

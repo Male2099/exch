@@ -1,5 +1,6 @@
 <script>
-import product from "../../api/product/product"
+import product       from '@/services/apis/product/product.js'
+import axiosInstance from '@/services/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {	
@@ -103,7 +104,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Product</li>
 			</ol>
 			<h1 class="page-header mb-0">Product</h1>
@@ -120,7 +121,7 @@ export default {
           </button> 
   </div>
 </form>
-<router-link to="/product/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+<router-link to="product/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
     class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
 </section>	
 <section>
@@ -154,10 +155,10 @@ export default {
           <td>{{ product.price }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.description }}</td>
-          <td><img :src="product.img || defaultimage" alt="" width="50" height="50"></td>
+          <td><img :src="product.img || defaultimage" alt="" width="35px" height="35px"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>  
             </div>

@@ -2,12 +2,11 @@
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
 import ConfirmDialogue from '../../components/app/confirm.vue'
-import order from "../../api/order/order"
+import order from "@/services/apis/order/order"
 export default {
 	components: { ConfirmDialogue },
 	data() {
                 return {
-	defaultimage: '../../src/assets/defaultImage.png',
 	orders:{
         user:{},
         customer:{},
@@ -55,8 +54,8 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/order/">Order</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li>
 			</ol>
 			<h1 class="page-header mb-0">Order Info</h1>
@@ -64,7 +63,7 @@ export default {
 		<div class="ms-auto">
 			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
         <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-		<a href="/order/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+		<a href="/admin/order" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>
     <div class="card border-0 mb-4">
@@ -134,7 +133,7 @@ export default {
           <td>{{ order.price }}</td>
           <td>{{ order.cost }}</td>
           <td>{{ order.product.name }}</td>
-          <td><img :src="order.product.img || defaultimage" alt="" width="50" height="50"></td>
+          <td><img :src="order.product.img" alt="" width="50" height="50"></td>
         </tr>
         <!-- Additional table rows -->
       </tbody>

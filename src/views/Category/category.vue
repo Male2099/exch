@@ -1,5 +1,7 @@
 <script>
-import category from "../../api/category/category"
+import category from "@/services/apis/category/category"
+import axiosInstance from "@/services/utils/axiosInstance";
+
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
@@ -110,7 +112,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Category</li>
 			</ol>
 			<h1 class="page-header mb-0">Category</h1>
@@ -129,7 +131,7 @@ export default {
           </button> 
                </div>
       </form>
-      <router-link to="/category/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+      <router-link to="/admin/category/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
     </section>
     <section>
@@ -156,7 +158,7 @@ export default {
           <td><img :src="category.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
             </div>

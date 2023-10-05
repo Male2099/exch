@@ -1,7 +1,7 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import StockApi from "../../api/stock/stockApi"
-import supplierApi from "../../api/supplier/allsupplier"
+import StockApi    from "@/services/apis/stock/stockApi"
+import supplierApi from "@/services/apis/supplier/allsupplier"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -27,7 +27,7 @@ export default {
       try {
         await StockApi.registerStock(this.stock);
         this.loading = false
-        this.$router.push("/stock/")
+        this.$router.push("/admin/stock")
       } catch (error) {
         this.loading = false;
       }
@@ -44,8 +44,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stcok</li>
 
       </ol>
@@ -73,9 +73,9 @@ export default {
     </div>
     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
       <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
-  <a href="/stock/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+  <a href="/admin/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>
     </div>
     </div>
   </form>
-</template>../../api/supplier/supplierApi
+</template>

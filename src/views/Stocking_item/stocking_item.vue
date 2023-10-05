@@ -1,8 +1,8 @@
 <script>
 import axios from 'axios';
-import StockingAll from '../../api/stock/stockitem';
-import Stocking from '../../api/stock/stockitem';
-import supplierApi from "../../api/supplier/allsupplier"
+import StockingAll from '@/services/apis/stock/stockitem';
+import Stocking    from '@/services/apis/stock/stockitem';
+import supplierApi from "@/services/apis/supplier/allsupplier"
 import ConfirmDialogue from '../../components/app/confirm.vue';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
@@ -44,7 +44,7 @@ export default {
           .then(response => {
             this.stock = response.data;
           })
-        this.$router.push("/stock/").then(() => {
+        this.$router.push("/admin/stock").then(() => {
           window.location.reload();
         });
       } else {
@@ -91,16 +91,16 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock/">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock_Item</li>
       </ol>
       <h1 class="page-header mb-0">Stocking Item</h1>
     </div>
     <div class="ms-auto">
       <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-        :href="`/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-      <a href="/stock/" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
+        :href="`/admin/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
+      <a href="/admin/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
     </div>
   </div>
   <form @submit="updateStocking">
@@ -133,7 +133,7 @@ export default {
         <div class="mb-3">
           <label for="deliveryAt" class="form-label">Delivery At</label>
           <div class="card">
-            <input type="text" class="form-control" placeholder="Delivery At" v-model="stock.deliveryAt" readonly>
+            <input type="date" class="form-control" placeholder="Delivery At" v-model="stock.deliveryAt" readonly>
           </div>
         </div>
         <div class="mb-3">
@@ -187,7 +187,7 @@ export default {
             <td>{{ stocking.cost }}</td>
             <td style="width: 100px;">
               <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-                :href="`/stocking_item/view/${stocking.id}`">View</a>
+                :href="`/admin/stocking_item/view/${stocking.id}`">View</a>
           </td>
         </tr>
       </tbody>

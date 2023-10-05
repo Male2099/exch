@@ -1,7 +1,7 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import AllproductApi from "../../api/product/AllproductApi"
-import StockitemApi from "../../api/stockitemApi"
+import AllproductApi from "@/services/apis/api/product/AllproductApi"
+import StockitemApi  from "@/services/apis/api/stockitemApi"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -31,7 +31,7 @@ export default {
       try {
         await StockitemApi.registerStockingProduct(this.stockingitem);
         this.loading = false
-        this.$router.push(`/stocking_item/${this.$route.params.id}`);
+        this.$router.push(`/admin/stocking_item/${this.$route.params.id}`);
                   } catch (error) {
         this.loading = false;      }
     },

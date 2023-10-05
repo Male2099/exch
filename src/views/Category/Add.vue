@@ -1,6 +1,7 @@
 <script>
-import categoryApi from "../../api/category/categoryApi"
-import imageApi from "../../api/imageApi"
+import categoryApi from "@/services/apis/category/categoryApi"
+import imageApi from "@/services/apis//imageApi"
+
 import PictureInput from 'vue-picture-input'
 import swal from "sweetalert"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
@@ -35,7 +36,7 @@ export default {
         await categoryApi.registerCategory(this.category);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push("/category")
+        this.$router.push("/admin/category")
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -70,7 +71,7 @@ export default {
     }, async showSuccessDialog() {
       await swal({
         title: "Success",
-        text: "Category created successfully!",
+        text: "User created successfully!",
         icon: "success",
         button: {
           text: "OK",
@@ -85,8 +86,8 @@ export default {
     <div class="d-flex align-items-center mb-3">
         <div>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
-                <li class="breadcrumb-item"><a href="/category">Category</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Add Category</li>
             </ol>
             <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Category</h1>
@@ -100,7 +101,7 @@ export default {
         <div class="card-body">
             <div class="mb-3">
                 <label class="form-label">Name</label>
-                <input type="text" class="form-control" placeholder="Category" v-model="category.name" required>
+                <input type="text" class="form-control" id="name" placeholder="Category" v-model="category.name" required>
             </div>
             <div class="card-header h6 mb-0 bg-none p-3">
                 <i class="fa-solid fa-image fa-lg fa-fw text-dark text-opacity-50 me-1"></i> Image
@@ -114,9 +115,9 @@ export default {
           </picture-input>
             </div>
             <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
+          <button :disabled="!isSubmittable" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
-  <a href="/category/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+  <a href="/admin/category" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 </div>
 <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"

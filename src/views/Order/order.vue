@@ -1,5 +1,5 @@
 <script>
-import order from "../../api/order/order"
+import order from "@/services/apis/order/order"
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {	
@@ -106,7 +106,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard/v2">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Order</li>
 			</ol>
 			<h1 class="page-header mb-0">Order</h1>
@@ -160,7 +160,7 @@ export default {
           <td>{{ order.changedMoney }}</td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/order/' + order.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/order/' + order.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
             </div>                

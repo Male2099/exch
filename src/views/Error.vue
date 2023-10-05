@@ -35,7 +35,7 @@ export default {
 				Perhaps, there pages will help find what you're looking for.
 			</div>
 			<div>
-				<router-link to="/dashboard/v2" class="btn btn-success px-3">Go Home</router-link>
+				<router-link to="/admin/dashboard" class="btn btn-success px-3">Go Home</router-link>
 			</div>
 		</div>
 	</div>
