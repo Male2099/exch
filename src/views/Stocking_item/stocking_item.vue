@@ -1,11 +1,12 @@
 <script>
-import axios from 'axios';
+import axiosInstance from "../../api/utils/axiosInstance";
 import StockingAll from '../../api/stock/stockitem';
-import Stocking from '../../api/stock/stockitem';
 import supplierApi from "../../api/supplier/allsupplier"
 import ConfirmDialogue from '../../components/app/confirm.vue';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
+
 export default {
   components: {
     ConfirmDialogue,
@@ -19,6 +20,8 @@ export default {
         supplier: {},
         stockingitems: []
       },
+      Stock: {
+  },
       suppliers: [],
       showTable: false
     };
@@ -26,7 +29,10 @@ export default {
 
   async mounted() {
     this.stock = await StockingAll.getStockById(this.$route.params.id);
+    this.Stock.tax = this.stock.tax;
+    this.Stock.status = this.stock.status;
     this.suppliers = await supplierApi.getAllSuppliers();
+
   },
   methods: {
     toggleTable() {
@@ -39,31 +45,64 @@ export default {
         okButton: 'Delete Forever',
       })
       if (ok) {
-        axios
-          .delete(`http://localhost:8081/api/v1/stockings/${this.$route.params.id}`)
-          .then(response => {
-            this.stock = response.data;
-          })
-        this.$router.push("/stock/").then(() => {
-          window.location.reload();
-        });
-      } else {
-        alert('You chose not to delete this page. Doing nothing now.')
-      }
+        const res = await axiosInstance.delete(`/stockings/${this.$route.params.id}`); 
+  return res.data,
+		this.$router.push("/stock").then(() => {
+        window.location.reload();
+	});
+            } else {
+				this.$router.push(`/stocking_item/${this.$route.params.id}`);
+            }
     },
     async updateStocking(e) {
-      e.preventDefault();
-      this.loading = true;
-      try {
-        await Stocking.updateStockById(this.$route.params.id, this.stock);
-        this.loading = false;
-        this.$router.push("/stock/")
-      } catch (err) {
-        this.loading = false;
-      }
-    }
+			e.preventDefault();
+			const confirm = await this.confirmDialog();
+			if (!confirm) return;
+			this.loading = true;
+			try {
+				this.stock = await StockingAll.updateStockById(this.$route.params.id, this.Stock);
+				this.loading = false
+				await this.showSuccessDialog()
+			} catch (error) {
+				this.loading = false;
+				console.log(error);
+			}
+		},
+		async confirmDialog() {
+			return swal({
+				title: "Update Stock",
+				text: "Are you sure you want to update this Stock?",
+				icon: "info",
+				buttons: {
+					cancel: {
+						text: 'Cancel',
+						value: null,
+						visible: true,
+						className: 'btn btn-default',
+						closeModal: true,
+					},
+					confirm: {
+						text: 'Update',
+						value: true,
+						visible: true,
+						className: 'btn btn-success',
+						closeModal: true
+					}
+				}
+			})
+		}, async showSuccessDialog() {
+			await swal({
+				title: "Success",
+				text: "Stock updated successfully!",
+				icon: "success",
+				button: {
+					text: "OK",
+					className: 'btn btn-success',
+				}
+			});
+		}
+	},
   }
-}
 
 </script>
 <style scoped>
@@ -98,36 +137,42 @@ export default {
       <h1 class="page-header mb-0">Stocking Item</h1>
     </div>
     <div class="ms-auto">
-      <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-        :href="`/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
+      <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
       <a href="/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
     </div>
   </div>
-  <form @submit="updateStocking">
   <div class="card border-0">
+    <form  @submit="updateStocking">
       <div class="card-body">
+        <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button v-if="stock.status == 'NEW'" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
+				</div>
+				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button class="btn btn-success btn-rounded rounded-pill"
+						style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
+						type="button">
+						<Loading style="font-size: .22rem" />
+					</button>
+				</div>
         <div class="mb-3">
           <label class="form-label">SupplierId</label>
-          <div>
-            <select class="form-control" v-model="stock.supplierId">
-              <option v-for="supplier in suppliers.data" :key="supplier.id" :value="supplier.id" v-text="supplier.name">
-              </option>
-            </select>
-          </div>
+          <div class="form-control">
+            {{stock.supplier.name}}
+        </div>
         </div>
         <div class="mb-3">
           <label for="Status" class="form-label">Status</label>
-          <select class="form-control" required v-model="stock.status">
+          <select class="form-control" required v-model="Stock.status">
             <option value="NEW">NEW</option>
-            <option value="SHIPPING">SHIPPING</option>
             <option value="COMPLETED">COMPLETED</option>
-            <option value="CANCEL">CANCEL</option>
+            <option value="CANCELLED">CANCELLED</option>
           </select>
         </div>
         <div class="mb-3">
           <label for="tax" class="form-label">Tax</label>
           <div class="card">
-            <input type="text" class="form-control" placeholder="Tax" required v-model="stock.tax">
+            <input type="text" class="form-control" placeholder="Tax" required v-model="Stock.tax">
           </div>
         </div>
         <div class="mb-3">
@@ -149,18 +194,16 @@ export default {
               v-model="stock.totalItem" readonly>
           </div>
         </div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit"><i
-              class="fa fa-recycle"></i>&ensp; Update</button>
-          <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i
-              class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-          <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-        </div>
       </div>
+    </form>
     <div>
-      <button @click="toggleTable" class="btn btn-success btn-rounded px-4 rounded-pill">
+      <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
+        <button @click="toggleTable" class="btn btn-success btn-rounded px-4 rounded-pill">
         {{ showTable ? 'Hide Order' : 'Show Order' }}
       </button>
+      <a type="button" v-if="stock.status == 'NEW'" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
+        :href="`/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
+      </div>
       <table v-if="showTable" class="table table-bordered table-dark table-stroped">
         <thead>
           <tr>
@@ -172,7 +215,7 @@ export default {
             <th>ExpDate</th>
             <th>MfgDate</th>
             <th>Cost</th>
-            <th style="width: 100px;">Action</th>
+            <th style="width: 100px;" v-if="stock.status == 'NEW'">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -185,8 +228,8 @@ export default {
             <td>{{ stocking.expDate }}</td>
             <td>{{ stocking.mfgDate }}</td>
             <td>{{ stocking.cost }}</td>
-            <td style="width: 100px;">
-              <a type="button" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
+            <td style="width: 100px;" v-if="stock.status == 'NEW'">
+              <a type="button" v-if="stock.status !== 'COMPLETED'" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
                 :href="`/stocking_item/view/${stocking.id}`">View</a>
           </td>
         </tr>
@@ -194,5 +237,4 @@ export default {
     </table>
   </div>
 </div>
-  </form>
 </template>../../api/supplier/supplierApi

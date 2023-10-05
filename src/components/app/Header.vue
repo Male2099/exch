@@ -93,7 +93,7 @@ onMounted(() => {
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<RouterLink to="/dashboard/v2" class="navbar-brand">
+			<RouterLink to="/dashboard" class="navbar-brand">
 				<span class="navbar-logo"></span> <b>Color</b> Admin
 			</RouterLink>
 			<button type="button" class="navbar-mobile-toggler" data-bs-toggle="collapse" data-bs-target="#top-navbar" v-if="appOption.appMegaMenu && !appOption.appSidebarTwo">

@@ -128,7 +128,7 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
     <div class="ms-auto">
-      <a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+      <a href="/user" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
   </div>
 

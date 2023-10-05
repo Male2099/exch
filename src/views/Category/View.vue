@@ -3,6 +3,9 @@ import Loading from '../../components/app/LoadingOnSubmit.vue';
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
 import categoryApi from '../../api/category/category';
+import ConfirmDialogue from '../../components/app/confirm.vue'
+import axiosInstance from "../../api/utils/axiosInstance";
+
 import swal from "sweetalert"
 export default {
 
@@ -21,6 +24,7 @@ export default {
                 }
             },
 			components: { 
+				ConfirmDialogue,
 		PictureInput,
 		Loading },
 			computed: {
@@ -34,6 +38,22 @@ export default {
 				this.image = this.$refs.pictureInput.file
 			}
 		},
+		async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+		const res = await axiosInstance.delete(`/categories/${this.$route.params.id}`); 
+  return res.data,
+		this.$router.push("/category").then(() => {
+        window.location.reload();
+	});
+            } else {
+				this.$router.push(`/category/${this.$route.params.id}`);
+            }
+        },
 		async updateCategory(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -105,7 +125,11 @@ export default {
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Update Category</li>
 			</ol>
 			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update Category</h1>
-	</div>
+		</div>
+		<div class="ms-auto">
+      <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
+		</div>
 		</div>
 	<form v-if="renderPageEnable" @submit="updateCategory">
     <div class="card border-0 mb-4 relative">

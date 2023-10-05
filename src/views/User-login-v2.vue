@@ -49,7 +49,7 @@ export default {
 	methods: {
 		checkForm: function(e) {
 			e.preventDefault();
-			this.$router.push({ path: '/dashboard/v2'})
+			this.$router.push({ path: '/dashboard'})
 		},
 		select: function(x) {
 			this.bg.bg1.active = false;

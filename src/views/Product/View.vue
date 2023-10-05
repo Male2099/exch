@@ -4,6 +4,8 @@ import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
 import categoryId from "../../api/category/categoryId"
 import Product from '../../api/product/product';
+import axiosInstance from "../../api/utils/axiosInstance";
+import ConfirmDialogue from '../../components/app/confirm.vue'
 import swal from "sweetalert"
 export default {
 	data() {
@@ -19,6 +21,7 @@ export default {
     };
 		},
 		components: { 
+			ConfirmDialogue,
 		PictureInput,
 		Loading },
 			computed: {
@@ -32,6 +35,22 @@ export default {
 				this.image = this.$refs.pictureInput.file
 			}
 		},
+		async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+		const res = await axiosInstance.delete(`/products/${this.$route.params.id}`); 
+  return res.data,
+		this.$router.push("/product").then(() => {
+        window.location.reload();
+	});
+            } else {
+				this.$router.push(`/product/${this.$route.params.id}`);
+            }
+        },
 		async updateProduct(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -107,6 +126,8 @@ this.products.categoryId = this.products.category.id
 			<h1 class="page-header mb-0">Product Info</h1>
 		</div>
 		<div class="ms-auto">
+			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 		<a href="/product" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>

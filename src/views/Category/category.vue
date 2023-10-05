@@ -35,8 +35,6 @@ export default {
 
       await this.pushQuery(this.query)
       await this.getCategories();
-      //set to make watch able to know if the current data is default or from search
-      // this.query.search = ''
     },
     async getCategories() {
       this.isLoading = true

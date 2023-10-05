@@ -1,9 +1,12 @@
 <script>
 import Loading from "../../components/app/LoadingOnSubmit.vue";
 import Supplier from "../../api/supplier/supplier";
+import ConfirmDialogue from '../../components/app/confirm.vue'
+import axiosInstance from "../../api/utils/axiosInstance";
 import swal from "sweetalert";
 export default {
-  components: { Loading },
+  components: { ConfirmDialogue,
+    Loading },
   data() {
     return {
       defaultimage: "../../src/assets/defaultImage.png",
@@ -14,6 +17,22 @@ export default {
     };
   },
   methods: {
+    async doDelete() {
+            const ok = await this.$refs.confirmDialogue.show({
+                title: 'Delete Confirmation',
+                message: 'Are you sure you want to delete? It cannot be undone.',
+                okButton: 'Delete Forever',
+            })
+            if (ok) {
+		const res = await axiosInstance.delete(`/suppliers/${this.$route.params.id}`); 
+  return res.data,
+		this.$router.push("/supplier").then(() => {
+        window.location.reload();
+	});
+            } else {
+				this.$router.push(`/supplier/${this.$route.params.id}`);
+            }
+        },
 		async updateSupplier(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -23,7 +42,7 @@ export default {
 				this.suppliers = await Supplier.updateSuppliersById(this.$route.params.id, this.suppliers);
 				this.loading = false
 				await this.showSuccessDialog()
-				// this.$router.push("/user")
+				 this.$router.push("/supplier")
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -83,6 +102,8 @@ export default {
 	  <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update Supplier</h1>
     </div>
     <div class="ms-auto">
+      <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
       <a href="/supplier" class="btn btn-success btn-rounded px-4 rounded-pill" type="button">Back</a
       >
     </div>

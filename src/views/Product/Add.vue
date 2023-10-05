@@ -90,7 +90,7 @@ export default {
   },
   async mounted() {
     this.categories = await categoryId.getAllCategories();
-    this.product.categoryId = this.categories[0]?.id;
+    this.product.categoryId = this.categories.data[0]?.id;
   },
 };
 </script>

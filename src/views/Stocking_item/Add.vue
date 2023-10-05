@@ -1,7 +1,9 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 import AllproductApi from "../../api/product/AllproductApi"
-import StockitemApi from "../../api/stockitemApi"
+import StockitemApi from "../../api/stock/stockitemApi"
+import swal from "sweetalert"
+
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -17,7 +19,6 @@ export default {
         productId:'1',
       },
       products: [],
-      image: null,
       loading: false
     }
   },
@@ -27,17 +28,55 @@ export default {
     methods: {
     async  registerStockingProduct(e) {
       e.preventDefault();
+      const confirm = await this.confirmDialog();
+      if (!confirm) return;
       this.loading = true;
       try {
         await StockitemApi.registerStockingProduct(this.stockingitem);
         this.loading = false
+        await this.showSuccessDialog()
         this.$router.push(`/stocking_item/${this.$route.params.id}`);
-                  } catch (error) {
-        this.loading = false;      }
+      } catch (error) {
+        this.loading = false;
+      }
     },
+    async confirmDialog() {
+      return swal({
+        title: "Create Stock",
+        text: "Are you sure you want to create this Stock",
+        icon: "info",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Create',
+            value: true,
+            visible: true,
+            className: 'btn btn-success',
+            closeModal: true
+          }
+        }
+      })
+    }, async showSuccessDialog() {
+      await swal({
+        title: "Success",
+        text: "Stock created successfully!",
+        icon: "success",
+        button: {
+          text: "OK",
+          className: 'btn btn-success',
+        }
+      });
+    }
   },
   async mounted() {
-    this.products = await AllproductApi.getAllProducts();
+    const suppliersPage = await AllproductApi.getAllProducts();
+    this.products = suppliersPage;
     this. stockingitem.AllproductApi = this.products[0]?.id;
   },
 };
@@ -86,10 +125,17 @@ export default {
       <label for="expDate" class="form-label">EXPDate</label>
       <input type="date" class="form-control" id="expDate" placeholder="EXpDate" v-model="stockingitem.expDate">
     </div>
-    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-      <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Submit</button>
-        <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
-</div>
+    <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
+            type="submit">Create</button>
+            <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
+        </div>
+        <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+          <button class="btn btn-success btn-rounded rounded-pill"
+            style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;" type="button">
+            <Loading style="font-size: .22rem" />
+          </button>
+        </div>
     </div>
     </div>
   </form>

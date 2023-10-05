@@ -1,6 +1,7 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
+import axiosInstance from "../../api/utils/axiosInstance";
 import ConfirmDialogue from '../../components/app/confirm.vue'
 import order from "../../api/order/order"
 export default {
@@ -36,19 +37,18 @@ export default {
                 okButton: 'Delete Forever',
             })
             if (ok) {
-				axios
-        .delete(`http://localhost:8081/api/v1/orders/${this.$route.params.id}`) // Replace with your API endpoint
-        .then(response => {
-			this.orders = response.data;
-        })
-		this.$router.push("/order/").then(() => {
+				if (ok) {
+		const res = await axiosInstance.delete(`/orders/${this.$route.params.id}`); 
+  return res.data,
+		this.$router.push("/order").then(() => {
         window.location.reload();
 	});
             } else {
-                alert('You chose not to delete this page. Doing nothing now.')
+				this.$router.push(`/order/${this.$route.params.id}`);
             }
-        },
+        }
   }
+}
 }
 </script>
 <template>

@@ -1,20 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
-
+import axiosInstance from "../utils/axiosInstance";
 const StockApi = {
   async registerStock(stock) {
-    const res = await fetch(`${API_BASE_URL}/stockings`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(stock),
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw data;
-    }
-    return data;
+    try{ 
+      const res = await axiosInstance.post("/stockings", stock);
+    return res.data
+  }catch (error) {
+    throw error.response.data;
+  }
   },
 };
-
 export default StockApi;

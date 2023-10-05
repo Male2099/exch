@@ -32,4 +32,23 @@ import axiosInstance from "../utils/axiosInstance";
         console.log(error);
       }
     },
+    async getStockingItemById(id) {
+      try {
+        const res = await axiosInstance.get(`/stocking-items/${id}?includeDetail=true`);
+        return res.data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateStockingItemById(id, updateStockingItem) {  
+      try {
+        const res = await axiosInstance.patch(`/stocking-items/${id}`, updateStockingItem);
+        console.log(res);
+        return res.data.data;
+      } catch (error) {
+        console.log("update errrr");
+        console.log(error);
+        throw error.response.data;
+      }
+    },
   };

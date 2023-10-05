@@ -20,6 +20,14 @@ export default {
     console.log(error);
   }
 },
+async DeleteSupplierById(id) {
+  try {
+  const res = await axiosInstance.delete(`/suppliers/${id}`); 
+  return res.data;
+} catch (error) {
+  console.log(error);
+}
+},
 async updateSuppliersById(id, updateSupplier) {
   try {
     const res = await axiosInstance.patch(`/suppliers/${id}`, updateSupplier);

@@ -18,7 +18,7 @@ export default {
 	methods: {
 		checkForm: function(e) {
 			e.preventDefault();
-			this.$router.push({ path: '/dashboard/v2'})
+			this.$router.push({ path: '/dashboard'})
 		}
 	}
 }
@@ -35,7 +35,7 @@ export default {
 				Perhaps, there pages will help find what you're looking for.
 			</div>
 			<div>
-				<router-link to="/dashboard/v2" class="btn btn-success px-3">Go Home</router-link>
+				<router-link to="/dashboard" class="btn btn-success px-3">Go Home</router-link>
 			</div>
 		</div>
 	</div>

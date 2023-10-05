@@ -1,10 +1,9 @@
 <script>
-import { useAppOptionStore } from '@/stores/app-option';
-const appOption = useAppOptionStore();
-import axios from 'axios';
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import StockItemId from "../../api/stock/stockitem"
+import ConfirmDialogue from '../../components/app/confirm.vue';
+import axiosInstance from "../../api/utils/axiosInstance";
+import swal from "sweetalert"
 export default {
-	components: { ConfirmDialogue },
 	data() {
                 return {
   stockingitems: {
@@ -12,18 +11,77 @@ export default {
 	stocking:{}
   },
                 }
-            },
-           
-	mounted() {
-		axios.get(`http://localhost:8081/api/v1/stocking-items/${this.$route.params.id}`)
-        .then(response => {
-          this.stockingitems = response.data;
-        })
-		appOption.appSidebarWide = true;
+            }, 
+			components: {
+    ConfirmDialogue},
+			methods: {
+				async doDelete() {
+      const ok = await this.$refs.confirmDialogue.show({
+        title: 'Delete Confirmation',
+        message: 'Are you sure you want to delete? It cannot be undone.',
+        okButton: 'Delete Forever',
+      })
+      if (ok) {
+        const res = await axiosInstance.delete(`/stocking-items/${this.$route.params.id}`); 
+  return res.data,
+  this.$router.push(`/stocking_item/${this.stockingitems.stocking.id}`).then(() => {
+        window.location.reload();
+	});
+            } else {
+				this.$router.push(`/stocking_item/view/${this.$route.params.id}`);
+            }
+    },
+		async updateStockItem(e) {
+			e.preventDefault();
+			const confirm = await this.confirmDialog();
+			if (!confirm) return;
+			this.loading = true;
+			try {
+				this.stockingitems = await StockItemId.updateStockingItemById(this.$route.params.id, this.stockingitems);
+				this.loading = false
+				await this.showSuccessDialog()
+				this.$router.push(`/stocking_item/${this.stockingitems.stocking.id}`);
+			} catch (error) {
+				this.loading = false;
+				console.log(error);
+			}
+		},
+		async confirmDialog() {
+			return swal({
+				title: "Update Stock Item",
+				text: "Are you sure you want to update this Stock Item?",
+				icon: "info",
+				buttons: {
+					cancel: {
+						text: 'Cancel',
+						value: null,
+						visible: true,
+						className: 'btn btn-default',
+						closeModal: true,
+					},
+					confirm: {
+						text: 'Update',
+						value: true,
+						visible: true,
+						className: 'btn btn-success',
+						closeModal: true
+					}
+				}
+			})
+		}, async showSuccessDialog() {
+			await swal({
+				title: "Success",
+				text: "Stock Item updated successfully!",
+				icon: "success",
+				button: {
+					text: "OK",
+					className: 'btn btn-success',
+				}
+			});
+		}
 	},
-	beforeRouteLeave(to, from, next) {
-		appOption.appSidebarWide = false;
-		next();
+	async mounted() {
+		this.stockingitems = await StockItemId.getStockingItemById(this.$route.params.id)
 	},
 }
 </script>
@@ -39,9 +97,12 @@ export default {
 			<h1 class="page-header mb-0">Stock Product Info</h1>
 		</div>
 		<div class="ms-auto">
+			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
+        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
 			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
 		</div>
 	</div>
+	<form @submit="updateStockItem">
 	<div class="card border-0 mb-4">
 		<div class="card-body">
 			<div class="mb-3">
@@ -52,14 +113,14 @@ export default {
 					<div class="mb-3">
 			<label for="Name" class="form-label">Name</label>
 			<div class="card">
-				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" required v-model="stockingitems.product.name">
+				<input id="name"  type="text" name="name" class="form-control" placeholder="Name" readonly v-model="stockingitems.product.name">
 			</div>
 		</div>
 		<div class="mb-3">
 			<label for="productId" class="form-label">Product Code</label>
 			<div class="card">
 				<div class="card">
-				<input id="productId"  type="text" name="productId" class="form-control" placeholder="Product Code" required v-model="stockingitems.product.id">
+				<input id="productId"  type="text" name="productId" class="form-control" placeholder="Product Code" readonly v-model="stockingitems.product.id">
 			</div>
 			</div>
 		</div>
@@ -96,11 +157,19 @@ export default {
 			</div>
 			</div>
 		</div>
-			
-			<div class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: 10px;">
-				<a :href="`/stocking_item/${stockingitems.stocking.id}`" class="btn btn-success btn-rounded px-4 rounded-pill"><i class="fa fa-recycle"></i>Update</a>
-				<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
-			</div>
+		<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
+
+					<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
+				</div>
+				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+					<button class="btn btn-success btn-rounded rounded-pill"
+						style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
+						type="button">
+						<Loading style="font-size: .22rem" />
+					</button>
+				</div>
 		</div>
 	</div>
+</form>
 </template>
