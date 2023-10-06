@@ -1,16 +1,11 @@
 <script>
-import axiosInstance from "../../api/utils/axiosInstance";
-import StockingAll from '../../api/stock/stockitem';
-import supplierApi from "../../api/supplier/allsupplier"
-import ConfirmDialogue from '../../components/app/confirm.vue';
-import { ContentLoader } from 'vue-content-loader';
+import StockingAll from '@/services/apis/stock/stockitem';
+import Stocking    from '@/services/apis/stock/stockitem';
+import supplierApi from "@/services/apis/supplier/allsupplier"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 import swal from "sweetalert"
-
 export default {
   components: {
-    ConfirmDialogue,
-    ContentLoader,
     LoadingOnFetchingData: Loading
   },
   data() {
@@ -38,22 +33,6 @@ export default {
     toggleTable() {
       this.showTable = !this.showTable;
     },
-    async doDelete() {
-      const ok = await this.$refs.confirmDialogue.show({
-        title: 'Delete Confirmation',
-        message: 'Are you sure you want to delete? It cannot be undone.',
-        okButton: 'Delete Forever',
-      })
-      if (ok) {
-        const res = await axiosInstance.delete(`/stockings/${this.$route.params.id}`); 
-  return res.data,
-		this.$router.push("/stock").then(() => {
-        window.location.reload();
-	});
-            } else {
-				this.$router.push(`/stocking_item/${this.$route.params.id}`);
-            }
-    },
     async updateStocking(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -63,6 +42,8 @@ export default {
 				this.stock = await StockingAll.updateStockById(this.$route.params.id, this.Stock);
 				this.loading = false
 				await this.showSuccessDialog()
+        this.$router.push("/admin/stock")
+
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -100,7 +81,46 @@ export default {
 					className: 'btn btn-success',
 				}
 			});
-		}
+		},
+    async deleteStockingItem(stocking) {
+      try {
+        const confirm = await this.confirmDeleteDialog(stocking);
+        if (!confirm) return;
+        this.isLoading = true
+        await Stocking.deleteStockingItemById(stocking.id);
+        location.reload();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(stocking) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting<span class="text-red">${stocking.product.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
+    }
 	},
   }
 
@@ -130,16 +150,14 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock_Item</li>
       </ol>
       <h1 class="page-header mb-0">Stocking Item</h1>
     </div>
     <div class="ms-auto">
-      <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-      <a href="/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
+      <a href="/admin/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
     </div>
   </div>
   <div class="card border-0">
@@ -202,7 +220,7 @@ export default {
         {{ showTable ? 'Hide Order' : 'Show Order' }}
       </button>
       <a type="button" v-if="stock.status == 'NEW'" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-        :href="`/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
+        :href="`/admin/stocking_item/add/${stock.id}`"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
       </div>
       <table v-if="showTable" class="table table-bordered table-dark table-stroped">
         <thead>
@@ -215,7 +233,7 @@ export default {
             <th>ExpDate</th>
             <th>MfgDate</th>
             <th>Cost</th>
-            <th style="width: 100px;" v-if="stock.status == 'NEW'">Action</th>
+            <th style="width: 200px;" v-if="stock.status == 'NEW'">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -228,9 +246,12 @@ export default {
             <td>{{ stocking.expDate }}</td>
             <td>{{ stocking.mfgDate }}</td>
             <td>{{ stocking.cost }}</td>
-            <td style="width: 100px;" v-if="stock.status == 'NEW'">
-              <a type="button" v-if="stock.status !== 'COMPLETED'" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"
-                :href="`/stocking_item/view/${stocking.id}`">View</a>
+            <td style="width: 200px;" v-if="stock.status == 'NEW'">
+              <a type="button" v-if="stock.status !== 'COMPLETED'" class="btn btn-rounded rounded-pill" aria-expanded="false"
+                :href="`/admin/stocking_item/view/${stocking.id}`"><i class="bi bi-pencil-square fs-4 text-info"></i></a>
+                <button class="btn rounded-pill text-danger" @click="deleteStockingItem(stocking)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
           </td>
         </tr>
       </tbody>

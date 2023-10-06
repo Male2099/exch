@@ -1,6 +1,6 @@
 <script>
-import supplier from "../../api/supplier/supplier"
-import axiosInstance from '../../api/utils/axiosInstance';
+import supplier from      "@/services/apis/supplier/supplier"
+import axiosInstance from '@/services/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {	
@@ -96,7 +96,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0">Suppliers</h1>
@@ -113,7 +113,7 @@ export default {
           </button>
   </div>
 </form>
-<router-link to="/supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+<router-link to="supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
     class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
 </section>
 		<!-- BEGIN #vue3TableLite -->
@@ -147,7 +147,7 @@ export default {
           <td>{{ supplier.info }}</td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/supplier/' + supplier.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/supplier/' + supplier.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
               </div>

@@ -1,7 +1,8 @@
 <script>
-import product from "../../api/product/product"
+import productid from '@/services/apis/product/product.js'
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
 export default {	
 	components: {
     ContentLoader,
@@ -35,7 +36,7 @@ export default {
     },
     async getProducts() {
       this.isLoading = true
-      const res = await product.getAllProducts(this.getUrlQueryParams);
+      const res = await productid.getAllProducts(this.getUrlQueryParams);
       this.isLoading = false
       this.products = res.data
       this.pageMetaData = res.metadata
@@ -55,6 +56,45 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteProduct(product) {
+      try {
+        const confirm = await this.confirmDeleteDialog(product);
+        if (!confirm) return;
+        this.isLoading = true
+        await productid.deleteProductById(product.id);
+        await this.getProducts();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(product) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting <span class="text-red">${product.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
 
   },
@@ -103,7 +143,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Product</li>
 			</ol>
 			<h1 class="page-header mb-0">Product</h1>
@@ -120,7 +160,7 @@ export default {
           </button> 
   </div>
 </form>
-<router-link to="/product/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+<router-link to="product/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
     class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
 </section>	
 <section>
@@ -157,9 +197,12 @@ export default {
           <td><img :src="product.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>  
+              <button class="btn rounded-pill text-danger" @click="deleteProduct(product)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
             </div>
       </td>
         </tr>

@@ -1,12 +1,12 @@
 <script>
 
-import userApi from "../../api/service/userApi"
-import { ContentLoader } from 'vue-content-loader';
+import userApi from "../../services/apis/user/userApi"
+
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
 
 export default {
   components: {
-    ContentLoader,
     LoadingOnFetchingData: Loading
   },
   data() {
@@ -64,8 +64,47 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteUser(user) {
+      try {
+        const confirm = await this.confirmDeleteDialog(user);
+        if (!confirm) return;
+        this.isLoading = true
+        await userApi.deleteUserById(user.id);
+        await this.getAllUsers();
+      } catch (error) {
+        this.isLoading = false
+        console.log(error);
+      }
+    },
+    async confirmDeleteDialog(user) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting <span class="text-red">${user.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
-
   },
   async mounted() {
     //set to current query of page
@@ -160,12 +199,12 @@ export default {
           <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
           <button type="submit" class="btn px-1 position-absolute" style="right: 0;"><i class="fa fa-search"></i>
           </button>
-          <button type="button" class="btn px-1 position-absolute" :class="{'d-none' :this.query.search==''}" style="right: 1.25rem;" @click="query.search = ''"><i
-              class="bi bi-x"></i>
+          <button type="button" class="btn px-1 position-absolute" :class="{ 'd-none': this.query.search == '' }"
+            style="right: 1.25rem;" @click="query.search = ''"><i class="bi bi-x"></i>
           </button>
         </div>
       </form>
-      <router-link to="/user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+      <router-link to="user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
     </section>
     <section>
@@ -206,10 +245,10 @@ export default {
             <td>{{ user.status ? "Active" : "Inactive" }}</td>
             <td>
               <div style="width: 100%; display: flex; justify-content: center;">
-                <router-link :to="'/user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+                <router-link :to="'user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
                   <i class="bi bi-pencil-square fs-4 text-info"></i>
                 </router-link>
-                <button class="btn rounded-pill text-danger" data-id="' + row.id + '" @click="deletecategories(users.id)">
+                <button class="btn rounded-pill text-danger" @click="deleteUser(user)">
                   <i class="bi bi-trash-fill w-100px fs-4"></i>
                 </button>
               </div>
@@ -278,3 +317,4 @@ export default {
   align-items: center;
 }
 </style>
+

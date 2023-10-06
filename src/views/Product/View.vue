@@ -1,11 +1,10 @@
 <script>
-import Loading from '../../components/app/LoadingOnSubmit.vue';
-import imageApi from "../../api/imageApi"
+import { useAppOptionStore } from '@/stores/app-option';
+const appOption = useAppOptionStore();
 import PictureInput from 'vue-picture-input'
-import categoryId from "../../api/category/categoryId"
-import Product from '../../api/product/product';
-import axiosInstance from "../../api/utils/axiosInstance";
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import imageApi from "../../services/apis/imageApi"
+import categoryId from "@/services/apis/category/categoryId"
+import Product    from '@/services/apis/product/product';
 import swal from "sweetalert"
 export default {
 	data() {
@@ -21,36 +20,19 @@ export default {
     };
 		},
 		components: { 
-			ConfirmDialogue,
 		PictureInput,
-		Loading },
+		 },
 			computed: {
 		imageLoaded() {
 			return !!this.$refs.pictureInput.file;
 		}
 	},
-			methods: {
+	methods: {
 		onChange(image) {
 			if (image) {
 				this.image = this.$refs.pictureInput.file
 			}
 		},
-		async doDelete() {
-            const ok = await this.$refs.confirmDialogue.show({
-                title: 'Delete Confirmation',
-                message: 'Are you sure you want to delete? It cannot be undone.',
-                okButton: 'Delete Forever',
-            })
-            if (ok) {
-		const res = await axiosInstance.delete(`/products/${this.$route.params.id}`); 
-  return res.data,
-		this.$router.push("/product").then(() => {
-        window.location.reload();
-	});
-            } else {
-				this.$router.push(`/product/${this.$route.params.id}`);
-            }
-        },
 		async updateProduct(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -61,7 +43,7 @@ export default {
 				this.products = await Product.updateProductById(this.$route.params.id, this.products);
 				this.loading = false
 				await this.showSuccessDialog()
-				 this.$router.push("/product")
+				 this.$router.push("/admin/product")
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -113,22 +95,20 @@ this.products.categoryId = this.products.category.id
 		this.renderPageEnable = true
 	},
 };
-
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-                <li class="breadcrumb-item"><a href="/product">Product</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+                <li class="breadcrumb-item"><a href="/admin/product">Product</a></li>
                 <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Product Details</li>
 			</ol>
 			<h1 class="page-header mb-0">Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-		<a href="/product" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+		<a href="/admin/product" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+
 		</div>
 	</div>
 	<form v-if="renderPageEnable" @submit="updateProduct">

@@ -1,7 +1,9 @@
 <script>
-import order from "../../api/order/order"
+import orderid from "@/services/apis/order/order"
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
+
 export default {	
 	components: {
     ContentLoader,
@@ -36,7 +38,7 @@ export default {
     },
     async getOrders() {
       this.isLoading = true
-      const res = await order.getAllOrders(this.getUrlQueryParams);
+      const res = await orderid.getAllOrders(this.getUrlQueryParams);
       this.isLoading = false
       this.orders = res.data
       this.pageMetaData = res.metadata
@@ -58,8 +60,46 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteOrder(order) {
+      try {
+        const confirm = await this.confirmDeleteDialog(order);
+        if (!confirm) return;
+        this.isLoading = true
+        await orderid.deleteOrderById(order.id);
+        await this.getOrders();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(order) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting The order with the ID <span class="text-red">${order.id}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
-
   },
   async mounted() {
     //set to current query of page
@@ -106,7 +146,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Order</li>
 			</ol>
 			<h1 class="page-header mb-0">Order</h1>
@@ -160,9 +200,12 @@ export default {
           <td>{{ order.changedMoney }}</td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/order/' + order.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/order/' + order.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
+              <button class="btn rounded-pill text-danger" @click="deleteOrder(order)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
             </div>                
       </td>
         </tr>

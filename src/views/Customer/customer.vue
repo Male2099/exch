@@ -1,8 +1,8 @@
 <script>
-import customer from "../../api/customer/customer"
-import { ContentLoader } from 'vue-content-loader';
+import customerapi from "@/services/apis/customer/customer"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
-
+import swal from "sweetalert"
+import { ContentLoader } from 'vue-content-loader';
 export default {	
 	components: {
     ContentLoader,
@@ -37,7 +37,7 @@ export default {
     },
     async getCustomers() {
       this.isLoading = true
-      const res = await customer.getAllCustomers(this.getUrlQueryParams);
+      const res = await customerapi.getAllCustomers(this.getUrlQueryParams);
       this.isLoading = false
       this.customers = res.data
       this.pageMetaData = res.metadata
@@ -59,8 +59,46 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteCustomer(customer) {
+      try {
+        const confirm = await this.confirmDeleteDialog(customer);
+        if (!confirm) return;
+        this.isLoading = true
+        await customerapi.deleteCustomerById(customer.id);
+        await this.getCustomers();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(customer) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting <span class="text-red">${customer.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
-
   },
   async mounted() {
     //set to current query of page
@@ -107,7 +145,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Customer</li>
 			</ol>
 			<h1 class="page-header mb-0">Customer</h1>
@@ -154,9 +192,12 @@ export default {
           <td>{{ customer.lastOrderAt }}</td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/customer/' + customer.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/customer/' + customer.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
+              <button class="btn rounded-pill text-danger" @click="deleteCustomer(customer)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
             </div>        
       </td>
         </tr>

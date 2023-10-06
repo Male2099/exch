@@ -1,11 +1,12 @@
 <script>
-import roleApi from "../../api/service/roleApi"
-import imageApi from "../../api/imageApi"
+import roleApi from "../../services/apis/role/roleApi"
+import imageApi from "../../services/apis/imageApi"
+
 import PictureInput from 'vue-picture-input'
-import userApi from "../../api/service/userApi"
 import swal from "sweetalert"
 
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import userApi from '../../services/apis/user/userApi'
 export default {
 	name: 'app',
 	data() {
@@ -115,10 +116,13 @@ export default {
 	},
 	async mounted() {
 		this.user = await userApi.getUserById(this.$route.params.id)
+		//set gender of user
 		this.user.sex = this.user.sex.toLocaleUpperCase()
+		// appOption.appSidebarWide = true;
 		this.user.roleId = this.user.role.id
 		this.user.password = ''
 		this.roles = await roleApi.getAllRoles();
+		// this.user.roleId = this.roles[2]?.id;
 		this.renderPageEnable = true
 
 	},
@@ -128,16 +132,16 @@ export default {
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<!-- <div> -->
-			<!-- <ol class="breadcrumb">
+		<!-- <ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="javascript:;">Home</a></li>
 				<li class="breadcrumb-item"><a href="javascript:;">User</a></li>
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add User</li>
 			</ol> -->
-			<!-- </div> -->
-			<!-- <div class="ms-auto">
+		<!-- </div> -->
+		<!-- <div class="ms-auto">
 				<a href="/user/" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 			</div> -->
-			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update User</h1>
+		<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Edit User</h1>
 	</div>
 
 	<form v-if="renderPageEnable" @submit="updateUser">
@@ -215,7 +219,7 @@ export default {
 				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
 
-					<a href="/user/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+					<router-link to="/admin/user" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</router-link>
 				</div>
 				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success btn-rounded rounded-pill"
@@ -229,5 +233,3 @@ export default {
 		</div>
 	</form>
 </template>
-
-../../api/service/roleApi

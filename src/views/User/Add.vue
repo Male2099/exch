@@ -1,7 +1,7 @@
 <script>
-import authApi from "../../api/service/authApi"
-import roleApi from "../../api/service/roleApi"
-import imageApi from "../../api/imageApi"
+import authApi from "../../services/apis/user/authApi"
+import roleApi from "../../services/apis/role/roleApi"
+import imageApi from "../../services/apis/imageApi"
 import PictureInput from 'vue-picture-input'
 import swal from "sweetalert"
 
@@ -11,6 +11,15 @@ export default {
   data() {
     return {
       user: {
+        // username: '',
+        // password: '',
+        // name: '',
+        // img: '',
+        // dob: '',
+        // roleId: '3',
+        // sex: 'MALE',
+        // address: '',
+        // phone: ""
         username: 'testSweetAlert',
         password: 'testSweetAlert',
         name: 'testSweetAlert',
@@ -72,7 +81,7 @@ export default {
         await authApi.registerUser(this.user);
         this.loading = false
         await this.showSuccessDialog()
-       this.$router.push("/user")
+        this.$router.push("/admin/user")
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -128,7 +137,7 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add User</h1>
     <div class="ms-auto">
-      <a href="/user" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+      <router-link to="/admin/user" class="btn btn-success btn-rounded px-4 rounded-pill">Back</router-link>
     </div>
   </div>
 
@@ -197,7 +206,7 @@ export default {
           <button :disabled="!isSubmittable" class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
 
-          <a href="/user/" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+          <router-link to="/admin/user" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</router-link>
         </div>
         <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"
@@ -209,4 +218,4 @@ export default {
       </div>
     </div>
   </form>
-</template>../../api/service/roleApi
+</template>

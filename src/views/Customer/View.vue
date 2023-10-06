@@ -1,12 +1,9 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
 const appOption = useAppOptionStore();
-import axiosInstance from "../../api/utils/axiosInstance";
-import customer from "../../api/customer/customer"
-import ConfirmDialogue from '../../components/app/confirm.vue'
+import customer from "@/services/apis/customer/customer"
 
 export default {
-	components: { ConfirmDialogue },
 	data() {
                 return {
 	customers:{},
@@ -25,22 +22,6 @@ export default {
     toggleTable() {
       this.showTable = !this.showTable;
     },
-	async doDelete() {
-            const ok = await this.$refs.confirmDialogue.show({
-                title: 'Delete Confirmation',
-                message: 'Are you sure you want to delete? It cannot be undone.',
-                okButton: 'Delete Forever',
-            })
-            if (ok) {
-		const res = await axiosInstance.delete(`/customers/${this.$route.params.id}`); 
-  return res.data,
-		this.$router.push("/customer").then(() => {
-        window.location.reload();
-	});
-            } else {
-				this.$router.push(`/customer/${this.$route.params.id}`);
-            }
-        },
   }
 }
 </script>
@@ -48,16 +29,14 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/customer">Customer</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/customer">Customer</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Customer</li>
 			</ol>
 			<h1 class="page-header mb-0">Customer Profile</h1>
 		</div>
 		<div class="ms-auto">
-			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-		<a href="/customer" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+		<a href="/admin/customer" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 	</div>
     <div class="card border-0 mb-4">

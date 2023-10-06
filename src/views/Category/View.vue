@@ -1,14 +1,10 @@
 <script>
-import Loading from '../../components/app/LoadingOnSubmit.vue';
 import imageApi from "../../api/imageApi"
 import PictureInput from 'vue-picture-input'
-import categoryApi from '../../api/category/category';
-import ConfirmDialogue from '../../components/app/confirm.vue'
-import axiosInstance from "../../api/utils/axiosInstance";
-
+import categoryApi from '@/services/apis/category/category';
+import ConfirmDialogue from '../../components/app/confirm.vue';
 import swal from "sweetalert"
 export default {
-
 	data() {
                 return {
 					defaultimage: '../../src/assets/defaultImage.png',
@@ -25,8 +21,7 @@ export default {
             },
 			components: { 
 				ConfirmDialogue,
-		PictureInput,
-		Loading },
+		PictureInput },
 			computed: {
 		imageLoaded() {
 			return !!this.$refs.pictureInput.file;
@@ -38,22 +33,6 @@ export default {
 				this.image = this.$refs.pictureInput.file
 			}
 		},
-		async doDelete() {
-            const ok = await this.$refs.confirmDialogue.show({
-                title: 'Delete Confirmation',
-                message: 'Are you sure you want to delete? It cannot be undone.',
-                okButton: 'Delete Forever',
-            })
-            if (ok) {
-		const res = await axiosInstance.delete(`/categories/${this.$route.params.id}`); 
-  return res.data,
-		this.$router.push("/category").then(() => {
-        window.location.reload();
-	});
-            } else {
-				this.$router.push(`/category/${this.$route.params.id}`);
-            }
-        },
 		async updateCategory(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -64,7 +43,7 @@ export default {
 				this.categories = await categoryApi.updateCategoryById(this.$route.params.id, this.categories);
 				this.loading = false
 				await this.showSuccessDialog()
-				// this.$router.push("/user")
+				 this.$router.push("/admin/category")
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -113,24 +92,19 @@ export default {
 		this.renderPageEnable = true
 
 	},
-};
-
+}
 </script>
 <template>
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-				<li class="breadcrumb-item"><a href="/category">Category</a></li>
-				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Update Category</li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
+				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
 			</ol>
-			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Update Category</h1>
+			<h1 class="page-header mb-0">Category </h1>
 		</div>
-		<div class="ms-auto">
-      <button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-		</div>
-		</div>
+	</div>
 	<form v-if="renderPageEnable" @submit="updateCategory">
     <div class="card border-0 mb-4 relative">
 		<div class="card-body">
@@ -161,8 +135,7 @@ export default {
 				</div>
 				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
-
-					<a href="/category" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+					<a href="/admin/category" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
 				</div>
 				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success btn-rounded rounded-pill"
@@ -171,9 +144,9 @@ export default {
 						<Loading style="font-size: .22rem" />
 					</button>
 				</div>
-
-			</div>
 		</div>
-	</form>
+	</div>
+</form>
+
 </template>
-../../api/category/category
+../../api/category/category../../api/category/category

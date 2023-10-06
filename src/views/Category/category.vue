@@ -1,11 +1,9 @@
 <script>
-import category from "../../api/category/category"
-import { ContentLoader } from 'vue-content-loader';
+import categoryid from "@/services/apis/category/category"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
-
+import swal from "sweetalert"
 export default {	
 	components: {
-    ContentLoader,
     LoadingOnFetchingData: Loading
 	},
 	data() {
@@ -35,10 +33,12 @@ export default {
 
       await this.pushQuery(this.query)
       await this.getCategories();
+      //set to make watch able to know if the current data is default or from search
+      // this.query.search = ''
     },
     async getCategories() {
       this.isLoading = true
-      const res = await category.getAllCategories(this.getUrlQueryParams);
+      const res = await categoryid.getAllCategories(this.getUrlQueryParams);
       this.isLoading = false
       this.categories = res.data
       this.pageMetaData = res.metadata
@@ -60,8 +60,46 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteCategory(category) {
+      try {
+        const confirm = await this.confirmDeleteDialog(category);
+        if (!confirm) return;
+        this.isLoading = true
+        await categoryid.deleteCategoryById(category.id);
+        await this.getCategories();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(category) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting <span class="text-red">${category.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
-
   },
   async mounted() {
     //set to current query of page
@@ -108,7 +146,7 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Category</li>
 			</ol>
 			<h1 class="page-header mb-0">Category</h1>
@@ -127,7 +165,7 @@ export default {
           </button> 
                </div>
       </form>
-      <router-link to="/category/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+      <router-link to="/admin/category/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
     </section>
     <section>
@@ -154,9 +192,12 @@ export default {
           <td><img :src="category.img || defaultimage" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
+              <button class="btn rounded-pill text-danger" @click="deleteCategory(category)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
             </div>
               </td>
         </tr>

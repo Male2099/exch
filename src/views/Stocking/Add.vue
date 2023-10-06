@@ -1,9 +1,9 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import StockApi from "../../api/stock/stockApi"
-import supplierApi from "../../api/supplier/allsupplier"
-import swal from "sweetalert"
+import StockApi    from "@/services/apis/stock/stockApi"
+import supplierApi from "@/services/apis/supplier/allsupplier"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
 
 export default {
     name: 'app',
@@ -31,7 +31,7 @@ export default {
         await StockApi.registerStock(this.stock);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push("/stock")
+        this.$router.push("/admin/stock")
       } catch (error) {
         this.loading = false;
       }
@@ -83,9 +83,9 @@ export default {
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
-        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stock</li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stcok</li>
 
       </ol>
       <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Stock</h1>

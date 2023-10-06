@@ -1,7 +1,5 @@
 <script>
-import StockItemId from "../../api/stock/stockitem"
-import ConfirmDialogue from '../../components/app/confirm.vue';
-import axiosInstance from "../../api/utils/axiosInstance";
+import StockItemId from "@/services/apis/stock/stockitem"
 import swal from "sweetalert"
 export default {
 	data() {
@@ -12,25 +10,7 @@ export default {
   },
                 }
             }, 
-			components: {
-    ConfirmDialogue},
 			methods: {
-				async doDelete() {
-      const ok = await this.$refs.confirmDialogue.show({
-        title: 'Delete Confirmation',
-        message: 'Are you sure you want to delete? It cannot be undone.',
-        okButton: 'Delete Forever',
-      })
-      if (ok) {
-        const res = await axiosInstance.delete(`/stocking-items/${this.$route.params.id}`); 
-  return res.data,
-  this.$router.push(`/stocking_item/${this.stockingitems.stocking.id}`).then(() => {
-        window.location.reload();
-	});
-            } else {
-				this.$router.push(`/stocking_item/view/${this.$route.params.id}`);
-            }
-    },
 		async updateStockItem(e) {
 			e.preventDefault();
 			const confirm = await this.confirmDialog();
@@ -40,7 +20,7 @@ export default {
 				this.stockingitems = await StockItemId.updateStockingItemById(this.$route.params.id, this.stockingitems);
 				this.loading = false
 				await this.showSuccessDialog()
-				this.$router.push(`/stocking_item/${this.stockingitems.stocking.id}`);
+				this.$router.push(`/admin/stocking_item/${this.stockingitems.stocking.id}`);
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -49,7 +29,7 @@ export default {
 		async confirmDialog() {
 			return swal({
 				title: "Update Stock Item",
-				text: "Are you sure you want to update this Stock Item?",
+				text: "Are you sure you want to update this Stock PRODUCT?",
 				icon: "info",
 				buttons: {
 					cancel: {
@@ -71,7 +51,7 @@ export default {
 		}, async showSuccessDialog() {
 			await swal({
 				title: "Success",
-				text: "Stock Item updated successfully!",
+				text: "Stock PRODUCT updated successfully!",
 				icon: "success",
 				button: {
 					text: "OK",
@@ -89,17 +69,15 @@ export default {
 	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
         <li class="breadcrumb-item"><a type="button" :href="`/stocking_item/${stockingitems.stocking.id}`">Stock_Item</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> View Stock_Item</li>
 			</ol>
 			<h1 class="page-header mb-0">Stock Product Info</h1>
 		</div>
 		<div class="ms-auto">
-			<button class="btn btn-danger btn-rounded px-4 rounded-pill" @click="doDelete"><i class="fa fa-trash-o fa-lg me-2 ms-n2 text-success-900"></i>Deleted</button>
-        <confirm-dialogue ref="confirmDialogue"></confirm-dialogue>
-			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
+			<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/admin/stocking_item/${stockingitems.stocking.id}`">Back</a>
 		</div>
 	</div>
 	<form @submit="updateStockItem">
@@ -160,7 +138,7 @@ export default {
 		<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
 
-					<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${stockingitems.stocking.id}`">Back</a>
+					<a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/admin/stocking_item/${stockingitems.stocking.id}`">Back</a>
 				</div>
 				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 					<button class="btn btn-success btn-rounded rounded-pill"

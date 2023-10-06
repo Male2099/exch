@@ -1,9 +1,7 @@
 <script>
-import { useAppOptionStore } from '@/stores/app-option';
-import AllproductApi from "../../api/product/AllproductApi"
-import StockitemApi from "../../api/stock/stockitemApi"
+import AllproductApi from "@/services/apis/product/AllproductApi"
+import StockitemApi from "@/services/apis/stock/stockitemApi"
 import swal from "sweetalert"
-
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 
 export default {
@@ -35,7 +33,7 @@ export default {
         await StockitemApi.registerStockingProduct(this.stockingitem);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push(`/stocking_item/${this.$route.params.id}`);
+        this.$router.push(`/admin/stocking_item/${this.$route.params.id}`);
       } catch (error) {
         this.loading = false;
       }
@@ -85,9 +83,9 @@ export default {
     <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-        <li class="breadcrumb-item"><a href="/stock">Stock</a></li>
-        <li class="breadcrumb-item"><a :href="`/stocking_item/${this.$route.params.id}`">Stock_Item</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
+        <li class="breadcrumb-item"><a :href="`/admin/stocking_item/${this.$route.params.id}`">Stock_Item</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stock_Item</li>
 
       </ol>
@@ -128,7 +126,7 @@ export default {
     <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
-            <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/stocking_item/${this.$route.params.id}`">Back</a>
+            <a type="button" class="btn btn-danger btn-rounded px-4 rounded-pill" aria-expanded="false" :href="`/admin/stocking_item/${this.$route.params.id}`">Back</a>
         </div>
         <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"

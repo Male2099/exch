@@ -1,7 +1,9 @@
 <script>
-import stock from "../../api/stock/stockitem"
+import stock from "@/services/apis/stock/stockitem"
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
+
 export default {	
 	components: {
     ContentLoader,
@@ -58,8 +60,46 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteStock(stocking) {
+      try {
+        const confirm = await this.confirmDeleteDialog(stocking);
+        if (!confirm) return;
+        this.isLoading = true
+        await stock.deleteStockById(stocking.id);
+        location.reload();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(stocking) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting The Stock with the ID of <span class="text-red">${stocking.id}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
-
   },
   async mounted() {
     //set to current query of page
@@ -106,7 +146,7 @@ export default {
   <div class="d-flex align-items-center mb-3">
     <div>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock</li>
       </ol>
       <h1 class="page-header mb-0">Stock</h1>
@@ -124,7 +164,7 @@ export default {
           </button> 
                </div>
       </form>
-      <router-link to="/stock/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+      <router-link to="/admin/stock/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
     </section>
     <section>
@@ -161,9 +201,12 @@ export default {
           <td>{{ stocking.status }}</td>
           <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/stocking_item/' + stocking.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+        <router-link :to="'/admin/stocking_item/' + stocking.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
           <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
+              <button class="btn rounded-pill text-danger" @click="deleteStock(stocking)">
+                  <i class="bi bi-trash-fill w-100px fs-4"></i>
+                </button>
             </div>    
               </td>
         </tr>

@@ -1,5 +1,5 @@
 <script>
-import suppliersApi from "../../api/supplier/supplierApi"
+import suppliersApi from "@/services/apis/supplier/supplierApi"
 import swal from "sweetalert"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 export default {
@@ -28,7 +28,7 @@ export default {
         await suppliersApi.registerSupplier(this.supplier);
         this.loading = false
         await this.showSuccessDialog()
-        this.$router.push("/supplier")
+        this.$router.push("/admin/supplier")
       } catch (error) {
         console.error(error);
         this.loading = false;
@@ -74,14 +74,14 @@ export default {
   	<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/dashboard">Home</a></li>
-				<li class="breadcrumb-item"><a href="/supplier">Supplier</a></li>
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/supplier">Supplier</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
 			</ol>
 			<h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Supplier</h1>
 		</div>
     <div class="ms-auto">
-			<a href="/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+			<a href="/admin/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
     </div>
     </div>
     <form @submit="registerSupplier">
