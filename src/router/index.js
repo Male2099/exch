@@ -102,12 +102,26 @@ const router = createRouter({
           path: "stocking_item/add/:id",
           component: () => import("../views/Stocking_item/Add.vue"),
         },
+        {
+          path: "me",
+          redirect: "/admin/me/profile",
+          // component: () => import("@/views/AuthProfile/Profile.vue"),
+          children: [
+            {
+              path: "profile",
+              component: () => import("@/views/AuthProfile/Profile.vue"),
+            },
+            {
+              path: "reset-password",
+              component:()=>import("@/views/AuthProfile/ResetPassword.vue")
+            }
+          ],
+        },
       ],
     },
   ],
 });
 
-import authApi from "../services/apis/user/authApi";
 import { userAuthStore } from "../stores/app-auth";
 
 router.beforeEach((to, from, next) => {

@@ -672,7 +672,7 @@ $app-boxed-layout-bg-cover:         url(./default/images/cover-pattern.png) !def
 $app-error-page-bg-cover:           url(./default/images/error-page-pattern.png) !default;    
 $app-login-bg-cover:                url(./default/images/bg-login.png) !default; 
 $app-login-bg-cover-dark:           url(./default/images/bg-login-dark-mode.png) !default;
-$app-profile-bg-cover:              url(./default/images/profile-cover.jpg) !default;
+$app-profile-bg-cover:              url(@/assets/profile-cover.png) !default;
 
 
 
