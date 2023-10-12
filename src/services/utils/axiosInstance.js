@@ -16,7 +16,7 @@ const axiosInstance = axios.create({
 // Add a request interceptor to update the token in the headers
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem(accessToken_key);
-  console.log("token send to server: " + token);
+  // console.log("token send to server: " + token);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -26,11 +26,11 @@ axiosInstance.interceptors.request.use((config) => {
 // Add a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("Jol response hz");
+    // console.log("Jol response hz");
     return response;
   },
   (error) => {
-    console.log("Jol error hz");
+    // console.log("Jol error hz");
 
     if (error.request && !error.response) {
       return Promise.reject(error);

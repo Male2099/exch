@@ -13,6 +13,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    exclude: ['vue-demi']
-	}
+    exclude: ['vue-demi', "node_modules/vue2-daterange-picker"]
+  }
 });
