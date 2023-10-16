@@ -4,6 +4,7 @@ import swal from "sweetalert"
 export default {
 	data() {
                 return {
+					defaultimage: '../../src/assets/defaultImage.png',
   stockingitems: {
 	product:{},
 	stocking:{}
@@ -85,7 +86,7 @@ export default {
 		<div class="card-body">
 			<div class="mb-3">
 			<div class="text-center">
-				<img :src="stockingitems.product.img" class="rounded-circle" width="150" height="150" alt="" />
+				<img :src="stockingitems.product.img|| defaultimage" onerror="this.src='../../src/assets/defaultImage.png'"> class="rounded-circle" width="150" height="150" alt="" />
 			</div>
 		</div>
 					<div class="mb-3">

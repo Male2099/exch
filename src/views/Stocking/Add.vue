@@ -109,7 +109,7 @@ export default {
     <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
             type="submit">Create</button>
-          <a href="/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+          <a href="/admin/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
         </div>
         <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
           <button class="btn btn-success btn-rounded rounded-pill"

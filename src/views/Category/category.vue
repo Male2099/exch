@@ -189,7 +189,7 @@ export default {
         <tr v-for="category in categories" :key="category.id">
           <td>{{ category.id }}</td>
           <td>{{ category.name }}</td>
-          <td><img :src="category.img || defaultimage" alt="" width="50" height="50"></td>
+          <td><img :src="category.img || defaultimage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
         <router-link :to="'/admin/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">

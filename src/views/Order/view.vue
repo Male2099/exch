@@ -112,7 +112,7 @@ export default {
           <td>{{ order.price }}</td>
           <td>{{ order.cost }}</td>
           <td>{{ order.product.name }}</td>
-          <td><img :src="order.product.img" alt="" width="50" height="50"></td>
+          <td><img :src="order.product.img|| defaultimage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" width="50" height="50"></td>
         </tr>
         <!-- Additional table rows -->
       </tbody>

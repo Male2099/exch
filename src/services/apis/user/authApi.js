@@ -53,6 +53,26 @@ const authApi = {
       // throw error.response.data;
     }
   },
+  async resetPassword(currentPassword, newPassword) {
+    try {
+      const res = await axiosInstance.patch("/auth/me/reset-password", {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+      });
+      return res.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
+  async updateMe(user) {
+    try {
+      const res = await axiosInstance.patch("/auth/me", user);
+      return res;
+    } catch (error) {
+      //throw the actual error to use in ui
+      throw error.response.data
+    }
+  },
   logout() {
     const authStore = userAuthStore();
     authStore.clearUser();

@@ -10,6 +10,7 @@ export default {
   },
   data() {
     return {
+      defaultimage: '../../src/assets/defaultImage.png',
       isLoading: true,
       stock: {
         supplier: {},
@@ -240,7 +241,7 @@ export default {
           <tr v-for="stocking in stock.stockingItems" :key="stocking.id">
             <td>{{ stocking.id }}</td>
             <td>{{ stocking.product.name }}</td>
-            <td><img :src="stocking.product.img" alt="" width="50" height="50"></td>
+            <td><img :src="stocking.product.img|| defaultimage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" width="50" height="50"></td>
             <td>{{ stocking.quantity }}</td>
             <td>{{ stocking.price }}</td>
             <td>{{ stocking.expDate }}</td>

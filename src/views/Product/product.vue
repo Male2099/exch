@@ -194,7 +194,7 @@ export default {
           <td>{{ product.price }}</td>
           <td>{{ product.quantity }}</td>
           <td>{{ product.description }}</td>
-          <td><img :src="product.img || defaultimage" alt="" width="50" height="50"></td>
+          <td><img :src="product.img || defaultimage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" width="50" height="50"></td>
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
         <router-link :to="'/admin/product/' + product.id" class="btn btn-rounded rounded-pill" aria-expanded="false">

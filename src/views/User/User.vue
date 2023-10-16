@@ -231,7 +231,7 @@ export default {
             <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
             <td>
               <div class="d-flex gap-2 h-100">
-                <img :src="user.img || defaultImage" style="width: 35px; height: 35px; object-fit: cover;">
+                <img :src="user.img || defaultImage" onerror="this.src='../../src/assets/defaultImage.png'" style="width: 35px; height: 35px; object-fit: cover;">
                 <div>
                   <span style="font-weight: bold">{{ user.name }}</span>
                   <br>
