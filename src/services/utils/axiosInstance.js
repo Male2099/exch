@@ -45,7 +45,8 @@ axiosInstance.interceptors.response.use(
     } else if (error.response.status === 404) {
       router.push("/not-found");
     } else if (error.response.status === 500) {
-      router.push("/internal-server-error");
+      console.log(error);
+      // router.push("/internal-server-error");
     }
 
     return Promise.reject(error);

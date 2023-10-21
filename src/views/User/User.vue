@@ -229,7 +229,7 @@ export default {
             <td>{{ user.phone }}</td>
             <td>{{ user.role.name }}</td>
             <td>{{ user.status ? "Active" : "Inactive" }}</td>
-            <td>
+            <td style="width: 10%;">
               <div style="width: 100%; display: flex; justify-content: center;">
                 <router-link :to="'user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
                   <i class="bi bi-pencil-square fs-4 text-info"></i>

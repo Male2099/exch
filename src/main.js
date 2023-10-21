@@ -46,7 +46,7 @@ app.use(createPinia());
 
 const authStore = userAuthStore();
 //init the auth user,
-await authStore.setUser();
+authStore.setUser();
 
 app.use(router);
 app.use(Vue3ProgressPlugin);
