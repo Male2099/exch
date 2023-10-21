@@ -163,7 +163,7 @@ export default {
 </form>
 </section>
 <section>
-    <table class="table table-bordered table-dark table-stroped">
+    <table class="_table table table-bordered table-dark table-stroped">
       <thead>
         <tr>
           <th>ID</th>
@@ -171,7 +171,7 @@ export default {
           <th>Phone</th>
           <th>Address</th>
           <th>Total Spend</th>
-          <th>Last Order At</th>
+          <!-- <th>Last Order At</th> -->
 		      <th style="width: 200px;">Action</th>
         </tr>
       </thead>
@@ -184,12 +184,12 @@ export default {
       </tbody>
       <tbody  v-else>
         <tr v-for="customer in customers" :key="customer.id">
-          <td>{{ customer.id }}</td>
+          <td style="vertical-align: middle; text-align: center;">{{ customer.id }}</td>
           <td>{{ customer.name }}</td>
           <td>{{ customer.phone }}</td>
           <td>{{ customer.address }}</td>
           <td>{{ customer.totalSpend }}</td>
-          <td>{{ customer.lastOrderAt }}</td>
+          <!-- <td>{{ customer.lastOrderAt }}</td> -->
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
         <router-link :to="'/admin/customer/' + customer.id" class="btn btn-rounded rounded-pill" aria-expanded="false">

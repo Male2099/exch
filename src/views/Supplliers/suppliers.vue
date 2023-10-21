@@ -118,15 +118,15 @@ export default {
 </section>
 		<!-- BEGIN #vue3TableLite -->
     <section>
-		<table class="table table-bordered table-dark table-stroped">
+		<table class="_table table table-bordered table-dark table-stroped">
       <thead>
         <tr>
           <th>ID</th>
-          <th>Name</th>
+          <th>Supplier</th>
           <th>Email</th>
           <th>phone</th>
           <th>address</th>
-          <th>info</th>
+          <!-- <th>info</th> -->
           <th style="width: 200px;"> Action</th>
         </tr>
       </thead>
@@ -139,12 +139,12 @@ export default {
       </tbody>
       <tbody  v-else>
         <tr v-for="supplier in suppliers" :key="supplier.id">
-          <td>{{ supplier.id }}</td>
+          <td  style="vertical-align: middle; text-align: center;">{{ supplier.id }}</td>
           <td>{{ supplier.name }}</td>
           <td>{{ supplier.email }}</td>
           <td>{{ supplier.phone }}</td>
           <td>{{ supplier.address }}</td>
-          <td>{{ supplier.info }}</td>
+          <!-- <td>{{ supplier.info }}</td> -->
 		  <td style="width: 200px;">
         <div style="width: 100%; display: flex; justify-content: center;">
         <router-link :to="'/admin/supplier/' + supplier.id" class="btn btn-rounded rounded-pill" aria-expanded="false">

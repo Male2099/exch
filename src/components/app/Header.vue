@@ -169,7 +169,8 @@ function logout() {
 			</div> -->
 			<div class="navbar-item navbar-user dropdown">
 				<a href="#" class="navbar-link dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
-					<img :src="user.img || defaultImage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" />
+					<img :src="user.img || defaultImage" onerror="this.src='../../src/assets/defaultImage.png'" alt=""
+						style="width: 27px; height: 27px; object-fit: cover;" />
 					<span>
 						<span class="d-none d-md-inline">{{ user.name }}</span>
 						<b class="caret"></b>

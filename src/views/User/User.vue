@@ -172,47 +172,32 @@ export default {
 } */
 </style>
 <template>
-  <!-- <div class="d-flex align-items-center mb-3">
+  <h1 class="page-header mb-0">User</h1>
 
-
-    <div>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link to="/home">Home</router-link></li>
-        <li class="breadcrumb-item">User</li>
-      </ol>
-      <h1 class="page-header mb-0">User</h1>
-    </div>
-    <div class="ms-auto">
-      <a href="/user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
-          class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</a>
-
-    </div>
-  </div> -->
-
-  <!-- BEGIN #vue3TableLite -->
   <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
 
-    <section class="d-flex justify-content-between pb-3">
-
+    <section class="d-flex justify-content-between">
       <form @submit="searchUser" name="search">
         <div class="form-group d-flex position-relative">
-          <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
-          <button type="submit" class="btn px-1 position-absolute" style="right: 0;"><i class="fa fa-search"></i>
+          <input type="text" v-model="query.search" class="form-control w-250px my-10px" placeholder="Enter keyword" />
+          <button type="submit" class="btn px-1 position-absolute" style="right: 3px;top:11px"><i
+              class="fa fa-search"></i>
           </button>
           <button type="button" class="btn px-1 position-absolute" :class="{ 'd-none': this.query.search == '' }"
-            style="right: 1.25rem;" @click="query.search = ''"><i class="bi bi-x"></i>
+            style="right: 22px;top:11px" @click="query.search = ''"><i class="bi bi-x"></i>
           </button>
         </div>
       </form>
-      <router-link to="user/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
-          class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
+      <router-link to="user/add" class="btn btn-success h-100  my-10px btn-rounded px-4 rounded-pill"
+        aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add
+      </router-link>
     </section>
     <section>
       <table class="_table table table-bordered table-dark table-stroped">
         <thead>
           <tr>
             <th>ID</th>
-            <th>User</th>
+            <th>User <span class="fw-normal">({{ pageMetaData.totalItems }})</span> </th>
             <th>Phone</th>
             <th>Role</th>
             <th>Status</th>
@@ -228,10 +213,11 @@ export default {
         </tbody>
         <tbody v-else>
           <tr v-for="user in users" :key="user.id" class="relative">
-            <td style="vertical-align: middle; text-align: center;">{{ user.id }}</td>
-            <td>
+            <td style="vertical-align: middle; text-align: center;width: 5%;">{{ user.id }}</td>
+            <td style="width: 30%;">
               <div class="d-flex gap-2 h-100">
-                <img :src="user.img || defaultImage" onerror="this.src='../../src/assets/defaultImage.png'" style="width: 35px; height: 35px; object-fit: cover;">
+                <img :src="user.img|| defaultImage" onerror="this.src='../../src/assets/defaultImage.png'"
+                  style="width: 35px; height: 35px; object-fit: cover;">
                 <div>
                   <span style="font-weight: bold">{{ user.name }}</span>
                   <br>
@@ -243,12 +229,12 @@ export default {
             <td>{{ user.phone }}</td>
             <td>{{ user.role.name }}</td>
             <td>{{ user.status ? "Active" : "Inactive" }}</td>
-            <td>
+            <td style="width: 10%;">
               <div style="width: 100%; display: flex; justify-content: center;">
                 <router-link :to="'user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
                   <i class="bi bi-pencil-square fs-4 text-info"></i>
                 </router-link>
-                <button class="btn rounded-pill text-danger" @click="deleteUser(user)">
+                <button class="btn rounded-pill text-danger" data-id="' + row.id + '" @click="deleteUser(user)">
                   <i class="bi bi-trash-fill w-100px fs-4"></i>
                 </button>
               </div>
@@ -258,7 +244,7 @@ export default {
       </table>
     </section>
     <!-- pagination -->
-    <section v-if="this.users.length > 0">
+    <section v-if="this.pageMetaData.totalPage>1">
       <ul class="pagination _custome-page">
         <li class="page-item">
           <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"

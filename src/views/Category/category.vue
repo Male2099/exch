@@ -2,11 +2,11 @@
 import categoryid from "@/services/apis/category/category"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 import swal from "sweetalert"
-export default {	
-	components: {
+export default {
+  components: {
     LoadingOnFetchingData: Loading
-	},
-	data() {
+  },
+  data() {
     return {
       defaultimage: '../../src/assets/defaultImage.png',
       categories: [],
@@ -143,72 +143,77 @@ export default {
 };
 </script>
 <template>
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Category</li>
-			</ol>
-			<h1 class="page-header mb-0">Category</h1>
-		</div>
-	</div>
+  <div class="d-flex align-items-center mb-3">
+    <div>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Category</li>
+      </ol>
+      <h1 class="page-header mb-0">Category</h1>
+    </div>
+  </div>
 
-	<div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
+  <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
     <section class="d-flex justify-content-between pb-3">
 
       <form @submit="searchCategory" name="search">
         <div class="form-group d-flex">
           <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
           <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-          <button type="button" class="btn px-1 position-absolute" :class="{'d-none' :this.query.search==''}" style="right: 1.25rem;" @click="query.search = ''"><i
-              class="bi bi-x"></i>
-          </button> 
-               </div>
+          <button type="button" class="btn px-1 position-absolute" :class="{ 'd-none': this.query.search == '' }"
+            style="right: 1.25rem;" @click="query.search = ''"><i class="bi bi-x"></i>
+          </button>
+        </div>
       </form>
       <router-link to="/admin/category/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
           class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
     </section>
     <section>
-		<table class="table table-bordered table-dark table-stroped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Image</th>
-		  <th style="width: 200px;"></th>
-        </tr>
-      </thead>
-      <tbody v-if="isLoading">
-        <tr>
-          <div class="_center-loading">
+      <table class="table table-bordered table-dark table-stroped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Category</th>
+            <th style="width:4%;">Action</th>
+          </tr>
+        </thead>
+        <tbody v-if="isLoading">
+          <tr>
+            <div class="_center-loading">
               <LoadingOnFetchingData />
             </div>
-        </tr>
-      </tbody>
-      <tbody  v-else>
-        <tr v-for="category in categories" :key="category.id">
-          <td>{{ category.id }}</td>
-          <td>{{ category.name }}</td>
-          <td><img :src="category.img || defaultimage" onerror="this.src='../../src/assets/defaultImage.png'" alt="" width="50" height="50"></td>
-		  <td style="width: 200px;">
-        <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/admin/category/' + category.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
-          <i class="bi bi-pencil-square fs-4 text-info"></i>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr v-for="category in categories" :key="category.id">
+            <td style="width: 3%; vertical-align: middle; text-align: center;">{{ category.id }}</td>
+            <td style="width: 30%;">
+              <div class="d-flex gap-2 h-100">
+                <img :src="category.img || defaultimage" onerror="this.src='../../../src/assets/defaultImage.png'"
+                  style="width: 35px; height: 35px; object-fit: cover;">
+                <div>
+                  <span style="font-weight: bold">{{ category.name }}</span>
+                </div>
+              </div>
+            </td>
+            <div style="width: 100%; display: flex; justify-content: center;">
+              <router-link :to="'/admin/category/' + category.id" class="btn btn-rounded rounded-pill"
+                aria-expanded="false">
+                <i class="bi bi-pencil-square fs-4 text-info"></i>
               </router-link>
               <button class="btn rounded-pill text-danger" @click="deleteCategory(category)">
-                  <i class="bi bi-trash-fill w-100px fs-4"></i>
-                </button>
+                <i class="bi bi-trash-fill w-100px fs-4"></i>
+              </button>
             </div>
-              </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-  <section v-if="this.categories.length > 0">
+          </tr>
+        </tbody>
+      </table>
+    </section>
+    <section v-if="this.categories.length > 0">
       <ul class="pagination _custome-page">
         <li class="page-item">
-          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link" :class="{'d-none': query.page}"
-            aria-label="Previous">
+          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
+            :class="{ 'd-none': query.page }" aria-label="Previous">
             <span aria-hidden="true">&laquo;</span>
             <span class="sr-only">Previous</span>
           </button>
