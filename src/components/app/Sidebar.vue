@@ -22,3 +22,5 @@ const appOption = useAppOptionStore();
 		</perfect-scrollbar>
 	</div>
 </template>
+
+<style></style>

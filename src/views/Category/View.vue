@@ -6,28 +6,29 @@ import ConfirmDialogue from '../../components/app/confirm.vue';
 import swal from "sweetalert"
 export default {
 	data() {
-                return {
-					defaultimage: '../../src/assets/defaultImage.png',
-					categories: {
-						name:'',
-						img:'',
-						available:''
-					},
-					result: `The category is`,
-					image: null,
-					loading: false,
+		return {
+			defaultimage: '../../src/assets/defaultImage.png',
+			categories: {
+				name: '',
+				img: '',
+				available: ''
+			},
+			result: `The category is`,
+			image: null,
+			loading: false,
 			renderPageEnable: false
-                }
-            },
-			components: { 
-				ConfirmDialogue,
-		PictureInput },
-			computed: {
+		}
+	},
+	components: {
+		ConfirmDialogue,
+		PictureInput
+	},
+	computed: {
 		imageLoaded() {
 			return !!this.$refs.pictureInput.file;
 		}
 	},
-			methods: {
+	methods: {
 		onChange(image) {
 			if (image) {
 				this.image = this.$refs.pictureInput.file
@@ -43,7 +44,7 @@ export default {
 				this.categories = await categoryApi.updateCategoryById(this.$route.params.id, this.categories);
 				this.loading = false
 				await this.showSuccessDialog()
-				 this.$router.push("/admin/category")
+				this.$router.push("/admin/category")
 			} catch (error) {
 				this.loading = false;
 				console.log(error);
@@ -95,58 +96,60 @@ export default {
 }
 </script>
 <template>
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-				<li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
-				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
-			</ol>
-			<h1 class="page-header mb-0">Category </h1>
-		</div>
-	</div>
-	<form v-if="renderPageEnable" @submit="updateCategory">
-    <div class="card border-0 mb-4 relative">
-		<div class="card-body">
-		<div class="mb-3">
-			<label for="Name" class="form-label">Name</label>
-				<input id="name"  type="text" class="form-control" placeholder="Name" v-model="categories.name" required>
-		</div>
-		<div class="mb-3">
-			<label for="Img" class="form-label">Image</label>
-			<div class="circle text-center">
-				<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*" size="10"
-						button-class="btn" :custom-strings="{
-							upload: '<h1>Bummer!</h1>',
-							drag: 'input profile picture'
-						}" @change="onChange" :prefill="categories.img || defaultImage" :alertOnError="false">
-					</picture-input>
+	<div>
+		<div class="d-flex align-items-center mb-3">
+			<div>
+				<ol class="breadcrumb">
+					<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+					<li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
+					<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
+				</ol>
+				<h1 class="page-header mb-0">Category </h1>
 			</div>
 		</div>
-		<div class="mb-3">
-					<label class="form-label">Status </label>
-					<div>
-						<select class="form-control text-center" v-model="categories.available"
-							:class="{ 'is-invalid': categories.available === 'false' || categories.available === false }">
-							<option value="true">Active</option>
-							<option value="false">Inactive</option>
-						</select>
+		<form v-if="renderPageEnable" @submit="updateCategory">
+			<div class="card border-0 mb-4 relative">
+				<div class="card-body">
+					<div class="mb-3">
+						<label for="Name" class="form-label">Name</label>
+						<input id="name" type="text" class="form-control" placeholder="Name" v-model="categories.name"
+							required>
+					</div>
+					<div class="mb-3">
+						<label for="Img" class="form-label">Image</label>
+						<div class="circle text-center">
+							<picture-input ref="pictureInput" width="150" height="150" margin="16" accept="image/*"
+								size="10" button-class="btn" :custom-strings="{
+									upload: '<h1>Bummer!</h1>',
+									drag: 'input profile picture'
+								}" @change="onChange" :prefill="categories.img || defaultImage" :alertOnError="false">
+							</picture-input>
+						</div>
+					</div>
+					<div class="mb-3">
+						<label class="form-label">Status </label>
+						<div>
+							<select class="form-control text-center" v-model="categories.available"
+								:class="{ 'is-invalid': categories.available === 'false' || categories.available === false }">
+								<option value="true">Active</option>
+								<option value="false">Inactive</option>
+							</select>
+						</div>
+					</div>
+					<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+						<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
+						<a href="/admin/category" class="btn btn-danger btn-rounded px-4 rounded-pill"
+							type="button">Back</a>
+					</div>
+					<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+						<button class="btn btn-success btn-rounded rounded-pill"
+							style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
+							type="button">
+							<Loading style="font-size: .22rem" />
+						</button>
 					</div>
 				</div>
-				<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-					<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
-					<a href="/admin/category" class="btn btn-danger btn-rounded px-4 rounded-pill" type="button">Back</a>
-				</div>
-				<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-					<button class="btn btn-success btn-rounded rounded-pill"
-						style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
-						type="button">
-						<Loading style="font-size: .22rem" />
-					</button>
-				</div>
-		</div>
-	</div>
-</form>
+			</div>
+		</form>
 
-</template>
-../../api/category/category../../api/category/category
+	</div></template>

@@ -26,7 +26,8 @@ export default {
 }
 </script>
 <template>
-	<div class="d-flex align-items-center mb-3">
+	<div>
+		<div class="d-flex align-items-center mb-3">
 		<div>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
@@ -108,5 +109,6 @@ export default {
     </table>
   </div>
 		</div>
+	</div>
 	</div>
 </template>

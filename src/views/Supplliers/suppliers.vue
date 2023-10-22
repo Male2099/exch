@@ -1,14 +1,14 @@
 <script>
-import supplier from      "@/services/apis/supplier/supplier"
+import supplier from "@/services/apis/supplier/supplier"
 import axiosInstance from '@/services/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
-export default {	
-	components: {
+export default {
+  components: {
     ContentLoader,
     LoadingOnFetchingData: Loading
-	},
-	data() {
+  },
+  data() {
     return {
       isLoading: true,
       suppliers: [],
@@ -93,94 +93,97 @@ export default {
 };
 </script>
 <template>
-	<div class="d-flex align-items-center mb-3">
-		<div>
-			<ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Supplier</li>
-			</ol>
-			<h1 class="page-header mb-0">Suppliers</h1>
-		</div>
-  </div>
+  <div>
+    <div class="d-flex align-items-center mb-3">
+      <div>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+          <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Supplier</li>
+        </ol>
+        <h1 class="page-header mb-0">Suppliers</h1>
+      </div>
+    </div>
     <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
       <section class="d-flex justify-content-between pb-3">
-<form @submit="searchSupplier" name="search">
-  <div class="form-group d-flex position-relative">
-    <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
-    <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-    <button type="button" class="btn px-1 position-absolute" :class="{'d-none' :this.query.search==''}" style="right: 1.25rem;" @click="query.search = ''"><i
-              class="bi bi-x"></i>
-          </button>
-  </div>
-</form>
-<router-link to="supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
-    class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
-</section>
-		<!-- BEGIN #vue3TableLite -->
-    <section>
-		<table class="_table table table-bordered table-dark table-stroped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Supplier</th>
-          <th>Email</th>
-          <th>phone</th>
-          <th>address</th>
-          <!-- <th>info</th> -->
-          <th style="width: 200px;"> Action</th>
-        </tr>
-      </thead>
-      <tbody v-if="isLoading">
-        <tr>
-          <div class="_center-loading">
-              <LoadingOnFetchingData />
-            </div>
-        </tr>
-      </tbody>
-      <tbody  v-else>
-        <tr v-for="supplier in suppliers" :key="supplier.id">
-          <td  style="vertical-align: middle; text-align: center;">{{ supplier.id }}</td>
-          <td>{{ supplier.name }}</td>
-          <td>{{ supplier.email }}</td>
-          <td>{{ supplier.phone }}</td>
-          <td>{{ supplier.address }}</td>
-          <!-- <td>{{ supplier.info }}</td> -->
-		  <td style="width: 200px;">
-        <div style="width: 100%; display: flex; justify-content: center;">
-        <router-link :to="'/admin/supplier/' + supplier.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
-          <i class="bi bi-pencil-square fs-4 text-info"></i>
-              </router-link>
+        <form @submit="searchSupplier" name="search">
+          <div class="form-group d-flex position-relative">
+            <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
+            <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+            <button type="button" class="btn px-1 position-absolute" :class="{ 'd-none': this.query.search == '' }"
+              style="right: 1.25rem;" @click="query.search = ''"><i class="bi bi-x"></i>
+            </button>
+          </div>
+        </form>
+        <router-link to="supplier/add" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false"><i
+            class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
+      </section>
+      <!-- BEGIN #vue3TableLite -->
+      <section>
+        <table class="_table table table-bordered table-dark table-stroped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Supplier</th>
+              <th>Email</th>
+              <th>phone</th>
+              <th>address</th>
+              <!-- <th>info</th> -->
+              <th style="width: 200px;"> Action</th>
+            </tr>
+          </thead>
+          <tbody v-if="isLoading">
+            <tr>
+              <div class="_center-loading">
+                <LoadingOnFetchingData />
               </div>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr v-for="supplier in suppliers" :key="supplier.id">
+              <td style="vertical-align: middle; text-align: center;">{{ supplier.id }}</td>
+              <td>{{ supplier.name }}</td>
+              <td>{{ supplier.email }}</td>
+              <td>{{ supplier.phone }}</td>
+              <td>{{ supplier.address }}</td>
+              <!-- <td>{{ supplier.info }}</td> -->
+              <td style="width: 200px;">
+                <div style="width: 100%; display: flex; justify-content: center;">
+                  <router-link :to="'/admin/supplier/' + supplier.id" class="btn btn-rounded rounded-pill"
+                    aria-expanded="false">
+                    <i class="bi bi-pencil-square fs-4 text-info"></i>
+                  </router-link>
+                </div>
               </td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-  <section v-if="this.suppliers.length > 0">
-      <ul class="pagination _custome-page">
-        <li class="page-item">
-          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link" :class="{'d-none': query.page}"
-            aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Previous</span>
-          </button>
-        </li>
-        <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
-          <button class="page-link acitve" @click="toPage(pageNum)"
-            :class="{ 'bg-dark text-white': pageNum == this.query.page }">
-            {{ pageNum }}
-          </button>
-        </li>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+      <section v-if="this.suppliers.length > 0">
+        <ul class="pagination _custome-page">
+          <li class="page-item">
+            <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
+              :class="{ 'd-none': query.page }" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </button>
+          </li>
+          <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
+            <button class="page-link acitve" @click="toPage(pageNum)"
+              :class="{ 'bg-dark text-white': pageNum == this.query.page }">
+              {{ pageNum }}
+            </button>
+          </li>
 
-        <li class="page-item">
-          <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
-            class="page-link" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Next</span>
-          </button>
-        </li>
-      </ul>
-    </section>
+          <li class="page-item">
+            <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
+              class="page-link" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </button>
+          </li>
+        </ul>
+      </section>
+    </div>
   </div>
 </template>
 <style scoped>

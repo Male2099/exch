@@ -209,10 +209,10 @@ export default {
 		<li class="breadcrumb-item"><a href="javascript:;">Dashboard</a></li>
 		<li class="breadcrumb-item active">Dashboard v3</li>
 	</ol> -->
-	<h1 class="page-header mb-3">Dashboard</h1>
 
-	<DatePickerBetweenVue @filterDate="filterDate" />
 	<div class="row">
+		<h1 class="page-header mb-3">Dashboard</h1>
+		<DatePickerBetweenVue @filterDate="filterDate" />
 		<!-- BEGIN col-8 -->
 		<div class="col-xl-8 col-lg-6">
 			<!-- BEGIN card -->
@@ -264,7 +264,7 @@ export default {
 			<div class="card border-0 mb-3 bg-gray-800 text-white">
 				<div class="card-body">
 					<div class="mb-3 text-gray-500">
-						<b>TOP PRODUCTS BY UNITS SOLD</b>
+						<b>TOP PRODUCTS SOLD</b>
 						<span class="ms-2 "><i class="fa fa-info-circle" data-bs-toggle="popover" data-bs-trigger="hover"
 								data-bs-title="Top products with units sold" data-bs-placement="top"
 								data-bs-content="Products with the most individual units sold. Includes orders from all sales channels."></i></span>

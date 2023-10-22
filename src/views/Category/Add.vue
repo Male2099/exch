@@ -83,6 +83,7 @@ export default {
 };
 </script>
 <template>
+  <div>
     <div class="d-flex align-items-center mb-3">
         <div>
             <ol class="breadcrumb">
@@ -128,4 +129,5 @@ export default {
         </div>
     </div>
 </form>
-</template>../../api/category/categoryApi
+  </div>
+</template>

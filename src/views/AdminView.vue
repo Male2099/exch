@@ -1,15 +1,11 @@
 
 
 <script setup lang="ts">
-import AppFooter from '@/components/app/Footer.vue';
 import AppHeader from '@/components/app/Header.vue';
 import AppSidebar from '@/components/app/Sidebar.vue';
-import AppSidebarRight from '@/components/app/SidebarRight.vue';
-import AppThemePanel from '@/components/app/ThemePanel.vue';
 import AppTopMenu from '@/components/app/TopMenu.vue';
 import { useAppOptionStore } from '@/stores/app-option';
 import { ProgressFinisher, useProgress } from '@marcoschulte/vue3-progress';
-import { getCurrentInstance } from 'vue';
 import { RouterView } from 'vue-router';
 import router from '../router/index';
 
