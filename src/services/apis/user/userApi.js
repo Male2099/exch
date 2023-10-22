@@ -2,10 +2,19 @@ import axiosInstance from "@/services/utils/axiosInstance";
 
 
 export default {
+  async registerUser(user) {
+    //set dob to null if not include
+    if (!user.dob) user.dob = null;
+    try {
+      const res = await axiosInstance.post("/auth/register", user);
+      return res.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  },
   async updateUserById(id, updateUser) {
     if (!updateUser.password) updateUser.password = null;
     if (!updateUser.img) updateUser.img = null;
-
     try {
       const res = await axiosInstance.patch(`/users/${id}`, updateUser);
       console.log(res);
