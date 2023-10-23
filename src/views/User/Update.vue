@@ -28,6 +28,7 @@ export default {
 				sex: '',
 				address: '',
 				phone: "",
+				status: '',
 				totalOrders: 0
 			},
 			updateUser: {
@@ -40,7 +41,9 @@ export default {
 				roleId: '',
 				sex: '',
 				address: '',
-				phone: ""
+				phone: "",
+				status: '',
+
 			},
 			image: null,
 			errors: {
@@ -91,7 +94,7 @@ export default {
 		// 	}
 		// },
 		async updateUserInfo(e) {
-			e.preventDefault()
+			e?.preventDefault()
 			const confirm = await this.confirmUpdateMeModal()
 			if (confirm) {
 				try {
@@ -135,15 +138,15 @@ export default {
 				}
 			})
 		},
-		async confirmUpdateMeModal() {
+		async confirmUpdateMeModal(text, text1) {
 			return swal({
-				title: "Update confirmation",
+				title: text || "Update confirmation",
 				// text: "Are you sure you want to make changes on your info",
 				icon: "info",
 				content: {
 					element: "span",
 					attributes: {
-						innerHTML: `Updating  <span class="text-red">${this.user.name}</span> information will automatically update all associated data`
+						innerHTML: text1 || `Updating  <span class="text-red">${this.user.name}</span> information will automatically update all associated data`
 					}
 				},
 				buttons: {
@@ -163,6 +166,19 @@ export default {
 					}
 				}
 			})
+		},
+		async confirmUserStatusOperation() {
+			const confirm = await this.confirmUpdateMeModal(
+				this.updateUser.status ?
+					"User Deactivation"
+					: 'User Reactivation',
+				this.updateUser.status ?
+					`By deactivating  <span class="text-red">${this.user.name}</span> their login access has been revoked. They will no longer be able to log in to the system.`
+					: `By reactivate <span class="text-success">${this.user.name}</span> Once reactivated, they will regain access to log in to the system.`
+			);
+			if (confirm) {
+				this.updateUser.status = !this.updateUser.status;
+			}
 		},
 		async updateMeSuccesModal() {
 			await swal({
@@ -261,8 +277,8 @@ export default {
 								<label class="form-label">Sex</label>
 								<select class="form-control" v-model="updateUser.sex" :disabled="!inEditProfileMode"
 									:class="{ 'disabled-input': !inEditProfileMode }">
-									<option value="Male" selected>MALE</option>
-									<option value="Female">FEMALE</option>
+									<option value="MALE" selected>MALE</option>
+									<option value="FEMALE">FEMALE</option>
 								</select>
 							</div>
 						</div>
@@ -290,14 +306,26 @@ export default {
 										</option>
 									</select>
 								</div>
-
 							</div>
 							<div v-if="!inEditProfileMode" class="col-md-6 mb-3">
-								<label for="order" class="form-label">Total orders</label>
-								<input type="number" class="form-control" id="order" v-model="user.totalOrders"
-									:disabled="!inEditProfileMode" :class="{ 'disabled-input': !inEditProfileMode }">
+								<div v-if="!inEditProfileMode" class="col-md-6 mb-3 w-100">
+									<div class="form-label">Total orders</div>
+									<div type="number" class="form-control disabled-input" :disabled="!inEditProfileMode">
+										{{ user.totalOrders }}
+									</div>
+								</div>
 							</div>
 						</div>
+						<div class="row">
+							<div v-if="!inEditProfileMode">
+								<div class="form-label">Status</div>
+								<div type="number" class="form-control disabled-input" :class="{ 'text-red': !user.status }"
+									:disabled="!inEditProfileMode">
+									{{ user.status ? "Active" : "Inactive" }}
+								</div>
+							</div>
+						</div>
+
 						<div v-if="inEditProfileMode">
 
 							<div class="mb-3">
@@ -317,6 +345,16 @@ export default {
 								</div>
 							</div>
 
+							<!-- change user status -->
+							<div class="mb-3">
+								<button v-if="updateUser.status" type="button" @click="confirmUserStatusOperation()"
+									class="btn btn-white w-100 text-red border-danger">Disbale This User
+								</button>
+								<button v-else type="button" @click="confirmUserStatusOperation()"
+									class="btn btn-white w-100 text-success border-success">Enable This User
+								</button>
+							</div>
+
 							<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end"
 								style="margin: auto;">
 								<button :disabled="!isSubmittable"
@@ -334,7 +372,7 @@ export default {
 								</button>
 							</div>
 						</div>
-						<div v-if="!inEditProfileMode" style="width: 100%; display: flex; justify-content: end;">
+						<div v-if="!inEditProfileMode" style="width: 100%; display: flex; justify-content: end;margin-top: .5rem;">
 							<router-link to="/admin/user"
 								class="btn btn-success btn-rounded px-4 rounded-pill">Back</router-link>
 						</div>
