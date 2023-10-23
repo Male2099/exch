@@ -6,14 +6,12 @@ export default {
     //input take file multipart file from formdata
     const formData = new FormData();
     formData.append("image", file);
-    console.log(formData);
     try {
       const res = await fetch(`${API_BASE_URL}/upload/images`, {
         method: "POST",
         body: formData,
       });
       const data = await res.json();
-      console.log(data);
       return data.imageUrl || data.ImageUrl;
     } catch (error) {
       console.error("error appear: " + res.message);

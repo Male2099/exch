@@ -12,7 +12,6 @@ const authApi = {
         body: JSON.stringify(user),
       });
       const data = await res.json();
-      console.log(data);
       return data;
     } catch (error) {
       // Handle the error here

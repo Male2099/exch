@@ -135,8 +135,6 @@ router.beforeEach((to, from, next) => {
     next("/admin");
   }
 
-  console.log("to " + to.path);
-  console.log("from: " + from.path);
 
   next();
 });

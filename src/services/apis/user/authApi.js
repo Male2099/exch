@@ -48,7 +48,6 @@ const authApi = {
       return res.data;
     } catch (error) {
       //throw the actual error to use in ui
-      console.log("get auth error");
       console.log(error);
       // throw error.response.data;
     }

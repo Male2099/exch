@@ -133,7 +133,6 @@ export default {
     async 'query.search'(newVal, oldVal) {
       //if current data is from search
       if (!newVal && this.isSearched) {
-        console.log("search");
         //default query
         await this.pushQuery(this.query)
         await this.getCategories();

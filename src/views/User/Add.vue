@@ -46,7 +46,6 @@ export default {
     },
     onChange(image) {
       if (image) {
-        console.log(1);
         this.image = this.$refs.pictureInput.file
       }
     },

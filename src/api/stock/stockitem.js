@@ -3,7 +3,6 @@ import axiosInstance from "../utils/axiosInstance";
     async updateStockById(id, updateStock) {  
       try {
         const res = await axiosInstance.patch(`/stockings/${id}`, updateStock);
-        console.log(res);
         return res.data.data;
       } catch (error) {
         console.log("update errrr");

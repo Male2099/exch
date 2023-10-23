@@ -1,21 +1,20 @@
 <script>
 import { useAppVariableStore } from '@/stores/app-variable';
-import { animateNumber } from '@/components/app/AnimateNumber.vue';
+// import { animateNumber } from '@/components/app/AnimateNumber.vue';
 import { Popover } from 'bootstrap';
 import apexchart from '@/components/plugins/Apexcharts.vue';
-import jsVectorMap from 'jsvectormap';
-import 'jsvectormap/dist/maps/world.js';
-import 'jsvectormap/dist/css/jsvectormap.min.css';
 
 import DatePickerBetweenVue from './DatePickerBetween.vue';
 import dashboardService from '../../services/apis/dasboard/dasboardService'
+import GeneralInfoDashboard from './GeneralInfoDashboard.vue';
 
 const appVariable = useAppVariableStore();
 
 export default {
 	components: {
 		apexchart: apexchart,
-		DatePickerBetweenVue
+		DatePickerBetweenVue,
+		GeneralInfoDashboard
 	},
 
 	data() {
@@ -48,10 +47,9 @@ export default {
 		}
 		await this.getSaleReport();
 		await this.getProductSelling()
-		console.log(this.productData);
 	},
 	async mounted() {
-		animateNumber();
+		// animateNumber();
 		// await this.getSaleReport();
 		// popover
 		var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
@@ -72,13 +70,11 @@ export default {
 	methods: {
 		filterDate(date) {
 			this.queryDate = date;
-			console.log("triggered");
 		},
 		async getSaleReport() {
 			// console.log("pass", this.queryDate);
 			const sale = await dashboardService.saleReport(this.queryDate);
 			if (sale) {
-				console.log(sale);
 				this.saleData = sale.data;
 				this.saleInfo.totalPrice = sale.totalPrice
 				this.saleInfo.totalSold = sale.totalSold
@@ -219,6 +215,7 @@ export default {
 			</ol>
 		</div>
 		<DatePickerBetweenVue @filterDate="filterDate" />
+		<GeneralInfoDashboard />
 		<!-- BEGIN col-8 -->
 		<div class="col-xl-8 col-lg-6">
 			<!-- BEGIN card -->

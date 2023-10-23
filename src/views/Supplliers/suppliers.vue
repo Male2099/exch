@@ -84,7 +84,6 @@ export default {
   }, watch: {
     async 'query.search'(newVal, oldVal) {
       if (!newVal && this.isSearched) {
-        console.log("search");
         await this.pushQuery(this.query)
         await this.getSuppliers();
       }

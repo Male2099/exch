@@ -46,7 +46,6 @@ export default {
     methods: {
         onChange(image) {
             if (image) {
-                console.log(1);
                 this.image = this.$refs.pictureInput.file
             }
         },
@@ -149,7 +148,6 @@ export default {
         },
     }, watch: {
         'updateUser.username'(newVal) {
-            console.log(1212);
             this.errors.username = ''
         }
     }

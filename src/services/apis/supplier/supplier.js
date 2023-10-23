@@ -24,7 +24,6 @@ export default {
 async updateSuppliersById(id, updateSupplier) {
   try {
     const res = await axiosInstance.patch(`/suppliers/${id}`, updateSupplier);
-    console.log(res);
     return res.data.data;
   } catch (error) {
     console.log("update errrr");

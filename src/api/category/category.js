@@ -3,10 +3,8 @@ export default {
   async updateCategoryById(id, updateCategory) {
     try {
     const res = await axiosInstance.patch(`/categories/${id}`,updateCategory); 
-    console.log(res);
     return res.data.data;
   } catch (error) {
-    console.log("update errrr");
     console.log(error);
     throw error.response.data;
   }

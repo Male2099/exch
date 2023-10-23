@@ -2,19 +2,12 @@
 import Datepicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 
+// import datepicker from '@/components/plugins/Datepicker.vue';
+
 export default {
 	components: { Datepicker },
-	watch: {
-		date(newVal) {
-			this.dateOption(
-				this._parseDateAsNumberFormat(this.date[0]),
-				this._parseDateAsNumberFormat(this.date[1]),
-			)
-		}
-	},
 	data() {
 		return {
-			date: [],
 			filterDate: {
 				startDate: null,
 				endDate: null,
@@ -22,25 +15,17 @@ export default {
 		};
 	},
 	async mounted() {
-		this.filterDate.startDate = this._dateFromToday(0)
-		this.filterDate.endDate = this._dateFromToday(1)
+		this.filterDate.startDate = this._refDateToday(0)
+		this.filterDate.endDate = this._refDateToday(1)
 	},
 	methods: {
-		date123(val) {
-			console.log("date:", val);
-		},
-		_parseDateAsNumberFormat(date) {
-			if (!date) return;
-			return (new Date(Date.parse(date))).toISOString()
-
-		},
+		//imp later
 		dateOption(startDate, endDate) {
 			this.filterDate.endDate = endDate
 			this.filterDate.startDate = startDate;
-
 			this.$emit("filterDate", this.filterDate)
 		},
-		_dateFromToday(nDay) {
+		_refDateToday(nDay) {
 			const today = new Date();
 			const date_nDays = new Date(today);
 
@@ -78,31 +63,35 @@ export default {
 				<span>{{ handleDateFormat(filterDate.startDate) + " ~ " + handleDateFormat(filterDate.endDate) }}</span>
 				<b class="caret ms-3 opacity-50"></b>
 			</button>
-			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding: 0 !important; ">
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 				<div class="d-flex">
 					<div>
-						<button @click="dateOption(_dateFromToday(0), _dateFromToday(1))"
-							class="dropdown-item">Today</button>
-						<button @click="dateOption(_dateFromToday(-1), _dateFromToday(0))"
+						<button @click="dateOption(_refDateToday(0), _refDateToday(1))" class="dropdown-item">Today</button>
+						<button @click="dateOption(_refDateToday(-1), _refDateToday(0))"
 							class="dropdown-item">Yesterday</button>
 
-						<button @click="dateOption(_dateFromToday(-7), _dateFromToday(1))" class="dropdown-item">Last 7
+						<button @click="dateOption(_refDateToday(-7), _refDateToday(1))" class="dropdown-item">Last 7
 							Days</button>
-						<button @click="dateOption(_dateFromToday(-30), _dateFromToday(1))" class="dropdown-item">Last 30
+						<button @click="dateOption(_refDateToday(-30), _refDateToday(1))" class="dropdown-item">Last 30
 							Days</button>
-						<button @click="dateOption(_dateFromToday(-currentDateOfMonth() + 1), _dateFromToday(1))"
+						<button @click="dateOption(_refDateToday(-currentDateOfMonth() + 1), _refDateToday(1))"
 							class="dropdown-item">This Month</button>
 						<button
-							@click="dateOption(_dateFromToday(-daysFromLastMonth() - (- 1)), _dateFromToday(-currentDateOfMonth() - (- 1)))"
+							@click="dateOption(_refDateToday(-daysFromLastMonth() - (- 1)), _refDateToday(-currentDateOfMonth() - (- 1)))"
 							class="dropdown-item">Last Month</button>
 					</div>
-					<div class="dropdown-item _date-picke">
-						<datepicker :inline="  true " range multiCalendars v-model="date" :enable-time-picker="false" />
+					<div class="dropdown-item _date-picker">
+						<Datepicker v-model="filterDate.startDate" :clearable="false" :format="YYYY-MM-DD"
+							:min-year="2000" />
+						<Datepicker v-model="filterDate.endDate" :clearable="false"   :format="YYYY-MM-DD"
+							:min-year="2000" />
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+	<!-- <div class="text-gray-600 fw-bold mt-2 mt-sm-0">compared to <span id="daterange-prev-date">24 Mar-30 Apr 2023</span>
+	</div> -->
 </template>
 
 <style scoped>

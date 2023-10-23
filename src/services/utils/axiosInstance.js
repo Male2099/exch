@@ -26,11 +26,9 @@ axiosInstance.interceptors.request.use((config) => {
 // Add a response interceptor to handle errors
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.log("Jol response hz");
     return response;
   },
   (error) => {
-    console.log("Jol error hz");
 
     if (error.request && !error.response) {
       return Promise.reject(error);
