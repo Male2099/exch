@@ -149,18 +149,18 @@ export default {
 </style>
 <template>
   <div>
-    <div class="d-flex align-items-center mb-3">
-      <div>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-          <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
-          <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock_Item</li>
-        </ol>
-        <h1 class="page-header mb-0">Stocking Item</h1>
-      </div>
-      <div class="ms-auto">
-        <a href="/admin/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
-      </div>
+
+    <div class="d-flex justify-content-between mb-2">
+      <h1 class="page-header mb-0">Stocking Item</h1>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Stock_Item</li>
+      </ol>
+    </div>
+
+    <div class="d-flex justify-content-end mb-2">
+      <a href="/admin/stock" class="btn btn-success btn-rounded px-4 rounded-pill" aria-expanded="false">Back</a>
     </div>
     <div class="card border-0">
       <form @submit="updateStocking">

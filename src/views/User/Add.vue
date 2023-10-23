@@ -50,12 +50,6 @@ export default {
         this.image = this.$refs.pictureInput.file
       }
     },
-    // async inToResetPasswordMode() {
-    // 	const confirm = await this.confirmResetPasswordMode()
-    // 	if (confirm) {
-    // 		router.push('/admin/me/reset-password')
-    // 	}
-    // },
     async addUser(e) {
       e.preventDefault()
       const confirm = await this.confirmAddUserModal()
@@ -68,19 +62,13 @@ export default {
           this.$router.push('/admin/user')
         } catch (error) {
           this.errors.username = error?.errors?.username
-          console.log("error add user");
-          console.log(this.errors);
         }
-      } else {
-        this.user.roleId = this.user.role.id
-        this.user = { ...this.user }
-
       }
 
     },
     async confirmAddUserModal() {
       return swal({
-        title: "Update confirmation",
+        title: "Create confirmation",
         // text: "Are you sure you want to make changes on your info",
         icon: "info",
         content: {
@@ -133,7 +121,6 @@ export default {
     },
   }, watch: {
     'user.username'(newVal) {
-      console.log(1212);
       this.errors.username = ''
     }
   }
@@ -141,9 +128,17 @@ export default {
 </script>
 
 <template>
-  <div id="auth-profile">
+  <div>
+    <div class="d-flex justify-content-between">
+      <h1 class="page-header mb-0">Add User</h1>
+      <ol class="breadcrumb my-1">
+        <li class="breadcrumb-item"><router-link to="/admin">Home</router-link></li>
+        <li class="breadcrumb-item active"><router-link to="/admin/user">User</router-link></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Add user</li>
+      </ol>
+    </div>
 
-    <div class="table-responsive form-inline">
+    <div class="table-responsive form-inline my-2">
       <form @submit="addUser">
         <div class="profile">
           <div class="profile-header">
@@ -171,7 +166,7 @@ export default {
         </div>
         <div class="card border-0 mb-4">
           <div class="card-body">
-            <div class="mb-3 fs-5 fw-bold">User Info</div>
+            <div class="mb-3 fs-5 fw-bold">Add User</div>
 
 
             <div class="row">
@@ -272,7 +267,7 @@ export default {
 }
 
 #auth-profile {
-  margin-top: -1.21rem;
+  /* margin-top: -1.21rem; */
   height: 90vh;
   /* background-color: white; */
 }

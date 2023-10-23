@@ -33,18 +33,16 @@ export default {
 </script>
 <template>
 	<div>
-		<div class="d-flex align-items-center mb-3">
-			<div>
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-					<li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
-					<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li>
-				</ol>
-				<h1 class="page-header mb-0">Order Info</h1>
-			</div>
-			<div class="ms-auto">
-				<a href="/admin/order" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-			</div>
+		<div class="d-flex justify-content-between">
+			<h1 class="page-header mb-0">Order Info</h1>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/order">Order</a></li>
+				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li>
+			</ol>
+		</div>
+		<div class="d-flex justify-content-end my-2">
+			<a href="/admin/order" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
 		</div>
 		<div class="card border-0 mb-4">
 			<div class="card-body">
@@ -125,9 +123,10 @@ export default {
 										height="50"></td>
 							</tr>
 							<!-- Additional table rows -->
-					</tbody>
-				</table>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div></template>
+</template>

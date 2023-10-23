@@ -173,7 +173,14 @@ export default {
 </style>
 <template>
   <div>
-    <h1 class="page-header mb-0">User</h1>
+    <div class="d-flex justify-content-between">
+      <h1 class="page-header mb-0">User</h1>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><router-link to="/admin">Home</router-link></li>
+        <li class="breadcrumb-item active"><span>User</span></li>
+        <!-- <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li> -->
+      </ol>
+    </div>
     <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
       <section class="d-flex justify-content-between">
         <form @submit="searchUser" name="search">

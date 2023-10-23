@@ -144,30 +144,29 @@ export default {
 </script>
 <template>
   <div>
-
-    <div class="d-flex align-items-center mb-3">
-      <div>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-          <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>Category</li>
-        </ol>
-        <h1 class="page-header mb-0">Category</h1>
-      </div>
+    <div class="d-flex justify-content-between">
+      <h1 class="page-header mb-0">Category</h1>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><router-link to="/admin">Home</router-link></li>
+        <li class="breadcrumb-item active"><span>Category</span></li>
+        <!-- <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li> -->
+      </ol>
     </div>
 
     <div class=" d-flex flex-column justify-content-between h-100vh" style="max-height: 100vh;">
-      <section class="d-flex justify-content-between pb-3">
-
+      <section class="d-flex justify-content-between">
         <form @submit="searchCategory" name="search">
-          <div class="form-group d-flex">
-            <input type="text" v-model="query.search" class="form-control w-250px" placeholder="Enter keyword" />
-            <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
+          <div class="form-group d-flex position-relative">
+            <input type="text" v-model="query.search" class="form-control w-250px my-10px" placeholder="Enter keyword" />
+            <button type="submit" class="btn px-1 position-absolute" style="right: 3px;top:11px"><i
+                class="fa fa-search"></i>
+            </button>
             <button type="button" class="btn px-1 position-absolute" :class="{ 'd-none': this.query.search == '' }"
-              style="right: 1.25rem;" @click="query.search = ''"><i class="bi bi-x"></i>
+              style="right: 22px;top:11px" @click="query.search = ''"><i class="bi bi-x"></i>
             </button>
           </div>
         </form>
-        <router-link to="/admin/category/add" class="btn btn-success btn-rounded px-4 rounded-pill"
+        <router-link to="/admin/category/add" class="btn btn-success h-100  my-10px btn-rounded px-4 rounded-pill"
           aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
       </section>
       <section>

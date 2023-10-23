@@ -3,7 +3,7 @@
 <script setup lang="ts">
 import AppHeader from '@/components/app/Header.vue';
 import AppSidebar from '@/components/app/Sidebar.vue';
-import AppTopMenu from '@/components/app/TopMenu.vue';
+// import AppTopMenu from '@/components/app/TopMenu.vue';
 import { useAppOptionStore } from '@/stores/app-option';
 import { ProgressFinisher, useProgress } from '@marcoschulte/vue3-progress';
 import { RouterView } from 'vue-router';
@@ -27,10 +27,10 @@ router.afterEach(async (to, from) => {
 
 <template>
     <div id="admin-view">
-		<app-header v-if="!appOption.appHeaderHide" />
-		<app-sidebar v-if="!appOption.appSidebarHide" />
-		<app-top-menu v-if="appOption.appTopMenu" />
+        <app-header v-if="!appOption.appHeaderHide" />
+        <!-- <app-top-menu v-if="appOption.appTopMenu" /> -->
         <div class="app-content" v-bind:class="appOption.appContentClass">
+            <app-sidebar v-if="!appOption.appSidebarHide" />
             <router-view></router-view>
         </div>
     </div>

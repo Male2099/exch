@@ -72,19 +72,18 @@ export default {
 </script>
 <template>
   <div>
-    <div class="d-flex align-items-center mb-3">
-      <div>
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-          <li class="breadcrumb-item"><a href="/admin/supplier">Supplier</a></li>
-          <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
-        </ol>
-        <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Supplier</h1>
-      </div>
-      <div class="ms-auto">
-        <a href="/admin/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-      </div>
+    <div class="d-flex justify-content-between mb-2">
+      <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Supplier</h1>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+        <li class="breadcrumb-item"><a href="/admin/supplier">Supplier</a></li>
+        <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
+      </ol>
     </div>
+    <div class="d-flex justify-content-end mb-2">
+      <a href="/admin/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
+    </div>
+
     <form @submit="registerSupplier">
       <div class="card border-0 mb-4">
         <div class="card-body">

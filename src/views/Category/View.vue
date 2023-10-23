@@ -97,15 +97,13 @@ export default {
 </script>
 <template>
 	<div>
-		<div class="d-flex align-items-center mb-3">
-			<div>
-				<ol class="breadcrumb">
-					<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-					<li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
-					<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
-				</ol>
-				<h1 class="page-header mb-0">Category </h1>
-			</div>
+		<div class="d-flex justify-content-between mb-4">
+			<h1 class="page-header mb-0">View Category </h1>
+			<ol class="breadcrumb">
+				<li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+				<li class="breadcrumb-item"><a href="/admin/category">Category</a></li>
+				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Category</li>
+			</ol>
 		</div>
 		<form v-if="renderPageEnable" @submit="updateCategory">
 			<div class="card border-0 mb-4 relative">
@@ -152,4 +150,5 @@ export default {
 			</div>
 		</form>
 
-	</div></template>
+	</div>
+</template>

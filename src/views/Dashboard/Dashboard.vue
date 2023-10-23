@@ -43,8 +43,8 @@ export default {
 	},
 	async created() {
 		this.queryDate = {
-			startDate: "2010-10-10",
-			endDate: '2024-10-10'
+			startDate: '',
+			endDate: ''
 		}
 		await this.getSaleReport();
 		await this.getProductSelling()
@@ -58,14 +58,13 @@ export default {
 		var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
 			return new Popover(popoverTriggerEl)
 		});
-
-
 	},
 	watch: {
 		queryDate: {
 			deep: true,
 			async handler(newVal) {
 				await this.getSaleReport();
+				await this.getProductSelling()
 
 			},
 		}
@@ -211,7 +210,14 @@ export default {
 	</ol> -->
 
 	<div class="row">
-		<h1 class="page-header mb-3">Dashboard</h1>
+		<div class="d-flex justify-content-between">
+			<h1 class="page-header mb-3">Dashboard</h1>
+			<ol class="breadcrumb my-1">
+				<li class="breadcrumb-item"><router-link to="/admin">Home</router-link></li>
+				<li class="breadcrumb-item active"><span>Dashboard</span></li>
+				<!-- <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li> -->
+			</ol>
+		</div>
 		<DatePickerBetweenVue @filterDate="filterDate" />
 		<!-- BEGIN col-8 -->
 		<div class="col-xl-8 col-lg-6">

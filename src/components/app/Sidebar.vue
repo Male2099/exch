@@ -8,8 +8,8 @@ const appOption = useAppOptionStore();
 
 </script>
 <template>
-	<div id="sidebar" class="app-sidebar" :data-bs-theme="'dark'">
-		<perfect-scrollbar class="app-sidebar-content" :class="{ 'h-100': appOption.appSidebarFixed }">
+	<div id="sidebar" class="app-sidebar" style="position: fixed;" :data-bs-theme="'dark'">
+		<perfect-scrollbar class="app-sidebar-content h-100">
 			<div class="menu">
 				<template v-for="menu in appSidebarMenu" :key="menu.id">
 					<div class="menu-header" v-if="menu.is_header">{{ menu.text }}</div>

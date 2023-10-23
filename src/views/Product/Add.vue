@@ -95,15 +95,13 @@ export default {
 </script>
 <template>
   <div>
-    <div class="d-flex align-items-center mb-3">
-      <div>
+      <div class="d-flex justify-content-between mb-4">
+        <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Product</h1>
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
           <li class="breadcrumb-item"><a href="/admin/product">Product</a></li>
           <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Product</li>
         </ol>
-        <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Product</h1>
-      </div>
     </div>
     <form @submit="registerProduct">
       <div class="card border-0 mb-4">

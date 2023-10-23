@@ -1,18 +1,18 @@
 <script>
 import { useAppOptionStore } from '@/stores/app-option';
-import StockApi    from "@/services/apis/stock/stockApi"
+import StockApi from "@/services/apis/stock/stockApi"
 import supplierApi from "@/services/apis/supplier/allsupplier"
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 import swal from "sweetalert"
 
 export default {
-    name: 'app',
-    data() {
-        return {
-        stock: {
-        tax:'',
-        expectedDelivery:'',
-        supplierId:'0',
+  name: 'app',
+  data() {
+    return {
+      stock: {
+        tax: '',
+        expectedDelivery: '',
+        supplierId: '0',
       },
       suppliers: [],
       loading: false
@@ -80,46 +80,46 @@ export default {
 }
 </script>
 <template>
-   <div>
-    <div class="d-flex align-items-center mb-3">
-    <div>
+  <div>
+
+    <div class="d-flex justify-content-between mb-4">
+      <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Stock</h1>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
         <li class="breadcrumb-item"><a href="/admin/stock">Stock</a></li>
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Stcok</li>
-
       </ol>
-      <h1 class="page-header mb-0" style="color: green;"><i class="fa fa-plus-circle"></i>Add Stock</h1>
-    </div>
     </div>
     <form @submit="registerStock">
-    <div class="card border-0 mb-4" >
-		<div class="card-body">
-	<div class="mb-3">
-      <label class="form-label">Supplier</label>
-      <div>
-            <select class="form-control" v-model="stock.supplierId">
-              <option v-for="(supplier) in suppliers.data" :key="supplier.id" :value="supplier.id" v-text="supplier.name"></option>
-            </select>
+      <div class="card border-0 mb-4">
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">Supplier</label>
+            <div>
+              <select class="form-control" v-model="stock.supplierId">
+                <option v-for="(supplier) in suppliers.data" :key="supplier.id" :value="supplier.id"
+                  v-text="supplier.name"></option>
+              </select>
+            </div>
           </div>
-    </div>
-    <div class="mb-3">
-      <label for="tax" class="form-label">Tax</label>
-      <input type="text" class="form-control" id="expectedDelivery" placeholder="expectedDelivery" v-model="stock.tax">
-    </div>
-    <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
-            type="submit">Create</button>
-          <a href="/admin/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+          <div class="mb-3">
+            <label for="tax" class="form-label">Tax</label>
+            <input type="text" class="form-control" id="expectedDelivery" placeholder="expectedDelivery"
+              v-model="stock.tax">
+          </div>
+          <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+            <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Create</button>
+            <a href="/admin/stock" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+          </div>
+          <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
+            <button class="btn btn-success btn-rounded rounded-pill"
+              style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;"
+              type="button">
+              <Loading style="font-size: .22rem" />
+            </button>
+          </div>
         </div>
-        <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
-          <button class="btn btn-success btn-rounded rounded-pill"
-            style="padding-left: 2.5rem;padding-right: 2.5rem;padding-top: .91rem; padding-bottom: .91rem;" type="button">
-            <Loading style="font-size: .22rem" />
-          </button>
-        </div>
-    </div>
-    </div>
-  </form>
-   </div>
+      </div>
+    </form>
+  </div>
 </template>

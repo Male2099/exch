@@ -28,7 +28,7 @@ export default {
 				sex: '',
 				address: '',
 				phone: "",
-				totalOrders: 10
+				totalOrders: 0
 			},
 			updateUser: {
 				username: '',
@@ -49,6 +49,26 @@ export default {
 			loading: false,
 			inEditProfileMode: false,
 			inToResetPasswordMode: false,
+		}
+	},
+	async mounted() {
+		this.roles = await roleApi.getAllRoles();
+		this.user = await userApi.getUserById(this.$route.params.id)
+
+		this.user.roleId = this.user.role.id
+		this.updateUser = { ...this.user }
+	}
+	, computed: {
+		isSubmittable() {
+			if (this.errors.username) {
+				return false
+			}
+			return true
+		},
+	}, watch: {
+		'updateUser.username'(newVal) {
+			console.log(1212);
+			this.errors.username = ''
 		}
 	},
 	methods: {
@@ -158,31 +178,21 @@ export default {
 			});
 		}
 	},
-	async mounted() {
-		this.roles = await roleApi.getAllRoles();
-		this.user = await userApi.getUserById(this.$route.params.id)
-		this.user.roleId = this.user.role.id
-		this.updateUser = { ...this.user }
-	}
-	, computed: {
-		isSubmittable() {
-			if (this.errors.username) {
-				return false
-			}
-			return true
-		},
-	}, watch: {
-		'updateUser.username'(newVal) {
-			console.log(1212);
-			this.errors.username = ''
-		}
-	}
+
 }
 </script>
 
 <template>
-	<div id="auth-profile">
-
+	<div>
+		<div class="d-flex justify-content-between mb-2">
+			<h1 class="page-header mb-0">User Info</h1>
+			<ol class="breadcrumb my-1">
+				<li class="breadcrumb-item"><router-link to="/admin">Home</router-link></li>
+				<li class="breadcrumb-item active"><router-link to="/admin/user">User</router-link></li>
+				<li class="breadcrumb-item active"><span>User Info</span></li>
+				<!-- <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i>View Order</li> -->
+			</ol>
+		</div>
 		<div class="table-responsive form-inline">
 			<form @submit="updateUserInfo">
 				<div class="profile">
@@ -253,8 +263,8 @@ export default {
 								<label class="form-label">Sex</label>
 								<select class="form-control" v-model="updateUser.sex" :disabled="!inEditProfileMode"
 									:class="{ 'disabled-input': !inEditProfileMode }">
-									<option value="MALE" selected>MALE</option>
-									<option value="FEMALE">FEMALE</option>
+									<option value="Male" selected>MALE</option>
+									<option value="Female">FEMALE</option>
 								</select>
 							</div>
 						</div>
@@ -276,7 +286,8 @@ export default {
 							<div class="col-md-6 mb-3">
 								<label class="form-label">Role</label>
 								<div>
-									<select class="form-control" v-model="updateUser.roleId">
+									<select class="form-control" v-model="updateUser.roleId" :disabled="!inEditProfileMode"
+										:class="{ 'disabled-input': !inEditProfileMode }">
 										<option v-for="(role) in roles" :key="role.id" :value="role.id" v-text="role.name">
 										</option>
 									</select>
