@@ -4,15 +4,26 @@ import userApi from "../../services/apis/user/userApi"
 
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 import swal from "sweetalert"
+import { userAuthStore } from "@/stores/app-auth";
+const authStore = userAuthStore();
 
 export default {
   components: {
     LoadingOnFetchingData: Loading
+  }, async mounted() {
+    //set to current query of page
+    this.query = this.getUrlQueryParams;
+    // fetch init data
+    await this.getAllUsers()
+    //get auth user 
+    this.authUser = authStore.user;
+
   },
   data() {
     return {
       defaultImage: "../../src/assets/defaultImage.png",
       users: [],
+      authUser: {},
       query: {
         page: 1,
         pageSize: 10,
@@ -106,13 +117,7 @@ export default {
       });
     }
   },
-  async mounted() {
-    //set to current query of page
-    this.query = this.getUrlQueryParams;
-    // fetch init data
-    await this.getAllUsers()
 
-  },
   computed: {
     //get the query from url
     getUrlQueryParams() {
@@ -236,10 +241,15 @@ export default {
               <td>{{ user.status ? "Active" : "Inactive" }}</td>
               <td style="width: 10%;">
                 <div style="width: 100%; display: flex; justify-content: center;">
-                  <router-link :to="'user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+                  <button v-if="user.id == authUser.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
+                    <i class="bi bi-pencil-square fs-4 text-gray"></i>
+                  </button>
+
+                  <router-link v-else :to="'user/' + user.id" class="btn btn-rounded rounded-pill" aria-expanded="false">
                     <i class="bi bi-pencil-square fs-4 text-info"></i>
                   </router-link>
-                  <button class="btn rounded-pill text-danger" data-id="' + row.id + '" @click="deleteUser(user)">
+                  <button class="btn rounded-pill text-danger" data-id="' + row.id + '" @click="deleteUser(user)"
+                    :disabled="user.id == authUser.id" :class="{ 'text-gray _border-none': user.id == authUser.id }">
                     <i class="bi bi-trash-fill w-100px fs-4"></i>
                   </button>
                 </div>
@@ -280,6 +290,10 @@ export default {
 </template>
 
 <style scoped>
+._border-none {
+  border: none;
+}
+
 ._table tbody td {
   vertical-align: middle;
 }

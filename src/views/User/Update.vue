@@ -17,6 +17,7 @@ export default {
 		return {
 			defaultImage: "../../../src/assets/defaultImage.png",
 			roles: [],
+			authUser: {},
 			user: {
 				username: '',
 				name: '',
@@ -57,6 +58,8 @@ export default {
 	async mounted() {
 		this.roles = await roleApi.getAllRoles();
 		this.user = await userApi.getUserById(this.$route.params.id)
+		this.authUser = authStore.user;
+
 
 		this.user.roleId = this.user.role.id
 		this.updateUser = { ...this.user }
@@ -233,7 +236,7 @@ export default {
 								<h4 class="mt-0 mb-1">{{ user.name }}</h4>
 								<p class="mb-2">@{{ user.username }}</p>
 								<p class="mb-2">{{ user.role.name }}</p>
-								<button type="button"
+								<button type="button" v-if="user.id!=authUser.id"
 									@click="inEditProfileMode = !inEditProfileMode; updateUser = { ...user }; errors.username = ''"
 									class="btn btn-xs" :class="inEditProfileMode ? 'btn-red' : 'btn-yellow'">
 									{{ !inEditProfileMode ? 'Edit User' : 'Cancel edit' }}
@@ -372,7 +375,8 @@ export default {
 								</button>
 							</div>
 						</div>
-						<div v-if="!inEditProfileMode" style="width: 100%; display: flex; justify-content: end;margin-top: .5rem;">
+						<div v-if="!inEditProfileMode"
+							style="width: 100%; display: flex; justify-content: end;margin-top: .5rem;">
 							<router-link to="/admin/user"
 								class="btn btn-success btn-rounded px-4 rounded-pill">Back</router-link>
 						</div>
