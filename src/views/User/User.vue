@@ -208,7 +208,7 @@ export default {
             <tr>
               <th>ID</th>
               <th>User <span class="fw-normal">({{ pageMetaData.totalItems }})</span> </th>
-              <th>Phone</th>
+              <!-- <th>Phone</th> -->
               <th>Role</th>
               <th>Status</th>
               <th>Action</th>
@@ -236,7 +236,7 @@ export default {
                 </div>
 
               </td>
-              <td>{{ user.phone }}</td>
+              <!-- <td>{{ user.phone }}</td> -->
               <td>{{ user.role.name }}</td>
               <td>{{ user.status ? "Active" : "Inactive" }}</td>
               <td style="width: 10%;">

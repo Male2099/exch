@@ -105,6 +105,7 @@ export default {
 					this.updateUser.img = imgUrl ?? this.updateUser.img
 					this.user = await userApi.updateUserById(this.$route.params.id, this.updateUser)
 					this.inEditProfileMode = false
+					this.inToResetPasswordMode = false
 					await this.updateMeSuccesModal()
 					this.user.roleId = this.user.role.id
 					this.updateUser = { ...this.user }
@@ -236,8 +237,8 @@ export default {
 								<h4 class="mt-0 mb-1">{{ user.name }}</h4>
 								<p class="mb-2">@{{ user.username }}</p>
 								<p class="mb-2">{{ user.role.name }}</p>
-								<button type="button" v-if="user.id!=authUser.id"
-									@click="inEditProfileMode = !inEditProfileMode; updateUser = { ...user }; errors.username = ''"
+								<button type="button" v-if="user.id != authUser.id"
+									@click="inEditProfileMode = !inEditProfileMode; inToResetPasswordMode = false; updateUser = { ...user }; errors.username = ''"
 									class="btn btn-xs" :class="inEditProfileMode ? 'btn-red' : 'btn-yellow'">
 									{{ !inEditProfileMode ? 'Edit User' : 'Cancel edit' }}
 								</button>
@@ -364,7 +365,8 @@ export default {
 									class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill"
 									type="submit">Confirm</button>
 
-								<button @click="inEditProfileMode = false; updateUser = { ...user }; errors.username = ''"
+								<button
+									@click="inEditProfileMode = false; inToResetPasswordMode = false; updateUser = { ...user }; errors.username = ''"
 									class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</button>
 							</div>
 							<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">

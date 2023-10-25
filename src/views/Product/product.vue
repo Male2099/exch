@@ -165,7 +165,7 @@ export default {
         </router-link>
       </section>
       <section>
-        <table class="_table table table-bproducted table-dark table-stroped">
+        <table class="_table table table-bordered table-dark table-stroped">
           <thead>
             <tr>
               <th>ID</th>
