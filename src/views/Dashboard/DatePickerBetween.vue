@@ -81,19 +81,19 @@ export default {
 			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="padding: 0 !important; ">
 				<div class="d-flex">
 					<div>
-						<button @click="dateOption(_dateFromToday(0), _dateFromToday(1))"
+						<button @click="dateOption(_dateFromToday(0), _dateFromToday(0))"
 							class="dropdown-item">Today</button>
 						<button @click="dateOption(_dateFromToday(-1), _dateFromToday(0))"
 							class="dropdown-item">Yesterday</button>
 
-						<button @click="dateOption(_dateFromToday(-7), _dateFromToday(1))" class="dropdown-item">Last 7
+						<button @click="dateOption(_dateFromToday(-7), _dateFromToday(0))" class="dropdown-item">Last 7
 							Days</button>
-						<button @click="dateOption(_dateFromToday(-30), _dateFromToday(1))" class="dropdown-item">Last 30
+						<button @click="dateOption(_dateFromToday(-30), _dateFromToday(0))" class="dropdown-item">Last 30
 							Days</button>
-						<button @click="dateOption(_dateFromToday(-currentDateOfMonth() + 1), _dateFromToday(1))"
+						<button @click="dateOption(_dateFromToday(-currentDateOfMonth() + 1), _dateFromToday(0))"
 							class="dropdown-item">This Month</button>
 						<button
-							@click="dateOption(_dateFromToday(-daysFromLastMonth() - (- 1)), _dateFromToday(-currentDateOfMonth() - (- 1)))"
+							@click="dateOption(_dateFromToday(-daysFromLastMonth() - (- 1)), _dateFromToday(-currentDateOfMonth()))"
 							class="dropdown-item">Last Month</button>
 					</div>
 					<div class="dropdown-item _date-picke">

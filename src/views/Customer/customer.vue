@@ -207,31 +207,32 @@ export default {
         </tbody>
       </table>
     </section>
-    <section v-if="this.customers.length > 0">
-      <ul class="pagination _custome-page">
-        <li class="page-item">
-          <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
-            :class="{ 'd-none': query.page }" aria-label="Previous">
-            <span aria-hidden="true">&laquo;</span>
-            <span class="sr-only">Previous</span>
-          </button>
-        </li>
-        <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
-          <button class="page-link acitve" @click="toPage(pageNum)"
-            :class="{ 'bg-dark text-white': pageNum == this.query.page }">
-            {{ pageNum }}
-          </button>
-        </li>
+    <section v-if="this.pageMetaData.totalPage > 1">
+        <ul class="pagination _custome-page">
+          <li class="page-item">
+            <button @click="toPage(this.query.page - 1)" :disabled="this.query.page <= 1" class="page-link"
+              :class="{ 'invisible': query.page <= 1 }" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+              <span class="sr-only">Previous</span>
+            </button>
+          </li>
+          <li v-for="pageNum in pageMetaData.totalPage" :key="pageNum" class="page-item">
+            <button class="page-link acitve" @click="toPage(pageNum)"
+              :class="{ 'bg-dark text-white': pageNum == this.query.page }">
+              {{ pageNum }}
+            </button>
+          </li>
 
-        <li class="page-item">
-          <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
-            class="page-link" aria-label="Next">
-            <span aria-hidden="true">&raquo;</span>
-            <span class="sr-only">Next</span>
-          </button>
-        </li>
-      </ul>
-    </section>
+          <li class="page-item">
+            <button @click="toPage(+this.query.page + 1)" :disabled="this.query.page >= this.pageMetaData.totalPage"
+              class="page-link" :class="{ 'invisible': this.query.page >= this.pageMetaData.totalPage }"
+              aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+              <span class="sr-only">Next</span>
+            </button>
+          </li>
+        </ul>
+      </section>
   </div>
 </template>
 <style scoped>
