@@ -8,6 +8,8 @@ export default {
     }
     try {
       const res = await axiosInstance.get(`/customers?${query}`);
+
+      console.log('resss',res);
       return res.data;
     } catch (error) {
       // console.log(error);

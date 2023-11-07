@@ -26,8 +26,8 @@ import PanelHeader from "@/components/bootstrap/PanelHeader.vue";
 import PanelTitle from "@/components/bootstrap/PanelTitle.vue";
 import PanelToolbar from "@/components/bootstrap/PanelToolbar.vue";
 
-import VCalendar from "v-calendar";
-import "v-calendar/dist/style.css";
+// import VCalendar from "v-calendar";
+// import "v-calendar/dist/style.css";
 
 //store auth
 import { userAuthStore } from "./stores/app-auth";
@@ -51,7 +51,7 @@ await authStore.setUser();
 app.use(router);
 app.use(Vue3ProgressPlugin);
 app.use(PerfectScrollbar);
-app.use(VCalendar);
+// app.use(VCalendar);
 
 app.config.globalProperties.emitter = emitter;
 

@@ -4,9 +4,12 @@ import { useAppVariableStore } from '@/stores/app-variable';
 import { Popover } from 'bootstrap';
 import apexchart from '@/components/plugins/Apexcharts.vue';
 
+
 import DatePickerBetweenVue from './DatePickerBetween.vue';
 import dashboardService from '../../services/apis/dasboard/dasboardService'
 import GeneralInfoDashboard from './GeneralInfoDashboard.vue';
+import customerApi from '../../services/apis/customer/customer';
+import customer from '../../services/apis/customer/customer';
 
 const appVariable = useAppVariableStore();
 
@@ -37,7 +40,13 @@ export default {
 				quantitySold: 10,
 				totalPrice: 100.00
 			},],
-			productData: []
+			productData: [],
+			generalInfo: {
+				'countCustomer': 0,
+				'countTodayOrder': 0,
+				'countTodaySold': 0,
+				'todayRevenue': 0
+			}
 		}
 	},
 	async created() {
@@ -46,7 +55,10 @@ export default {
 			endDate: ''
 		}
 		await this.getSaleReport();
-		await this.getProductSelling()
+		await this.getProductSelling();
+
+		let customers=await customerApi.getAllCustomers({ page: 100000, pageSize:10 })
+		this.generalInfo.countCustomer = customers?.metadata?.totalItems;
 	},
 	async mounted() {
 		// animateNumber();
@@ -71,14 +83,19 @@ export default {
 		filterDate(date) {
 			this.queryDate = date;
 		},
-		async getSaleReport() {
+		async getSaleReport(query) {
 			// console.log("pass", this.queryDate);
-			const sale = await dashboardService.saleReport(this.queryDate);
+			const sale = await dashboardService.saleReport(query || this.queryDate);
 			if (sale) {
 				this.saleData = sale.data;
 				this.saleInfo.totalPrice = sale.totalPrice
 				this.saleInfo.totalSold = sale.totalSold
 				this.saleInfo.totalOrders = sale.totalOrders
+			}
+			if (query) {
+				this.generalInfo.countTodayOrder = sale.totalOrders
+				this.generalInfo.countTodaySold = sale.totalSold
+				this.generalInfo.todayRevenue = sale.totalPrice
 			}
 			this.saleReport = this.getSaleData();
 		},
@@ -215,7 +232,9 @@ export default {
 			</ol>
 		</div>
 		<DatePickerBetweenVue @filterDate="filterDate" />
-		<GeneralInfoDashboard />
+		<GeneralInfoDashboard :countCustomer="generalInfo.countCustomer" :countTodayOrder="generalInfo.countTodayOrder"
+			:countTodaySold="generalInfo.countTodaySold" :todayRevenue="generalInfo.todayRevenue" />
+
 		<!-- BEGIN col-8 -->
 		<div class="col-xl-8 col-lg-6">
 			<!-- BEGIN card -->
