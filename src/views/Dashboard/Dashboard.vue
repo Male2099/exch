@@ -303,7 +303,7 @@ export default {
 
 							<div class="text-truncate">
 								<div>{{ prod.name }}</div>
-								<div class="text-gray-500">{{ prod?.price || 'xx' }}$</div>
+								<div class="text-gray-500">{{ prod?.price || '' }}{{ prod?.price?'$':'' }}</div>
 							</div>
 							<div class="ms-auto text-center">
 								<div class="fs-13px"><span data-animation="number">{{ prod.quantitySold }}</span></div>

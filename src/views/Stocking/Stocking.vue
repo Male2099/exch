@@ -99,7 +99,17 @@ export default {
           }
         },
       });
-    }
+    },
+    dateParser(dateString) {
+      //change 2023-11-13T00:22:51.907342 
+      // to
+      // 2023-11-13 00:22:51
+      if (!dateString) return;
+      dateString = dateString.split('.')[0]
+      return dateString.replace('T', ' ')
+
+
+    },
   },
   async mounted() {
     //set to current query of page
@@ -169,13 +179,13 @@ export default {
           aria-expanded="false"><i class="fa fa-plus fa-lg me-2 ms-n2 text-success-900"></i>Add</router-link>
       </section>
       <section>
-        <table class="table table-bordered table-dark table-stroped">
+        <table class="_table table table-bordered table-dark table-stroped">
           <thead>
             <tr>
               <th>ID</th>
               <th>Supplier</th>
-              <th>Tax</th>
-              <th>Delivery At</th>
+              <!-- <th>Tax</th> -->
+              <!-- <th>Delivery At</th> -->
               <th>Created At</th>
               <th>Total Item</th>
               <th>Total Cost</th>
@@ -194,9 +204,9 @@ export default {
             <tr v-for="stocking in stockings" :key="stocking.id">
               <td>{{ stocking.id }}</td>
               <td>{{ stocking.supplier.name }}</td>
-              <td>{{ stocking.tax }}</td>
-              <td>{{ stocking.deliveryAt }}</td>
-              <td>{{ stocking.createdAt }}</td>
+              <!-- <td>{{ stocking.tax }}</td> -->
+              <!-- <td>{{ stocking.deliveryAt }}</td> -->
+              <td>{{ dateParser(stocking.createdAt) }}</td>
               <td>{{ stocking.totalItem }}</td>
               <td>{{ stocking.totalCost }}</td>
               <td>{{ stocking.status }}</td>

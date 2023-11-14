@@ -173,7 +173,7 @@ export default {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Category</th>
+              <th>Category<span class="fw-normal">({{ pageMetaData.totalItems }})</span> </th>
               <th style="width:4%;">Action</th>
             </tr>
           </thead>

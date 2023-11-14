@@ -107,9 +107,9 @@ export default {
 				<li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Product</li>
 			</ol>
 		</div>
-		<div class="d-flex justify-content-end mb-2">
+		<!-- <div class="d-flex justify-content-end mb-2">
 			<a href="/admin/product" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-		</div>
+		</div> -->
 
 		<form v-if="renderPageEnable" @submit="updateProduct">
 			<div class="card border-0 mb-4">
@@ -188,7 +188,7 @@ export default {
 					<div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 						<button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Update</button>
 
-						<a href="/product" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+						<a href="/admin/product" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
 					</div>
 					<div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
 						<button class="btn btn-success btn-rounded rounded-pill"

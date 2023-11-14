@@ -1,7 +1,7 @@
 <script>
 import productApi from "@/services/apis/product/productApi"
 import categoryId from "@/services/apis/category/categoryId"
-import imageApi from "../../api/imageApi"
+import imageApi from "../../services/apis/imageApi"
 import PictureInput from 'vue-picture-input';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
 import swal from "sweetalert"

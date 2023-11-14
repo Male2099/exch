@@ -19,12 +19,23 @@ export default {
 	async mounted() {
 		this.orders = await order.getOrderById(this.$route.params.id)
 		appOption.appSidebarWide = true;
+		this.orders.date=this.dateParser(this.orders.date)
+
+		console.log(this.orders);
 	},
 	beforeRouteLeave(to, from, next) {
 		appOption.appSidebarWide = false;
 		next();
 	},
 	methods: {
+		dateParser(dateString) {
+			//change 2023-11-13T00:22:51.907342 
+			// to
+			// 2023-11-13 00:22:51
+			if (!dateString) return;
+			dateString = dateString.split('.')[0]
+			return dateString.replace('T', ' ')
+		},
 		toggleTable() {
 			this.showTable = !this.showTable;
 		},

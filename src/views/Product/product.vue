@@ -169,7 +169,7 @@ export default {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Product</th>
+              <th>Product<span class="fw-normal">({{ pageMetaData.totalItems }})</span> </th>
               <th>Category</th>
               <!-- <th>ProductCode</th> -->
               <th>Price</th>

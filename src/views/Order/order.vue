@@ -99,7 +99,17 @@ export default {
           }
         },
       });
-    }
+    },
+    dateParser(dateString) {
+      //change 2023-11-13T00:22:51.907342 
+      // to
+      // 2023-11-13 00:22:51
+      if (!dateString) return;
+      dateString = dateString.split('.')[0]
+      return dateString.replace('T', ' ')
+
+
+    },
   },
   async mounted() {
     //set to current query of page
@@ -169,18 +179,18 @@ export default {
         </form>
       </section>
       <section>
-        <table class="table table-bordered table-dark table-stroped">
+        <table class="table _table table-bordered table-dark table-stroped">
           <thead>
             <tr>
               <th>ID</th>
-              <th>User</th>
+              <!-- <th>User</th> -->
               <th>Customer</th>
-              <th>Status</th>
               <th>Date</th>
-              <th>Tax</th>
+              <!-- <th>Tax</th> -->
               <th>Total Price</th>
-              <th>Received Money</th>
-              <th>Changed Money</th>
+              <!-- <th>Received Money</th> -->
+              <!-- <th>Changed Money</th> -->
+              <th>Status</th>
               <th style="width: 200px;">Action</th>
             </tr>
           </thead>
@@ -194,14 +204,14 @@ export default {
           <tbody v-else>
             <tr v-for="order in orders" :key="order.id">
               <td>{{ order.id }}</td>
-              <td>{{ order.user.name }}</td>
+              <!-- <td>{{ order.user.name }}</td> -->
               <td>{{ order.customer.name }}</td>
-              <td>{{ order.status }}</td>
-              <td>{{ order.date }}</td>
-              <td>{{ order.tax }}</td>
+              <td>{{ dateParser(order.date) }}</td>
+              <!-- <td>{{ order.tax }}</td> -->
               <td>{{ order.totalPrice }}</td>
-              <td>{{ order.receivedMoney }}</td>
-              <td>{{ order.changedMoney }}</td>
+              <!-- <td>{{ order.receivedMoney }}</td> -->
+              <!-- <td>{{ order.changedMoney }}</td> -->
+              <td>{{ order.status }}</td>
               <td style="width: 200px;">
                 <div style="width: 100%; display: flex; justify-content: center;">
                   <router-link :to="'/admin/order/' + order.id" class="btn btn-rounded rounded-pill"

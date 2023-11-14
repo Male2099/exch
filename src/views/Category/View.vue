@@ -1,5 +1,5 @@
 <script>
-import imageApi from "../../api/imageApi"
+import imageApi from "@/services/apis/imageApi"
 import PictureInput from 'vue-picture-input'
 import categoryApi from '@/services/apis/category/category';
 import ConfirmDialogue from '../../components/app/confirm.vue';

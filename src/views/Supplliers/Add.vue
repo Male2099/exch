@@ -80,9 +80,9 @@ export default {
         <li class="breadcrumb-item active"><i class="fa fa-arrow-back"></i> Add Supplier</li>
       </ol>
     </div>
-    <div class="d-flex justify-content-end mb-2">
+    <!-- <div class="d-flex justify-content-end mb-2">
       <a href="/admin/supplier" class="btn btn-success btn-rounded px-4 rounded-pill">Back</a>
-    </div>
+    </div> -->
 
     <form @submit="registerSupplier">
       <div class="card border-0 mb-4">
@@ -110,7 +110,7 @@ export default {
           </div>
           <div v-if="!loading" class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
             <button class="btn btn-success me-md-2 btn-rounded px-4 rounded-pill" type="submit">Create</button>
-            <a href="/supplier" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
+            <a href="/admin/supplier" class="btn btn-danger btn-rounded px-4 rounded-pill">Cancel</a>
           </div>
           <div v-else class="d-grid gap-2 d-md-flex justify-content-md-end" style="margin: auto;">
             <button class="btn btn-success btn-rounded rounded-pill"

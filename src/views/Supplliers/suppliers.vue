@@ -122,7 +122,7 @@ export default {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Supplier</th>
+              <th>Supplier<span class="fw-normal">({{ pageMetaData.totalItems }})</span> </th>
               <th>Email</th>
               <th>phone</th>
               <th>address</th>

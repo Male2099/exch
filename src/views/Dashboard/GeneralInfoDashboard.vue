@@ -59,7 +59,11 @@ export default {
         <!-- BEGIN col-3 -->
         <div class="col-xl-3 col-md-6">
             <div class="widget widget-stats bg-dark">
-                <div class="stats-icon stats-icon-lg"><i class="fa fa-comment-alt fa-fw"></i></div>
+                <div class="stats-icon stats-icon-lg">
+                    <!-- <i class="fa fa-comment-alt fa-fw"></i> -->
+                    <i class="fa-solid fa-id-badge"></i>
+
+                </div>
                 <div class="stats-content">
                     <div class="stats-title">TOTAL CUSTOMERS</div>
                     <div class="stats-number">{{ countCustomer }}</div>

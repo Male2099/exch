@@ -25,8 +25,11 @@ export default {
 
   async mounted() {
     this.stock = await StockingAll.getStockById(this.$route.params.id);
+    this.stock.createdAt=this.dateParser(this.stock.createdAt)
+    this.stock.deliveryAt=this.dateParser(this.stock.deliveryAt)
     this.Stock.tax = this.stock.tax;
     this.Stock.status = this.stock.status;
+
     this.suppliers = await supplierApi.getAllSuppliers();
 
   },
@@ -121,7 +124,17 @@ export default {
           }
         },
       });
-    }
+    },
+    dateParser(dateString) {
+      //change 2023-11-13T00:22:51.907342 
+      // to
+      // 2023-11-13 00:22:51
+      if (!dateString) return '';
+      dateString = dateString.split('.')[0]
+      return dateString.replace('T', ' ')
+
+
+    },
   },
 }
 
@@ -177,7 +190,7 @@ export default {
             </button>
           </div>
           <div class="mb-3">
-            <label class="form-label">SupplierId</label>
+            <label class="form-label">Supplier Name</label>
             <div class="form-control">
               {{ stock.supplier.name }}
             </div>
