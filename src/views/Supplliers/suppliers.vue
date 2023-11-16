@@ -3,6 +3,8 @@ import supplier from "@/services/apis/supplier/supplier"
 import axiosInstance from '@/services/utils/axiosInstance';
 import { ContentLoader } from 'vue-content-loader';
 import Loading from '../../components/app/LoadingOnSubmit.vue';
+import swal from "sweetalert"
+
 export default {
   components: {
     ContentLoader,
@@ -57,6 +59,46 @@ export default {
         }
       }
       await this.$router.push({ path: this.$route.fullPath, query: updatedQueryParams });
+    },
+    async deleteSupplier(_supplier) {
+      try {
+        const confirm = await this.confirmDeleteDialog(_supplier);
+        if (!confirm) return;
+        this.isLoading = true
+        console.log(_supplier);
+        await supplier.deleteSupplier(_supplier.id);
+        await this.getSuppliers();
+      } catch (error) {
+        this.isLoading = false
+      }
+    },
+    async confirmDeleteDialog(product) {
+      return swal({
+        title: "Delete Confirmation",
+        content: {
+          element: "span",
+          attributes: {
+            innerHTML: `Deleting <span class="text-red">${product.name}</span>  will permanently remove all associated data`
+          }
+        },
+        icon: "warning",
+        buttons: {
+          cancel: {
+            text: 'Cancel',
+            value: null,
+            visible: true,
+            className: 'btn btn-default',
+            closeModal: true,
+          },
+          confirm: {
+            text: 'Delete',
+            value: true,
+            visible: true,
+            className: 'btn btn-danger',
+            closeModal: true
+          }
+        },
+      });
     }
   },
   async mounted() {
@@ -151,6 +193,9 @@ export default {
                     aria-expanded="false">
                     <i class="bi bi-pencil-square fs-4 text-info"></i>
                   </router-link>
+                  <button class="btn rounded-pill text-danger" @click="deleteSupplier(supplier)">
+                    <i class="bi bi-trash-fill w-100px fs-4"></i>
+                  </button>
                 </div>
               </td>
             </tr>
