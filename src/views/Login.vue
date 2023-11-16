@@ -6,25 +6,14 @@ import { userAuthStore } from "../stores/app-auth";
 const appOption = useAppOptionStore();
 
 export default {
-	// mounted() {
-	// 	appOption.appSidebarHide = true;
-	// 	appOption.appHeaderHide = true;
-	// 	appOption.appContentClass = 'p-0';
-	// },
-	// beforeRouteLeave(to, from, next) {
-	// 	appOption.appSidebarHide = false;
-	// 	appOption.appHeaderHide = false;
-	// 	appOption.appContentClass = '';
-	// 	next();
-	// },
 	data() {
 		return {
 			bg: {
 				activeImg: '/assets/img/login-bg/login-bg-main.jpg',
 			},
 			user: {
-				username: 'root',
-				password: '123456'
+				username: '',
+				password: ''
 			},
 			error: ''
 		}

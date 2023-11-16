@@ -25,7 +25,6 @@ export default {
 </script>
 
 <template>
-	<!-- BEGIN error -->
 	<div class="error">
 		<div class="error-code">404</div>
 		<div class="error-content">
@@ -39,5 +38,4 @@ export default {
 			</div>
 		</div>
 	</div>
-	<!-- END error -->
 </template>
